@@ -1,0 +1,16 @@
+server:
+  port: 9002
+
+spring:
+  application:
+    name: seckill-service
+  datasource:
+    url: jdbc:mysql:///seckill_system
+    username: root
+    password: root
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
