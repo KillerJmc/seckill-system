@@ -1,20 +1,39 @@
 package com.seckill.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 /**
+ * 秒杀成功客户表
  * @author Jmc
  */
 @Data
 @TableName("seckill_success")
 public class SeckillSuccess {
+
+    @TableId(type = IdType.AUTO)
     private Integer id;
+
+    /**
+     * 秒杀活动id
+     */
     private Integer seckillId;
+
+    /**
+     * 客户id
+     */
     private Integer accountId;
+
+    /**
+     * 订单id
+     */
     private String orderId;
-    private LocalDateTime createTime;
-    private LocalDateTime modifyTime;
+
+    private LocalDateTime gmtCreate;
+
+    private LocalDateTime gmtModified;
 }
