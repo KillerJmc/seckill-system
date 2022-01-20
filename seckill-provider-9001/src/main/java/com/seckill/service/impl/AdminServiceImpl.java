@@ -15,7 +15,7 @@ public class AdminServiceImpl implements AdminService {
     private final AdminDao adminDao;
 
     @Override
-    public void login(Admin admin) {
-
+    public boolean login(Admin admin) {
+        return false;
     }
 }

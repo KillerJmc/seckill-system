@@ -1,11 +1,14 @@
 package com.seckill.controller;
 
+import com.jmc.lang.Objs;
 import com.jmc.net.R;
 import com.seckill.pojo.Admin;
 import com.seckill.pojo.SeckillActivity;
 import com.seckill.service.AdminService;
+import com.seckill.util.Verify;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,15 +18,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class AdminController {
+    private final StringRedisTemplate redisTemplate = new StringRedisTemplate();
+
     private final AdminService adminService;
 
     /**
-     * 登录（传入用户名，密码）<br>
+     * 登录（传入账号，密码）<br>
      * 要对参数进行校验，把token放好，小心多服务间token共享问题 <br>
      * 返回token给客户端（token用admin-{uuid} -> adminName存进redis）
      */
     @PostMapping("/admin/login")
     public R login(Admin admin) {
+        if (Verify.nullOrEmpty(admin.getName(), admin.getPassword())) {
+            return R.error()
+                    .msg("账号或密码为空！");
+        }
+
+        if (!adminService.login(admin)) {
+            return R.error()
+                    .msg("账号或密码错误！");
+        }
         return null;
     }
 
@@ -47,6 +61,7 @@ public class AdminController {
 
     /**
      * 获取秒杀成功的客户列表
+     *
      * @param seckillId 秒杀id
      */
     @PostMapping("/admin/getSeckillSuccessList")
