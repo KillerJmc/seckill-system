@@ -1,16 +1,18 @@
 package com.seckill.controller;
 
-import com.jmc.lang.Objs;
 import com.jmc.net.R;
+import com.seckill.common.Const;
+import com.seckill.common.MsgMapping;
 import com.seckill.pojo.Admin;
 import com.seckill.pojo.SeckillActivity;
 import com.seckill.service.AdminService;
 import com.seckill.util.Verify;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 /**
  * @author Jmc
@@ -28,17 +30,27 @@ public class AdminController {
      * 返回token给客户端（token用admin-{uuid} -> adminName存进redis）
      */
     @PostMapping("/admin/login")
-    public R login(Admin admin) {
+    public synchronized R login(Admin admin) {
         if (Verify.nullOrEmpty(admin.getName(), admin.getPassword())) {
             return R.error()
-                    .msg("账号或密码为空！");
+                    .msg(MsgMapping.ACCOUNT_PWD_NULL_OR_EMPTY);
         }
 
         if (!adminService.login(admin)) {
             return R.error()
-                    .msg("账号或密码错误！");
+                    .msg(MsgMapping.ACCOUNT_OR_PWD_ERROR);
         }
-        return null;
+
+        // 定义token
+        var token = Const.ADMIN_TOKEN_PREFIX + UUID.randomUUID();
+
+        // 存入redis
+        redisTemplate.opsForValue().set(token, admin.getName());
+
+        // 返回token给客户端
+        return R.ok()
+                .msg(MsgMapping.LOGIN_SUCCESS)
+                .data(token);
     }
 
     /**

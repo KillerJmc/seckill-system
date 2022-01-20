@@ -1,5 +1,5 @@
 package com.seckill.service.impl;
-
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.seckill.dao.AdminDao;
 import com.seckill.pojo.Admin;
 import com.seckill.service.AdminService;
@@ -16,6 +16,12 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public boolean login(Admin admin) {
-        return false;
+        var queryAdmin = adminDao.selectOne(
+            Wrappers.<Admin>lambdaQuery()
+                    .eq(Admin::getName, admin.getName())
+                    .eq(Admin::getPassword, admin.getPassword())
+        );
+
+        return queryAdmin != null;
     }
 }

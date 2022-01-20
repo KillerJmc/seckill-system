@@ -19,6 +19,11 @@ public class PreliminaryScreening {
     private Integer id;
 
     /**
+     * 秒杀活动id
+     */
+    private Integer seckillId;
+
+    /**
      * 客户id
      */
     private Integer accountId;
