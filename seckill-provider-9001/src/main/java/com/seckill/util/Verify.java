@@ -1,5 +1,7 @@
 package com.seckill.util;
 
+import com.jmc.lang.Strs;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -28,5 +30,14 @@ public class Verify {
         }
 
         return false;
+    }
+
+    /**
+     * 检查身份证号是否合法
+     */
+    public static boolean validIdNum(String idNum) {
+        return idNum != null &&
+                idNum.length() == 18 &&
+                (Strs.isNum(idNum) || (Strs.isNum(idNum.substring(0, 17)) && Character.isLetter(idNum.charAt(17))));
     }
 }

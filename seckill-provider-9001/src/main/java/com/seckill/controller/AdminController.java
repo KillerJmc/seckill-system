@@ -6,12 +6,14 @@ import com.seckill.common.MsgMapping;
 import com.seckill.pojo.Admin;
 import com.seckill.pojo.SeckillActivity;
 import com.seckill.service.AdminService;
+import com.seckill.service.TokenService;
 import com.seckill.util.Verify;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -20,14 +22,13 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 public class AdminController {
-    private final StringRedisTemplate redisTemplate = new StringRedisTemplate();
-
     private final AdminService adminService;
+    private final TokenService tokenService;
 
     /**
      * 登录（传入账号，密码）<br>
      * 要对参数进行校验，把token放好，小心多服务间token共享问题 <br>
-     * 返回token给客户端（token用admin-{uuid} -> adminName存进redis）
+     * 返回tokeGet户端（token用{uuid} -> adminName存进redis）
      */
     @PostMapping("/admin/login")
     public synchronized R login(Admin admin) {
@@ -42,15 +43,15 @@ public class AdminController {
         }
 
         // 定义token
-        var token = Const.ADMIN_TOKEN_PREFIX + UUID.randomUUID();
+        var token = UUID.randomUUID().toString();
 
         // 存入redis
-        redisTemplate.opsForValue().set(token, admin.getName());
+        tokenService.putAccountName(token, admin.getName());
 
         // 返回token给客户端
         return R.ok()
                 .msg(MsgMapping.LOGIN_SUCCESS)
-                .data(token);
+                .data(Map.of("token", token));
     }
 
     /**

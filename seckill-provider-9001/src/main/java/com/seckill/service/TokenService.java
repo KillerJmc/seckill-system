@@ -1,13 +1,17 @@
 package com.seckill.service;
 
+/**
+ * Token服务
+ * @author Jmc
+ */
 public interface TokenService {
     /**
-     * 通过token获取管理员名称
+     * 将token -> 账户名存入redis
      */
-    String getAdminName(String token);
+    void putAccountName(String token, String accountName);
 
     /**
-     * 根据token获取客户名称
+     * 通过token获取管理员或客户账户名称
      */
-    String getCustomerName(String token);
+    String getAccountName(String token);
 }

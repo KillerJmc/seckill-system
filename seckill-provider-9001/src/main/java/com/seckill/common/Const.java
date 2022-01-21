@@ -11,12 +11,7 @@ public interface Const {
     int ACCOUNT_ID_OFFSET = 10000;
 
     /**
-     * 管理员token前缀
+     * redis中token的组名
      */
-    String ADMIN_TOKEN_PREFIX = "admin-";
-
-    /**
-     * 客户token前缀
-     */
-    String CUSTOMER_TOKEN_PREFIX = "customer-";
+    String REDIS_TOKEN_GROUP = "token:";
 }

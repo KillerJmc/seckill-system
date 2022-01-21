@@ -50,6 +50,12 @@ public class CustomerServiceImpl implements CustomerService {
                         .eq(Customer::getAccountId, customer.getAccountId())
                         .eq(Customer::getPassword, customer.getPassword())
         );
+
+        if (queryCustomer != null) {
+            // 回填姓名
+            customer.setName(queryCustomer.getName());
+        }
+
         return queryCustomer != null;
     }
 }

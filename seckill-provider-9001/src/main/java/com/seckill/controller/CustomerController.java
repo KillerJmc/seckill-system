@@ -6,6 +6,7 @@ import com.seckill.common.MsgMapping;
 import com.seckill.pojo.Customer;
 import com.seckill.pojo.PreliminaryScreening;
 import com.seckill.service.CustomerService;
+import com.seckill.service.TokenService;
 import com.seckill.util.Verify;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -21,9 +23,8 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 public class CustomerController {
-    private final StringRedisTemplate redisTemplate = new StringRedisTemplate();
-
     private final CustomerService customerService;
+    private final TokenService tokenService;
 
     /**
      * 注册（提供真名，身份证，密码）
@@ -33,6 +34,12 @@ public class CustomerController {
         if (Verify.nullOrEmpty(customer.getName(), customer.getIdNumber(), customer.getPassword())) {
             return R.error()
                     .msg(MsgMapping.ACCOUNT_ID_NUM_PWD_NULL_OR_EMPTY);
+        }
+
+        // 检查身份证号
+        if (!Verify.validIdNum(customer.getIdNumber())) {
+            return R.error()
+                    .msg(MsgMapping.ID_NUM_FORMAT_ERROR);
         }
 
         if (!customerService.insert(customer)) {
@@ -47,7 +54,7 @@ public class CustomerController {
     /**
      * 登录（提供账号和密码） <br>
      * 并根据初筛结果插入到{@link PreliminaryScreening}（如果已经有了就不再插入） <br>
-     * 返回token给客户端（token用customer-{uuid} -> customerName存进redis）
+     * 返回token给客户端（token用{uuid} -> {accountName}存进redis）
      */
     @PostMapping("/login")
     public R login(Customer customer) {
@@ -55,6 +62,7 @@ public class CustomerController {
             return R.error()
                     .msg(MsgMapping.ACCOUNT_PWD_NULL_OR_EMPTY);
         }
+
 
         if (!customerService.contains(customer)) {
             return R.error()
@@ -64,15 +72,15 @@ public class CustomerController {
         // TODO: 初筛结果
 
         // 定义token
-        var token = Const.CUSTOMER_TOKEN_PREFIX + UUID.randomUUID();
+        var token = UUID.randomUUID().toString();
 
         // 存入redis
-        redisTemplate.opsForValue().set(token, customer.getName());
+        tokenService.putAccountName(token, customer.getName());
 
         // 返回token给客户端
         return R.ok()
                 .msg(MsgMapping.LOGIN_SUCCESS)
-                .data(token);
+                .data(Map.of("token", token));
     }
 
     /**
