@@ -9,10 +9,8 @@ import com.seckill.service.CustomerService;
 import com.seckill.service.TokenService;
 import com.seckill.util.Verify;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.UUID;
@@ -22,6 +20,8 @@ import java.util.UUID;
  */
 @RestController
 @RequiredArgsConstructor
+@Slf4j
+@CrossOrigin(Const.CROSS_ORIGIN)
 public class CustomerController {
     private final CustomerService customerService;
     private final TokenService tokenService;
@@ -31,6 +31,8 @@ public class CustomerController {
      */
     @PostMapping("/register")
     public synchronized R register(Customer customer) {
+        log.info("请求: {}", customer);
+
         if (Verify.nullOrEmpty(customer.getName(), customer.getIdNumber(), customer.getPassword())) {
             return R.error()
                     .msg(MsgMapping.ACCOUNT_ID_NUM_PWD_NULL_OR_EMPTY);
@@ -47,8 +49,11 @@ public class CustomerController {
                     .msg(MsgMapping.ID_NUM_REPEATED);
         }
 
+        log.info("客户注册：{}", customer);
+
         return R.ok()
-                .msg(MsgMapping.REG_SUCCESS);
+                .msg(MsgMapping.REG_SUCCESS)
+                .data(Map.of("accountId", customer.getAccountId()));
     }
 
     /**
@@ -57,7 +62,9 @@ public class CustomerController {
      * 返回token给客户端（token用{uuid} -> {accountName}存进redis）
      */
     @PostMapping("/login")
-    public R login(Customer customer) {
+    public R login(@RequestBody Customer customer) {
+        log.info("请求: {}", customer);
+
         if (Verify.nullOrEmpty(customer.getAccountId(), customer.getPassword())) {
             return R.error()
                     .msg(MsgMapping.ACCOUNT_PWD_NULL_OR_EMPTY);
@@ -76,6 +83,8 @@ public class CustomerController {
 
         // 存入redis
         tokenService.putAccountName(token, customer.getName());
+
+        log.info("客户登录：{}", customer);
 
         // 返回token给客户端
         return R.ok()

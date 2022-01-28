@@ -2,8 +2,6 @@ package com.seckill.service;
 
 import com.seckill.pojo.SeckillActivity;
 
-import java.util.List;
-
 /**
  * @author Jmc
  */

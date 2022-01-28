@@ -3,7 +3,6 @@ package com.seckill.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.seckill.common.Const;
 import com.seckill.dao.CustomerDao;
-import com.seckill.pojo.Admin;
 import com.seckill.pojo.Customer;
 import com.seckill.service.CustomerService;
 import lombok.RequiredArgsConstructor;

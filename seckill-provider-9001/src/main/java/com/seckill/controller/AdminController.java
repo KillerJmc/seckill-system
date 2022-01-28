@@ -9,8 +9,10 @@ import com.seckill.service.AdminService;
 import com.seckill.service.TokenService;
 import com.seckill.util.Verify;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -21,6 +23,8 @@ import java.util.UUID;
  */
 @RestController
 @RequiredArgsConstructor
+@Slf4j
+@CrossOrigin(Const.CROSS_ORIGIN)
 public class AdminController {
     private final AdminService adminService;
     private final TokenService tokenService;
@@ -31,7 +35,9 @@ public class AdminController {
      * 返回tokeGet户端（token用{uuid} -> adminName存进redis）
      */
     @PostMapping("/admin/login")
-    public synchronized R login(Admin admin) {
+    public synchronized R login(@RequestBody Admin admin) {
+        log.info("请求: {}", admin);
+
         if (Verify.nullOrEmpty(admin.getName(), admin.getPassword())) {
             return R.error()
                     .msg(MsgMapping.ACCOUNT_PWD_NULL_OR_EMPTY);
@@ -47,6 +53,8 @@ public class AdminController {
 
         // 存入redis
         tokenService.putAccountName(token, admin.getName());
+
+        log.info("管理员登录：{}", admin);
 
         // 返回token给客户端
         return R.ok()
