@@ -9,45 +9,55 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 客户信息
+ * 秒杀活动规则
  * @author Jmc
  */
 @Data
-@TableName("customer_info")
-public class CustomerInfo {
+@TableName("seckill_activity_rule")
+public class SeckillActivityRule {
 
     @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 客户id
+     * 规则名称
      */
-    private Integer accountId;
+    private String ruleName;
 
     /**
-     * 是否有工作
+     * 工作状态（在岗或失业）
      */
     private Boolean workStatus;
 
     /**
-     * 是否被列入失信人名单
+     * 最小年龄
+     */
+    private Integer minAge;
+
+    /**
+     * 最大年龄
+     */
+    private Integer maxAge;
+
+    /**
+     * 是否在失信人名单中
      */
     private Boolean inCreditBlacklist;
 
     /**
-     * 三年内逾期次数
+     * 三年内最多逾期次数
      */
-    private Integer overdueTimes;
+    private Integer maxOverdueTimes;
 
     /**
-     * 三年内逾期金额
+     * 三年内最多逾期天数
      */
-    private Double overdueMoney;
+    private Integer maxOverdueDays;
 
     /**
-     * 三年内逾期天数
+     * 三年内最多逾期金额
      */
-    private Integer overdueDays;
+    private Double maxOverdueMoney;
 
     @TableField(select = false)
     private LocalDateTime gmtCreate;

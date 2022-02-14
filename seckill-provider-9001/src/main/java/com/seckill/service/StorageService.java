@@ -6,7 +6,10 @@ import com.seckill.pojo.Storage;
  * @author Jmc
  */
 public interface StorageService {
-    int insert(Storage storage);
+    /**
+     * 获取当前的库存数量
+     */
+    int getStorage(Integer seckillId);
 
     /**
      * 减少库存

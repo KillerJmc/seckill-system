@@ -13,7 +13,14 @@ public interface CustomerService {
     boolean insert(Customer customer);
 
     /**
-     * 提供账号和密码的Customer对象
+     * 检查账号/身份证号和密码是否在数据库中有匹配
      */
     boolean contains(Customer customer);
+
+    Customer getByAccountId(Integer accountId);
+
+    /**
+     * 是否能申请秒杀活动
+     */
+    boolean canApply(Integer accountId);
 }

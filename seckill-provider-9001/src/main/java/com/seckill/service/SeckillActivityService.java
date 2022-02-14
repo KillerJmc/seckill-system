@@ -7,12 +7,12 @@ import com.seckill.pojo.SeckillActivity;
  */
 public interface SeckillActivityService {
     /**
-     * 插入一条秒杀活动
+     * 获取最新秒杀活动
      */
-    void insert(SeckillActivity seckillActivity);
+    SeckillActivity getLatest();
 
     /**
-     * 获取秒杀活动
+     * 获取最新秒杀id
      */
-    SeckillActivity getOne();
+    int getLatestSeckillId();
 }

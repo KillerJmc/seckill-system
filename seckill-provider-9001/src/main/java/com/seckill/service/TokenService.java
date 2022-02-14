@@ -6,12 +6,20 @@ package com.seckill.service;
  */
 public interface TokenService {
     /**
-     * 将token -> 账户名存入redis
+     * 创建token
+     * @param accountId 账号id
+     * @return token
      */
-    void putAccountName(String token, String accountName);
+    String create(Integer accountId);
 
     /**
-     * 通过token获取管理员或客户账户名称
+     * 将token -> 账户id存入redis
      */
-    String getAccountName(String token);
+    void putAccountId(String token, Integer accountId);
+
+    /**
+     * 通过token获取客户账户id
+     * @return 客户账户id
+     */
+    Integer getAccountId(String token);
 }

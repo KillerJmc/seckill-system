@@ -1,5 +1,8 @@
 package com.seckill.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -13,6 +16,7 @@ import java.time.LocalDateTime;
 @TableName("seckill_application_form")
 public class SeckillApplicationForm {
 
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -25,7 +29,9 @@ public class SeckillApplicationForm {
      */
     private Integer accountId;
 
+    @TableField(select = false)
     private LocalDateTime gmtCreate;
 
+    @TableField(select = false)
     private LocalDateTime gmtModified;
 }

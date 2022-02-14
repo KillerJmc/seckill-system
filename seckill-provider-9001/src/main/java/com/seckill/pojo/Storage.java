@@ -1,6 +1,7 @@
 package com.seckill.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
@@ -31,7 +32,9 @@ public class Storage {
      */
     private Integer amount;
 
+    @TableField(select = false)
     private LocalDateTime gmtCreate;
 
+    @TableField(select = false)
     private LocalDateTime gmtModified;
 }

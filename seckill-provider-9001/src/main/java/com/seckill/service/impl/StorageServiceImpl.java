@@ -1,5 +1,6 @@
 package com.seckill.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.seckill.dao.StorageDao;
 import com.seckill.pojo.Storage;
 import com.seckill.service.StorageService;
@@ -15,8 +16,8 @@ public class StorageServiceImpl implements StorageService {
     private final StorageDao storageDao;
 
     @Override
-    public int insert(Storage storage) {
-        return 0;
+    public int getStorage(Integer seckillId) {
+        return -1;
     }
 
     @Override
