@@ -6,8 +6,7 @@
 	<groupId>com.lingyuango.seckill</groupId>
 	<artifactId>seckill-system</artifactId>
 	<packaging>pom</packaging>
-	<version>0.0.1</version>
-	<name>seckill-system</name>
+	<version>1.0.0</version>
 	<description>A22 Seckill System</description>
 
 	<modules>
@@ -18,6 +17,8 @@
 
 	<properties>
 		<java.version>17</java.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 
 		<spring-boot.version>2.6.2</spring-boot.version>
 		<spring-cloud.version>2021.0.0</spring-cloud.version>
