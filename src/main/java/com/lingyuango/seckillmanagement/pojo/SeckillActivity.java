@@ -1,10 +1,14 @@
 package com.lingyuango.seckillmanagement.pojo;
 
 import com.lingyuango.seckillmanagement.model.BaseGmtModel;
+import com.lingyuango.seckillmanagement.proxy.BaseGmtModelProxy;
+import com.lingyuango.seckillmanagement.proxy.SeckillIdFillerProxy;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.PreDataProxy;
+import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -19,6 +23,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Date;
+import java.util.Random;
 
 @Getter
 @Setter
@@ -26,20 +31,14 @@ import java.util.Date;
 @EruptDataSource("mysql_seckill_system")
 @Table(name = "seckill_activity")
 @Erupt(name = "活动管理")
+@PreDataProxy(SeckillIdFillerProxy.class)
 public class SeckillActivity extends BaseGmtModel {
 
     /**
      * 秒杀活动id
      */
     @Column(name = "seckill_id")
-    @EruptField(
-            views = @View(title = "秒杀活动id", sortable = true),
-            edit = @Edit(
-                    title = "秒杀活动id",
-                    type = EditType.NUMBER, search = @Search, notNull = true,
-                    numberType = @NumberType
-            )
-    )
+    @EruptField(views = @View(title = "秒杀活动id", sortable = true))
     private Integer seckillId;
 
     /**

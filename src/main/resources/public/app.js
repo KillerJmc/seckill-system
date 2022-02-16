@@ -5,9 +5,9 @@ window.eruptSiteConfig = {
     // 是否展示版权信息
     copyright: false,
 
-    // logo路径
+    // 主页logo图片
     logoPath: "erupt.svg",
 
-    // logo文字
-    logoText: "erupt",
+    // 主页logo文字
+    logoText: "零元购",
 };

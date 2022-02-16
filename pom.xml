@@ -19,17 +19,34 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <erupt.version>1.9.3</erupt.version>
+        <jmc-utils.version>2.0.0</jmc-utils.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>jmc-repo</id>
+            <url>https://killerjmc.github.io/jmc-utils/repo/maven</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-web</artifactId>
+            <version>${erupt.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-security</artifactId>
+            <version>${erupt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-upms</artifactId>
+            <version>${erupt.version}</version>
         </dependency>
 
         <dependency>
@@ -45,33 +62,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-upms</artifactId>
-            <version>1.9.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-security</artifactId>
-            <version>1.9.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-web</artifactId>
-            <version>1.9.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-tpl</artifactId>
-            <version>1.9.3</version>
+            <groupId>com.jmc</groupId>
+            <artifactId>jmc-utils</artifactId>
+            <version>${jmc-utils.version}</version>
         </dependency>
     </dependencies>
 
