@@ -39,7 +39,7 @@ public class Storage extends BaseGmtModel {
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
                             fetchHandler = SqlChoiceFetchHandler.class,
-                            fetchHandlerParams = {"select seckill_id from seckill_system.seckill_application_form", "5000"}
+                            fetchHandlerParams = {"select seckill_id from seckill_system.seckill_activity", "5000"}
                     )
             )
     )

@@ -38,7 +38,7 @@ public class SeckillSuccess extends BaseGmtModel {
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
                             fetchHandler = SqlChoiceFetchHandler.class,
-                            fetchHandlerParams = {"select seckill_id from seckill_system.seckill_success", "5000"}
+                            fetchHandlerParams = {"select seckill_id from seckill_system.seckill_activity", "5000"}
                     )
             )
     )
