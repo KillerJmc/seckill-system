@@ -53,7 +53,7 @@ public class SeckillActivity extends BaseGmtModel {
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
                             fetchHandler = SqlChoiceFetchHandler.class,
-                            fetchHandlerParams = {"select id, product_id from seckill_system.product", "5000"}
+                            fetchHandlerParams = {"select product_id from seckill_system.product", "5000"}
                     )
             )
     )
@@ -102,7 +102,7 @@ public class SeckillActivity extends BaseGmtModel {
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
                             fetchHandler = SqlChoiceFetchHandler.class,
-                            fetchHandlerParams = {"select id, rule_id from seckill_system.seckill_activity_rule", "5000"}
+                            fetchHandlerParams = {"select rule_id from seckill_system.seckill_activity_rule", "5000"}
                     )
             )
     )

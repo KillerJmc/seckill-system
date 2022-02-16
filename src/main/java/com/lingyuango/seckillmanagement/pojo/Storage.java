@@ -1,11 +1,12 @@
 package com.lingyuango.seckillmanagement.pojo;
 
 import com.lingyuango.seckillmanagement.model.BaseGmtModel;
+import com.lingyuango.seckillmanagement.proxy.SeckillIdFillerProxy;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.sub_erupt.Power;
+import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -22,9 +23,9 @@ import javax.persistence.Table;
 @Setter
 @Entity
 @EruptDataSource("mysql_seckill_system")
-@Table(name = "seckill_application_form")
-@Erupt(name = "客户申请表", power = @Power(importable = true, export = true))
-public class SeckillApplicationForm extends BaseGmtModel {
+@Table(name = "storage")
+@Erupt(name = "库存管理")
+public class Storage extends BaseGmtModel {
 
     /**
      * 秒杀活动id
@@ -45,12 +46,12 @@ public class SeckillApplicationForm extends BaseGmtModel {
     private Integer seckillId;
 
     /**
-     * 顾客账号
+     * 库存数量
      */
-    @Column(name = "account_id")
+    @Column(name = "amount")
     @EruptField(
-            views = @View(title = "账号"),
-            edit = @Edit(title = "账号", search = @Search, notNull = true)
+            views = @View(title = "库存数量", sortable = true),
+            edit = @Edit(title = "库存数量", notNull = true, search = @Search)
     )
-    private Integer accountId;
+    private Integer amount;
 }
