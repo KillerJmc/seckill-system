@@ -1,11 +1,11 @@
 package com.lingyuango.seckill.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.lingyuango.seckill.service.SeckillApplicationFormService;
 import com.lingyuango.seckill.dao.SeckillApplicationFormDao;
 import com.lingyuango.seckill.pojo.SeckillApplicationForm;
 import com.lingyuango.seckill.service.CustomerService;
 import com.lingyuango.seckill.service.SeckillActivityService;
+import com.lingyuango.seckill.service.SeckillApplicationFormService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

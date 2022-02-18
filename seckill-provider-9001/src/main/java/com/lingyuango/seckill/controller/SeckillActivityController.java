@@ -1,7 +1,6 @@
 package com.lingyuango.seckill.controller;
 
 import com.jmc.net.R;
-import com.jmc.time.Time;
 import com.lingyuango.seckill.common.Const;
 import com.lingyuango.seckill.common.MsgMapping;
 import com.lingyuango.seckill.service.PreliminaryScreeningService;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -62,7 +62,7 @@ public class SeckillActivityController {
         }
 
         var activity = seckillActivityService.getLatest();
-        long countDown = (Time.toMilli(activity.getStartTime()) - Time.toMilli(LocalDateTime.now())) / 1000;
+        long countDown = Duration.between(LocalDateTime.now(), activity.getStartTime()).toSeconds();
         countDown = countDown < 0 ? 0 : countDown;
 
         log.info("用户id {} 获取最新的秒杀活动倒计时：{} 秒", customerId, activity);

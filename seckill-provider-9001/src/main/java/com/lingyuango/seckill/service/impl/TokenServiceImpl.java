@@ -1,9 +1,10 @@
 package com.lingyuango.seckill.service.impl;
 
+import com.jmc.lang.Objs;
 import com.jmc.lang.Strs;
+import com.lingyuango.seckill.common.Const;
 import com.lingyuango.seckill.service.TokenService;
 import com.lingyuango.seckill.util.Verify;
-import com.lingyuango.seckill.common.Const;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Integer getAccountId(String token) {
-        if (Verify.nullOrEmpty(token)) {
+        if (Objs.nullOrEmpty(token)) {
             return null;
         }
 

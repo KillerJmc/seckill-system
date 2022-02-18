@@ -1,20 +1,22 @@
 package com.lingyuango.seckill.controller;
 
+import com.jmc.lang.Objs;
 import com.jmc.lang.Strs;
 import com.jmc.net.R;
-import com.jmc.time.Time;
-import com.lingyuango.seckill.common.MsgMapping;
-import com.lingyuango.seckill.service.*;
-import com.lingyuango.seckill.util.Verify;
 import com.lingyuango.seckill.common.Const;
+import com.lingyuango.seckill.common.MsgMapping;
 import com.lingyuango.seckill.pojo.Customer;
 import com.lingyuango.seckill.pojo.PreliminaryScreening;
+import com.lingyuango.seckill.service.*;
+import com.lingyuango.seckill.util.Verify;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -40,7 +42,7 @@ public class CustomerController {
     public synchronized R register(@RequestBody Customer customer) {
         log.info("请求: {}", customer);
 
-        if (Verify.nullOrEmpty(customer.getName(), customer.getIdNumber(), customer.getPassword())) {
+        if (Objs.nullOrEmpty(customer.getName(), customer.getIdNumber(), customer.getPassword())) {
             return R.error()
                     .msg(MsgMapping.NAME_ID_NUM_PWD_NULL_OR_EMPTY);
         }
@@ -80,8 +82,8 @@ public class CustomerController {
         log.info("请求: {}", customer);
 
         // 账号密码是否格式错误
-        var formatError = Verify.nullOrEmpty(customer.getAccountId(), customer.getPassword()) &&
-                Verify.nullOrEmpty(customer.getIdNumber(), customer.getPassword());
+        var formatError = Objs.nullOrEmpty(customer.getAccountId(), customer.getPassword()) &&
+                Objs.nullOrEmpty(customer.getIdNumber(), customer.getPassword());
 
         // 检查输入格式是否正确
         if (formatError) {
@@ -170,11 +172,10 @@ public class CustomerController {
                     .msg(MsgMapping.DOES_NOT_APPLY);
         }
 
-        var startTimeMilli = Time.toMilli(seckillActivityService.getLatest().getStartTime());
-        var nowMill = System.currentTimeMillis();
+        var between = Duration.between(LocalDateTime.now(), seckillActivityService.getLatest().getStartTime());
 
         // 检查秒杀是否开始
-        if (nowMill < startTimeMilli) {
+        if (between.toMillis() > 0) {
             return R.error()
                     .msg(MsgMapping.SECKILL_NOT_STARTED);
         }

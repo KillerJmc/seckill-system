@@ -1,12 +1,12 @@
 package com.lingyuango.seckill.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.lingyuango.seckill.dao.CustomerDao;
-import com.lingyuango.seckill.service.CustomerService;
-import com.lingyuango.seckill.service.SeckillActivityService;
 import com.lingyuango.seckill.common.Const;
+import com.lingyuango.seckill.dao.CustomerDao;
 import com.lingyuango.seckill.pojo.Customer;
 import com.lingyuango.seckill.service.CustomerInfoService;
+import com.lingyuango.seckill.service.CustomerService;
+import com.lingyuango.seckill.service.SeckillActivityService;
 import com.lingyuango.seckill.util.Calculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
