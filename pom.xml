@@ -10,9 +10,12 @@
 	<description>A22 Seckill System</description>
 
 	<modules>
+		<module>seckill-account-service</module>
+		<module>seckill-service</module>
+		<module>seckill-payment-service</module>
+		<module>seckill-mock-service</module>
+
 		<module>seckill-provider-9001</module>
-		<module>seckill-provider-9002</module>
-		<module>seckill-provider-9003</module>
 	</modules>
 
 	<properties>

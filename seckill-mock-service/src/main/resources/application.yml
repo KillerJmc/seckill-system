@@ -1,0 +1,16 @@
+server:
+  port: 9041
+
+spring:
+  application:
+    name: seckill-mock-service
+  datasource:
+    url: jdbc:mysql:///seckill_mock_db
+    username: root
+    password: root
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

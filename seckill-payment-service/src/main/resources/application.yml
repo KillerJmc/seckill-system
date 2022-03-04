@@ -1,0 +1,16 @@
+server:
+  port: 9011
+
+spring:
+  application:
+    name: seckill-payment-service
+  datasource:
+    url: jdbc:mysql:///seckill_payment_db
+    username: root
+    password: root
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
