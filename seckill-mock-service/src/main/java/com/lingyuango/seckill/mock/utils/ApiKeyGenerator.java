@@ -14,7 +14,7 @@ public class ApiKeyGenerator {
 
     }
 
-    public static String Generator() {
+    public static String secretKeyGenerator() {
         return "Secret_Key" + DigestUtils.md5DigestAsHex(
                 new BigInteger(String.valueOf(RandomGeneratorTool.getRandomLong()))
                         .multiply(BigInteger.valueOf(RandomGeneratorTool.getRandomLong()))
@@ -22,7 +22,16 @@ public class ApiKeyGenerator {
                         .getBytes(StandardCharsets.UTF_8));
     }
 
+    public static String appIdGenerator() {
+        return "Appid" + DigestUtils.md5DigestAsHex(
+                new BigInteger(String.valueOf(RandomGeneratorTool.getRandomLong()))
+                        .multiply(BigInteger.valueOf(RandomGeneratorTool.getRandomLong()))
+                        .toString()
+                        .getBytes(StandardCharsets.UTF_8));
+    }
+
     public static void main(String[] args) {
-        System.out.println(Generator());
+        System.out.println(appIdGenerator());
+        System.out.println(secretKeyGenerator());
     }
 }
