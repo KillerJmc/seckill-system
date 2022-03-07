@@ -51,5 +51,6 @@
             <groupId>com.jmc</groupId>
             <artifactId>jmc-utils</artifactId>
         </dependency>
+
     </dependencies>
 </project>
