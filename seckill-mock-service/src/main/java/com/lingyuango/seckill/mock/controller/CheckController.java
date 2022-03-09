@@ -9,7 +9,6 @@ import com.lingyuango.seckill.mock.service.SecretKeyService;
 import com.lingyuango.seckill.mock.utils.CheckDateStamp;
 import com.lingyuango.seckill.mock.utils.Security;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,18 +39,24 @@ public class CheckController {
                               @RequestHeader("Signature") String signature,
                               @RequestBody CheckAccount inf,
                               HttpServletResponse resp) {
+
         var secKey = secretKeyService.getSecretKey(appid);
         if (Security.verify(appid, secKey, date, signature, inf)) {
+
             if (CheckDateStamp.CheckOverTime(date)) {
+
                 boolean exist = checkService.checkAccount(inf);
+                var nowDate = LocalDateTime.now();
+
                 var result = new CheckAccountReturn() {{
                     setAccountExist(exist);
                 }};
-                var nowDate = LocalDateTime.now();
+
                 resp.addHeader("Appid", appid);
                 resp.addHeader("Date-Stamp", String.valueOf(nowDate.toEpochSecond(ZoneOffset.of("+8"))));
                 resp.addHeader("Signature", Security.getSignature(appid, secKey, nowDate, result));
                 return R.ok().data(Map.of("Result", result));
+
             } else {
                 return R.error().data(MsgMapping.OVERTIME);
             }

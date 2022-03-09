@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * @author ChaconneLuo
  */
+
 @Mapper
 public interface SecretKeyDao extends BaseMapper<SecretKey> {
 

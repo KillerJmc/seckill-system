@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 /**
  * @author ChaconneLuo
  */
+
 @Mapper
 public interface OrderDao extends BaseMapper<Order> {
     @Select("select max(id) from `order`")
