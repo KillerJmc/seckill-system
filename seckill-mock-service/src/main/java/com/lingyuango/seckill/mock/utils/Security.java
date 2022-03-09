@@ -1,5 +1,7 @@
 package com.lingyuango.seckill.mock.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.lingyuango.seckill.mock.pojo.CheckAccount;
 import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
 
