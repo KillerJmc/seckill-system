@@ -58,10 +58,10 @@ public class CheckController {
                 return R.ok().data(Map.of("Result", result));
 
             } else {
-                return R.error().data(MsgMapping.OVERTIME);
+                return R.error().msg(MsgMapping.OVERTIME);
             }
         }
-        return R.error().data(VERITY_ERROR);
+        return R.error().msg(VERITY_ERROR);
     }
 
 }

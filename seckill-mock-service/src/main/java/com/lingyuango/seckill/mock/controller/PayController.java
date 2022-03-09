@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Map;
 
+import static com.lingyuango.seckill.mock.common.MsgMapping.VERITY_ERROR;
+
 /**
  * @author ChaconneLuo
  */
@@ -51,8 +53,8 @@ public class PayController {
                 resp.addHeader("Signature", Security.getSignature(appid, secKey, nowDate, status));
                 return R.ok().data(Map.of("Result", status));
             }
-            return R.error().data(MsgMapping.OVERTIME);
+            return R.error().msg(MsgMapping.OVERTIME);
         }
-        return R.error();
+        return R.error().msg(VERITY_ERROR);
     }
 }
