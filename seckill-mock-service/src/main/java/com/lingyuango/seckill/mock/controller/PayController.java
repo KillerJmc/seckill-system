@@ -1,12 +1,15 @@
 package com.lingyuango.seckill.mock.controller;
 
 import com.jmc.net.R;
+import com.lingyuango.seckill.mock.common.Const;
+import com.lingyuango.seckill.mock.common.MsgMapping;
 import com.lingyuango.seckill.mock.pojo.PayInformation;
 import com.lingyuango.seckill.mock.service.PayService;
 import com.lingyuango.seckill.mock.service.SecretKeyService;
 import com.lingyuango.seckill.mock.utils.CheckDateStamp;
 import com.lingyuango.seckill.mock.utils.Security;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,8 +28,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PayController {
 
-    private SecretKeyService secretKeyService;
-    private PayService payService;
+    private final SecretKeyService secretKeyService;
+    private final PayService payService;
 
     @PostMapping("/Pay")
     @ResponseBody
@@ -45,6 +48,7 @@ public class PayController {
                 resp.addHeader("Signature", Security.getSignature(appid, secKey, nowDate, status));
                 return R.ok().data(Map.of("Result", status));
             }
+            return R.error().data(MsgMapping.OVERTIME);
         }
         return R.error();
     }

@@ -4,13 +4,17 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lingyuango.seckill.mock.dao.SecretKeyDao;
 import com.lingyuango.seckill.mock.pojo.SecretKey;
 import com.lingyuango.seckill.mock.service.SecretKeyService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 /**
  * @author ChaconneLuo
  */
+@Service
+@RequiredArgsConstructor
 public class SecretKeyServiceImpl implements SecretKeyService {
 
-    private SecretKeyDao secretKeyDao;
+    private final SecretKeyDao secretKeyDao;
 
     @Override
     public String getSecretKey(String appId) {

@@ -1,5 +1,6 @@
 package com.lingyuango.seckill.mock.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.ToString;
 
@@ -8,6 +9,7 @@ import lombok.ToString;
  */
 @Data
 @ToString
+@TableName("account")
 public class CheckAccount {
 
     private String idNumber;

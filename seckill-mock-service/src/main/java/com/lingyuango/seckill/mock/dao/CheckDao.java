@@ -11,7 +11,4 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface CheckDao extends BaseMapper<CheckAccount> {
 
-    @Select("select id from account where number_id = #{idNumber} and name = #{name}")
-    Integer userCount(CheckAccount Inf);
-
 }

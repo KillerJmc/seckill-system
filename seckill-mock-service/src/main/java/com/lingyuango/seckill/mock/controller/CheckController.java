@@ -1,7 +1,6 @@
 package com.lingyuango.seckill.mock.controller;
 
 import com.jmc.net.R;
-import com.lingyuango.seckill.mock.common.Const;
 import com.lingyuango.seckill.mock.common.MsgMapping;
 import com.lingyuango.seckill.mock.pojo.CheckAccount;
 import com.lingyuango.seckill.mock.pojo.CheckAccountReturn;
@@ -10,6 +9,7 @@ import com.lingyuango.seckill.mock.service.SecretKeyService;
 import com.lingyuango.seckill.mock.utils.CheckDateStamp;
 import com.lingyuango.seckill.mock.utils.Security;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Map;
 
+import static com.lingyuango.seckill.mock.common.MsgMapping.VERITY_ERROR;
+
 /**
  * @author ChaconneLuo
  */
@@ -28,8 +30,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CheckController {
 
-    private SecretKeyService secretKeyService;
-    private CheckService checkService;
+    private final SecretKeyService secretKeyService;
+    private final CheckService checkService;
 
     @PostMapping("/CheckInformation")
     @ResponseBody
@@ -54,7 +56,7 @@ public class CheckController {
                 return R.error().data(MsgMapping.OVERTIME);
             }
         }
-        return R.error();
+        return R.error().data(VERITY_ERROR);
     }
 
 }

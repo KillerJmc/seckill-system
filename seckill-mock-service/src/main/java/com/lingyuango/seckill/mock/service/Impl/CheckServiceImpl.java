@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 
 /**
  * @author ChaconneLuo
@@ -22,39 +24,49 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CheckServiceImpl implements CheckService {
 
-    private CheckDao checkDao;
-    private AccountDao accountDao;
-    private MoneyDao moneyDao;
+    private final CheckDao checkDao;
+    private final AccountDao accountDao;
+    private final MoneyDao moneyDao;
 
     @Override
-    public boolean checkAccount(CheckAccount Inf) {
+    public boolean checkAccount(CheckAccount inf) {
 
-        var count = checkDao.selectCount(Wrappers.lambdaQuery(Inf));
+        var count = checkDao.selectCount(Wrappers.<CheckAccount>lambdaQuery()
+                .eq(CheckAccount::getIdNumber, inf.getIdNumber()));
 
         if (count != 0L) {
             return true;
         } else {
-            return randomInsertAccount(Inf);
+            return randomInsertAccount(inf);
         }
     }
 
-    public Boolean randomInsertAccount(CheckAccount Inf) {
+    public Boolean randomInsertAccount(CheckAccount inf) {
         if (RandomGeneratorTool.getRandomBoolean(0.8)) {
+            var date = LocalDateTime.now();
             var maxId = accountDao.getMaxId();
+            if (maxId == null) {
+                maxId = -1;
+            }
+            var id = maxId;
             var account = new Account() {{
-                setIdNumber(Inf.getIdNumber());
-                setName(Inf.getName());
-                setAccountId(maxId + Const.ACCOUNT_ID_OFFSET + 1);
+                setIdNumber(inf.getIdNumber());
+                setName(inf.getName());
+                setAccountId(id + Const.ACCOUNT_ID_OFFSET + 1);
             }};
+            account.setGmtCreate(date);
+            account.setGmtModified(date);
             accountDao.insert(account);
 
-            var count = checkDao.selectCount(Wrappers.lambdaQuery(Inf));
+            var count = checkDao.selectCount(Wrappers.lambdaQuery(inf));
+            System.out.println(count);
+            if (count == 1L) {
 
-            if (count != 0L) {
-
-                moneyDao.insertMoney(new Money() {{
-                    setAccountId(accountDao.getAccountId(Inf));
+                moneyDao.insert(new Money() {{
+                    setAccountId(accountDao.getAccountId(inf));
                     setMoney(RandomGeneratorTool.getRandomMoney());
+                    setGmtCreate(date);
+                    setGmtModified(date);
                 }});
 
             } else {
