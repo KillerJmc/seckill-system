@@ -51,11 +51,5 @@
             <groupId>com.jmc</groupId>
             <artifactId>jmc-utils</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.jmc</groupId>
-            <artifactId>code-maker</artifactId>
-            <version>1.7.0</version>
-        </dependency>
     </dependencies>
 </project>
