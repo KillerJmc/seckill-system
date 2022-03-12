@@ -18,8 +18,8 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@EruptDataSource("mysql_seckill_system")
-@Table(name = "seckill_activity_rule")
+@EruptDataSource("mysql_seckill_service_db")
+@Table(name = "sk_seckill_activity_rule")
 @Erupt(name = "规则管理")
 public class ActivityRule extends BaseGmtModel {
 

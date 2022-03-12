@@ -21,9 +21,9 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@EruptDataSource("mysql_seckill_system")
-@Table(name = "seckill_success")
-@Erupt(name = "秒杀成功客户表", power = @Power(importable = true, export = true))
+@EruptDataSource("mysql_seckill_payment_db")
+@Table(name = "sk_seckill_success")
+@Erupt(name = "秒杀成功客户表", power = @Power(importable = true, export = true, add = false))
 public class SeckillSuccess extends BaseGmtModel {
 
     /**
@@ -38,7 +38,7 @@ public class SeckillSuccess extends BaseGmtModel {
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
                             fetchHandler = SqlChoiceFetchHandler.class,
-                            fetchHandlerParams = {"select seckill_id from seckill_system.seckill_activity", "5000"}
+                            fetchHandlerParams = {"select seckill_id from seckill_service_db.sk_seckill_activity", "5000"}
                     )
             )
     )

@@ -18,8 +18,8 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@EruptDataSource("mysql_seckill_system")
-@Table(name = "product")
+@EruptDataSource("mysql_seckill_service_db")
+@Table(name = "sk_product")
 @Erupt(name = "产品管理")
 public class Product extends BaseGmtModel {
 

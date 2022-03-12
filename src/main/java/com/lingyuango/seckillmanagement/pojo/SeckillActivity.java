@@ -28,8 +28,8 @@ import java.util.Random;
 @Getter
 @Setter
 @Entity
-@EruptDataSource("mysql_seckill_system")
-@Table(name = "seckill_activity")
+@EruptDataSource("mysql_seckill_service_db")
+@Table(name = "sk_seckill_activity")
 @Erupt(name = "活动管理")
 @PreDataProxy(SeckillIdFillerProxy.class)
 public class SeckillActivity extends BaseGmtModel {
@@ -53,7 +53,7 @@ public class SeckillActivity extends BaseGmtModel {
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
                             fetchHandler = SqlChoiceFetchHandler.class,
-                            fetchHandlerParams = {"select product_id from seckill_system.product", "5000"}
+                            fetchHandlerParams = {"select product_id from seckill_service_db.sk_product", "5000"}
                     )
             )
     )
@@ -102,7 +102,7 @@ public class SeckillActivity extends BaseGmtModel {
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
                             fetchHandler = SqlChoiceFetchHandler.class,
-                            fetchHandlerParams = {"select rule_id from seckill_system.seckill_activity_rule", "5000"}
+                            fetchHandlerParams = {"select rule_id from seckill_service_db.sk_seckill_activity_rule", "5000"}
                     )
             )
     )
