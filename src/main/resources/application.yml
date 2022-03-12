@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:mysql:///erupt?serverTimezone=Asia/Shanghai
     username: root
-    password: linmeichen
+    password: root
   jpa:
     show-sql: true
     generate-ddl: false
@@ -15,13 +15,12 @@ spring:
 
 erupt:
   dbs:
-
       -
         datasource:
           name: mysql_seckill_service_db
           url: jdbc:mysql:///seckill_service_db?serverTimezone=Asia/Shanghai
           username: root
-          password: linmeichen
+          password: root
 
         hikari:
           pool-name: erupt-mysql
@@ -34,8 +33,6 @@ erupt:
           open-in-view: true
           database: mysql
 
-
-
         scanPackages: com.lingyuango.seckillmanagement.pojo
 
       -
@@ -43,7 +40,7 @@ erupt:
           name: mysql_seckill_payment_db
           url: jdbc:mysql:///seckill_payment_db?serverTimezone=Asia/Shanghai
           username: root
-          password: linmeichen
+          password: root
 
 
         jpa:
