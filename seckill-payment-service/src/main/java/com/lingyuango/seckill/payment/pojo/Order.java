@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.annotation.*;
  */
 @Data
 @TableName("sk_seckill_success")
-public class SeckillSuccess {
+public class Order {
 
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -30,7 +30,11 @@ public class SeckillSuccess {
      */
     private String orderId;
 
+    private Boolean paid;
+
+    @TableField(select = false)
     private LocalDateTime gmtCreate;
 
+    @TableField(select = false)
     private LocalDateTime gmtModified;
 }

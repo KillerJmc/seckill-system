@@ -1,6 +1,6 @@
 package com.lingyuango.seckill.payment.dao;
 
-import com.lingyuango.seckill.payment.pojo.SeckillSuccess;
+import com.lingyuango.seckill.payment.pojo.Order;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -8,6 +8,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @author Lingyuango
  */
 @Mapper
-public interface SeckillSuccessDao extends BaseMapper<SeckillSuccess> {
+public interface OrderDao extends BaseMapper<Order> {
 
 }

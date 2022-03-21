@@ -1,4 +1,4 @@
-package com.lingyuango.seckill.mock.pojo;
+package com.lingyuango.seckill.payment.pojo;
 
 import lombok.Data;
 import lombok.ToString;
@@ -8,7 +8,7 @@ import lombok.ToString;
  */
 @Data
 @ToString
-public class PayInformation {
+public class PayInf {
 
     private String idNumber;
 

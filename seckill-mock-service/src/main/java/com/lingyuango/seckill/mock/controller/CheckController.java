@@ -32,7 +32,7 @@ public class CheckController {
     private final SecretKeyService secretKeyService;
     private final CheckService checkService;
 
-    @PostMapping("/CheckInformation")
+    @PostMapping("/checkInformation")
     @ResponseBody
     public R CheckInformation(@RequestHeader("Appid") String appid,
                               @RequestHeader("Date-Stamp") LocalDateTime date,
