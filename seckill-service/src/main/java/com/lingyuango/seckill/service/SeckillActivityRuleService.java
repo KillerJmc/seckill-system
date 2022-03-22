@@ -1,7 +1,10 @@
 package com.lingyuango.seckill.service;
 
+import com.lingyuango.seckill.pojo.SeckillActivityRule;
+
 /**
- * @author Lingyuango
+ * @author Jmc
  */
 public interface SeckillActivityRuleService {
+    SeckillActivityRule getById(Integer id);
 }

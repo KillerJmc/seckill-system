@@ -30,7 +30,7 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
         activityRule.setId(null);
         activityRule.setRuleId(null);
         res.setActivityRuleId(null);
-        res.setActivityRule(activityRule);
+        res.setRule(activityRule);
 
         var product = productService.getByProductId(res.getProductId());
         product.setId(null);

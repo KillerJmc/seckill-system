@@ -71,7 +71,9 @@ public class CustomerController {
      * 返回token给客户端（token用{uuid} -> {accountName}存进redis）
      */
     @PostMapping("/login")
-    public synchronized R login(@CookieValue(value = "token", required = false) String repeatedToken, @RequestBody Customer customer, HttpServletResponse resp) {
+    public synchronized R login(@CookieValue(value = "token", required = false) String repeatedToken,
+                                @RequestBody Customer customer,
+                                HttpServletResponse resp) {
         // 防止重复登录
         if (repeatedToken != null && tokenService.getAccountId(repeatedToken) != null) {
             log.info("重复登录：token = {}", repeatedToken);
@@ -128,7 +130,7 @@ public class CustomerController {
 
         return R.ok()
                 .data(Map.of(
-                        "customerName", customer.getName(),
+                        "name", customer.getName(),
                         "applied", applied,
                         "canApply", canApply
                 ));

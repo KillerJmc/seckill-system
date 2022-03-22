@@ -1,18 +1,18 @@
 package com.lingyuango.seckill.pojo;
 
-import java.time.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import com.baomidou.mybatisplus.annotation.*;
+
+import java.time.LocalDateTime;
 
 /**
- * 秒杀活动客户申请表
+ * 秒杀成功客户表
  * @author Jmc
  */
 @Data
-@TableName("sk_seckill_application_form")
-public class SeckillApplicationForm {
-
-    @TableId(type = IdType.AUTO)
+public class SeckillSuccess {
     private Integer id;
 
     /**
@@ -25,9 +25,12 @@ public class SeckillApplicationForm {
      */
     private Integer accountId;
 
-    @TableField(select = false)
+    /**
+     * 订单id
+     */
+    private String orderId;
+
     private LocalDateTime gmtCreate;
 
-    @TableField(select = false)
     private LocalDateTime gmtModified;
 }

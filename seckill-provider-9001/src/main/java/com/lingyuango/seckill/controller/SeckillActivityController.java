@@ -46,7 +46,7 @@ public class SeckillActivityController {
 
         return R.ok()
                 .msg("获取成功")
-                .data(Map.of("seckillActivity", activity));
+                .data(Map.of("activity", activity));
     }
 
     /**

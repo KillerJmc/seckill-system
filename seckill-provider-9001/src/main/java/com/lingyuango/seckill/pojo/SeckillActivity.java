@@ -61,7 +61,7 @@ public class SeckillActivity {
      * 秒杀活动规则（手动注入）
      */
     @TableField(select = false)
-    private SeckillActivityRule activityRule;
+    private SeckillActivityRule rule;
 
     @TableField(select = false)
     private LocalDateTime gmtCreate;

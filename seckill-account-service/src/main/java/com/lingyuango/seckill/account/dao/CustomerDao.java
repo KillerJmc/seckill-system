@@ -3,11 +3,13 @@ package com.lingyuango.seckill.account.dao;
 import com.lingyuango.seckill.account.pojo.Customer;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
- * @author Lingyuango
+ * @author Jmc
  */
 @Mapper
 public interface CustomerDao extends BaseMapper<Customer> {
-
+    @Select("select max(id) from sk_customer")
+    Integer getMaxId();
 }

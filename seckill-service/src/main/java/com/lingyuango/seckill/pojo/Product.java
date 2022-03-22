@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.*;
 
 /**
  * 商品
- * @author Lingyuango
+ * @author Jmc
  */
 @Data
 @TableName("sk_product")
@@ -35,7 +35,9 @@ public class Product {
      */
     private String info;
 
+    @TableField(select = false)
     private LocalDateTime gmtCreate;
 
+    @TableField(select = false)
     private LocalDateTime gmtModified;
 }

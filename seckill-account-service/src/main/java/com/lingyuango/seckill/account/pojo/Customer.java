@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.*;
 
 /**
  * 客户
- * @author Lingyuango
+ * @author Jmc
  */
 @Data
 @TableName("sk_customer")
@@ -35,7 +35,9 @@ public class Customer {
      */
     private String password;
 
+    @TableField(select = false)
     private LocalDateTime gmtCreate;
 
+    @TableField(select = false)
     private LocalDateTime gmtModified;
 }

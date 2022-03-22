@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.*;
 
 /**
  * 初筛
- * @author Lingyuango
+ * @author Jmc
  */
 @Data
 @TableName("sk_pre_screening")
@@ -35,7 +35,9 @@ public class PreScreening {
      */
     private Boolean pass;
 
+    @TableField(select = false)
     private LocalDateTime gmtCreate;
 
+    @TableField(select = false)
     private LocalDateTime gmtModified;
 }

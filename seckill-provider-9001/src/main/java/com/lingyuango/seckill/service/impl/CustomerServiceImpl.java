@@ -70,7 +70,7 @@ public class CustomerServiceImpl implements CustomerService {
         var customer = getByAccountId(accountId);
         var activity = seckillActivityService.getLatest();
 
-        var rule = activity.getActivityRule();
+        var rule = activity.getRule();
         var customerInfo = customerInfoService.getByAccountId(accountId);
         int customerAge = Calculator.getAge(customer.getIdNumber());
 

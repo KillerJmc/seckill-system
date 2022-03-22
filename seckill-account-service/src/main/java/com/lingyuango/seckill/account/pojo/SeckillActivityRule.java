@@ -1,18 +1,19 @@
-package com.lingyuango.seckill.pojo;
+package com.lingyuango.seckill.account.pojo;
 
-import java.time.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import com.baomidou.mybatisplus.annotation.*;
+
+import java.time.LocalDateTime;
 
 /**
  * 秒杀活动规则
  * @author Jmc
  */
 @Data
-@TableName("sk_seckill_activity_rule")
 public class SeckillActivityRule {
-
-    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -60,9 +61,7 @@ public class SeckillActivityRule {
      */
     private Double maxOverdueMoney;
 
-    @TableField(select = false)
     private LocalDateTime gmtCreate;
 
-    @TableField(select = false)
     private LocalDateTime gmtModified;
 }

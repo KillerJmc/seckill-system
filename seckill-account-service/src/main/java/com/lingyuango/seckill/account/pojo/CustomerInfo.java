@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.*;
 
 /**
  * 客户信息
- * @author Lingyuango
+ * @author Jmc
  */
 @Data
 @TableName("sk_customer_info")
@@ -45,7 +45,9 @@ public class CustomerInfo {
      */
     private Integer overdueDays;
 
+    @TableField(select = false)
     private LocalDateTime gmtCreate;
 
+    @TableField(select = false)
     private LocalDateTime gmtModified;
 }
