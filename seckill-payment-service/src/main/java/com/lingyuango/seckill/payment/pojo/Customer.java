@@ -1,36 +1,41 @@
-package com.lingyuango.seckill.mock.pojo;
+package com.lingyuango.seckill.payment.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 /**
- * @author ChaconneLuo
+ * 客户
+ * @author Jmc
  */
-
 @Data
-@ToString
-@TableName("`order`")
-@JsonIgnoreProperties({"id","gmtCreate","gmtModified"})
-public class Order {
+public class Customer {
 
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    private Integer orderId;
-
-    private Boolean paySuccess;
-
+    /**
+     * 账号id，等于自然主键 + 10000
+     */
     private Integer accountId;
 
-    private double money;
+    /**
+     * 身份证号
+     */
+    private String idNumber;
+
+    /**
+     * 客户姓名
+     */
+    private String name;
+
+    /**
+     * 账号密码
+     */
+    private String password;
 
     @TableField(select = false)
     private LocalDateTime gmtCreate;

@@ -38,7 +38,7 @@ public class RandomGeneratorTool {
         return generator.nextLong(Integer.MAX_VALUE, Long.MAX_VALUE);
     }
 
-    public static Integer getRandomMoney() {
-        return generator.nextInt(10000,50000);
+    public static Double getRandomMoney() {
+        return generator.nextDouble(10000,50000);
     }
 }

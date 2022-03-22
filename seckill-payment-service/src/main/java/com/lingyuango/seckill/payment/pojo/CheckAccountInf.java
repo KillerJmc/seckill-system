@@ -1,5 +1,6 @@
-package com.lingyuango.seckill.mock.pojo;
+package com.lingyuango.seckill.payment.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.ToString;
 
@@ -8,12 +9,11 @@ import lombok.ToString;
  */
 @Data
 @ToString
-public class PayInformation {
+@TableName("account")
+public class CheckAccountInf {
 
     private String idNumber;
 
     private String name;
-
-    private Double money;
 
 }
