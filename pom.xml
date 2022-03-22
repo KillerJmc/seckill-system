@@ -23,16 +23,16 @@
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 
-		<spring-boot.version>2.6.2</spring-boot.version>
-		<spring-cloud.version>2021.0.0</spring-cloud.version>
-		<alibaba-cloud.version>2021.1</alibaba-cloud.version>
-		<mybatis-plus.version>3.4.3.4</mybatis-plus.version>
+		<spring-boot.version>2.6.4</spring-boot.version>
+		<spring-cloud.version>2021.0.1</spring-cloud.version>
+		<alibaba-cloud.version>2021.0.1.0</alibaba-cloud.version>
+		<mybatis-plus.version>3.5.1</mybatis-plus.version>
 		<jmc-utils.version>2.1.0</jmc-utils.version>
 	</properties>
 
 	<repositories>
 		<repository>
-			<id>jmc-repo</id>
+			<id>jmc-utils-repo</id>
 			<url>https://killerjmc.github.io/jmc-utils/repo/maven</url>
 		</repository>
 	</repositories>
@@ -89,6 +89,13 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring-boot.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
