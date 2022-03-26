@@ -8,7 +8,7 @@ public interface Const {
     /**
      * 允许跨域的地址
      */
-    String CROSS_ORIGIN = "http://localhost";
+    String CROSS_ORIGIN = "*";
 
     /**
      * 客户账号id相对于自然id的偏移值

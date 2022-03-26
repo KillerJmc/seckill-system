@@ -1,0 +1,21 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: seckill-service
+  datasource:
+    url: jdbc:mysql://mysql:3306/seckill_system
+    username: root
+    password: root
+  cloud:
+    nacos:
+      server-addr: nacos:8848
+  redis:
+    host: redis
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  web:
+    build: web
+    restart: always
+    ports:
+      - '80:80'
+    depends_on:
+      - server
+
+  server:
+    build: server
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - '9001:9001'
+    depends_on:
+      - mysql
+      - nacos
+      - redis
+
+  mysql:
+    image: mysql:8.0.28
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: seckill_system
+      TZ: Asia/Shanghai
+    ports:
+      - '3366:3306'
+    volumes:
+      - ./mysql/sql:/docker-entrypoint-initdb.d
+
+  nacos:
+    image: nacos/nacos-server:v2.0.4
+    environment:
+      MODE: standalone
+      JVM_XMS: 128M
+      JVM_XMX: 128M
+    ports:
+      - '8848:8848'
+
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - '6379:6379'

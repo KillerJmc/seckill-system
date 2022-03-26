@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = Const.CROSS_ORIGIN, allowCredentials = "true")
+@CrossOrigin(originPatterns = Const.CROSS_ORIGIN, allowCredentials = "true")
 public class SeckillActivityController {
     private final SeckillActivityService seckillActivityService;
     private final PreliminaryScreeningService preliminaryScreeningService;
