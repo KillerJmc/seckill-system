@@ -2,9 +2,9 @@ package com.lingyuango.seckill.account.controller;
 
 import com.jmc.lang.Objs;
 import com.jmc.net.R;
-import com.lingyuango.seckill.account.common.Const;
 import com.lingyuango.seckill.account.common.MsgMapping;
 import com.lingyuango.seckill.account.pojo.Customer;
+import com.lingyuango.seckill.account.pojo.PreScreening;
 import com.lingyuango.seckill.account.service.PreScreeningService;
 import com.lingyuango.seckill.account.service.SeckillApplicationFormClient;
 import com.lingyuango.seckill.account.service.TokenService;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import com.lingyuango.seckill.account.service.CustomerService;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
@@ -44,7 +43,7 @@ public class CustomerController {
      * 注册（提供真名，身份证，密码）
      */
     @PostMapping("/register")
-    @CrossOrigin(origins = Const.CROSS_ORIGIN, allowCredentials = "true")
+    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public synchronized R<Map<String, Integer>> register(@RequestBody Customer customer) {
         log.info("请求: {}", customer);
 
@@ -76,16 +75,16 @@ public class CustomerController {
 
     /**
      * 登录（提供账号/身份证号和密码） <br>
-     * 并根据初筛结果插入到{@link com.lingyuango.seckill.account.pojo.PreScreening}（如果已经有了就不再插入） <br>
-     * 返回token给客户端（token用{uuid} -> {accountName}存进redis）
+     * 并根据初筛结果插入到{@link PreScreening}（如果已经有了就不再插入） <br>
+     * 返回token给客户端（token用{token:uuid} -> {accountId}存进redis）
      */
     @PostMapping("/login")
-    @CrossOrigin(origins = Const.CROSS_ORIGIN, allowCredentials = "true")
+    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public synchronized R<Void> login(@CookieValue(value = "token", required = false) String repeatedToken,
                                 @RequestBody Customer customer,
                                 HttpServletResponse resp) {
         // 防止重复登录
-        if (repeatedToken != null && tokenService.getAccountId(repeatedToken) != null) {
+        if (tokenService.getAccountId(repeatedToken) != null) {
             log.info("重复登录：token = {}", repeatedToken);
             return R.error()
                     .msg(MsgMapping.LOGIN_REPEAT)
@@ -112,10 +111,10 @@ public class CustomerController {
                     .build();
         }
 
+        // 获取token
         var token = tokenService.create(customer.getAccountId());
 
-        // 存入客户端cookie
-        resp.addCookie(new Cookie("token", token));
+        resp.addCookie(token);
 
         log.info("客户登录：{}", customer);
 
@@ -126,7 +125,7 @@ public class CustomerController {
     }
 
     @PostMapping("/getInfo")
-    @CrossOrigin(origins = Const.CROSS_ORIGIN, allowCredentials = "true")
+    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public synchronized R<Map<String, Object>> getInfo(@CookieValue(value = "token", required = false) String token) {
         Integer customerId;
         if ((customerId = tokenService.getAccountId(token)) == null) {

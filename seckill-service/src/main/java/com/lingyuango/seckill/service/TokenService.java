@@ -1,5 +1,7 @@
 package com.lingyuango.seckill.service;
 
+import javax.servlet.http.Cookie;
+
 /**
  * Token服务
  * @author Jmc
@@ -10,7 +12,7 @@ public interface TokenService {
      * @param accountId 账号id
      * @return token
      */
-    String create(Integer accountId);
+    Cookie create(Integer accountId);
 
     /**
      * 将token -> 账户id存入redis

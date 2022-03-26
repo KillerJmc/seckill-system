@@ -1,16 +1,3 @@
-server:
-  port: 9031
-
 spring:
-  application:
-    name: seckill-service
-  datasource:
-    url: jdbc:mysql:///seckill_service_db
-    username: root
-    password: root
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
+  profiles:
+    active: dev

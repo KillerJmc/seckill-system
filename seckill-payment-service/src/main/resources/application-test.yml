@@ -1,0 +1,30 @@
+server:
+  port: 9020
+
+spring:
+  application:
+    name: seckill-payment-service
+  datasource:
+    url: jdbc:mysql://payment-db:3306/seckill_payment_db
+    username: root
+    password: root
+  cloud:
+    nacos:
+      server-addr: nacos:8848
+  redis:
+    host: redis
+
+  # Deprecated!!!
+  main:
+    allow-bean-definition-overriding: true
+
+rocketmq:
+  producer:
+    group: cart-producer-group
+  name-server: rocketmq:9876
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

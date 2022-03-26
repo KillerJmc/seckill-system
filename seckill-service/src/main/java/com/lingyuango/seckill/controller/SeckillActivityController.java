@@ -56,7 +56,7 @@ public class SeckillActivityController {
     }
 
     @PostMapping("/getCurrent")
-    @CrossOrigin(origins = Const.CROSS_ORIGIN, allowCredentials = "true")
+    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public synchronized R<Map<String, SeckillActivity>> getCurrent(@CookieValue(value = "token", required = false) String token) {
         Integer customerId;
         if (token == null || (customerId = tokenService.getAccountId(token)) == null) {
@@ -82,7 +82,7 @@ public class SeckillActivityController {
      * @return 倒计时（单位：秒）
      */
     @PostMapping("/getCountDown")
-    @CrossOrigin(origins = Const.CROSS_ORIGIN, allowCredentials = "true")
+    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public synchronized R<Map<String, Long>> getCountDown(@CookieValue(value = "token", required = false) String token) {
         Integer customerId;
         if (token == null || (customerId = tokenService.getAccountId(token)) == null) {
@@ -105,7 +105,7 @@ public class SeckillActivityController {
      * 申请秒杀
      */
     @PostMapping("/apply")
-    @CrossOrigin(origins = Const.CROSS_ORIGIN, allowCredentials = "true")
+    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public synchronized R<Void> apply(@CookieValue(value = "token", required = false) String token) {
         Integer customerId;
         if ((customerId = tokenService.getAccountId(token)) == null) {
@@ -129,7 +129,7 @@ public class SeckillActivityController {
      * 获取暴露的秒杀地址
      */
     @PostMapping("/getSeckillUrl")
-    @CrossOrigin(origins = Const.CROSS_ORIGIN, allowCredentials = "true")
+    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public R<Map<String, Integer>> getSeckillUrl(@CookieValue(value = "token", required = false) String token) {
         Integer customerId;
         if ((customerId = tokenService.getAccountId(token)) == null) {
@@ -167,7 +167,7 @@ public class SeckillActivityController {
      * @return 成功的话返回订单
      */
     @PostMapping("/seckill/{seckillUrl}")
-    @CrossOrigin(origins = Const.CROSS_ORIGIN, allowCredentials = "true")
+    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public R<Map<String, SeckillSuccess>> seckill(@CookieValue(value = "token", required = false) String token, @PathVariable String seckillUrl) {
         Integer customerId;
         if ((customerId = tokenService.getAccountId(token)) == null) {

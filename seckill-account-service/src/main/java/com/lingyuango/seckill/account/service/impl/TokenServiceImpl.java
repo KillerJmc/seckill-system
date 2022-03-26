@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import java.util.UUID;
 
 @Service
@@ -16,14 +17,20 @@ public class TokenServiceImpl implements TokenService {
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    public String create(Integer accountId) {
+    public Cookie create(Integer accountId) {
         // 定义token
         var token = UUID.randomUUID().toString();
 
         // 存入redis
         putAccountId(token, accountId);
 
-        return token;
+        // 设置cookie
+        var cookie = new Cookie(Const.TOKEN_COOKIE_NAME, token);
+
+        // 设置路径为根路径，对所有url可见
+        cookie.setPath("/");
+
+        return cookie;
     }
 
     @Override
