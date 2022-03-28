@@ -6,7 +6,7 @@ import com.lingyuango.seckill.account.common.MsgMapping;
 import com.lingyuango.seckill.account.pojo.Customer;
 import com.lingyuango.seckill.account.pojo.PreScreening;
 import com.lingyuango.seckill.account.service.PreScreeningService;
-import com.lingyuango.seckill.account.service.SeckillApplicationFormClient;
+import com.lingyuango.seckill.account.client.SeckillApplicationFormClient;
 import com.lingyuango.seckill.account.service.TokenService;
 import com.lingyuango.seckill.account.util.Verify;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +29,15 @@ public class CustomerController {
     private final CustomerService customerService;
     private final PreScreeningService preScreeningService;
     private final SeckillApplicationFormClient seckillApplicationFormClient;
+
+    /**
+     * 通过账户id获取客户
+     */
+    @PostMapping("/getCustomer")
+    public R<Customer> getCustomer(Integer accountId) {
+        return R.ok()
+                .data(customerService.getByAccountId(accountId));
+    }
 
     /**
      * 用户是否能申请活动

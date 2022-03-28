@@ -2,7 +2,7 @@ package com.lingyuango.seckill.mock.controller;
 
 import com.jmc.net.R;
 import com.lingyuango.seckill.mock.common.MsgMapping;
-import com.lingyuango.seckill.mock.pojo.PayInformation;
+import com.lingyuango.seckill.mock.pojo.PayInfo;
 import com.lingyuango.seckill.mock.service.PayService;
 import com.lingyuango.seckill.mock.service.SecretKeyService;
 import com.lingyuango.seckill.mock.utils.CheckDateStamp;
@@ -37,7 +37,7 @@ public class PayController {
     public R pay(@RequestHeader("Appid") String appid,
                  @RequestHeader("Date-Stamp") LocalDateTime date,
                  @RequestHeader("Signature") String signature,
-                 @RequestBody PayInformation pay,
+                 @RequestBody PayInfo pay,
                  HttpServletResponse resp) {
 
         var secKey = secretKeyService.getSecretKey(appid);

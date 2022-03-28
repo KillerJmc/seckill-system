@@ -1,4 +1,4 @@
-package com.lingyuango.seckill.service;
+package com.lingyuango.seckill.client;
 
 import com.jmc.net.R;
 import com.lingyuango.seckill.pojo.SeckillSuccess;
@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "seckill-payment-service", path = "/seckillSuccess", contextId = "SeckillSuccessFeignClient")
+@FeignClient(value = "seckill-payment-service", path = "/seckillSuccess", contextId = "seckillSuccessClient")
 public interface SeckillSuccessClient {
     /**
      * 插入秒杀成功的一条客户信息

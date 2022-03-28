@@ -2,8 +2,6 @@ package com.lingyuango.seckill.mock.controller;
 
 import com.jmc.net.R;
 import com.lingyuango.seckill.mock.common.MsgMapping;
-import com.lingyuango.seckill.mock.pojo.CheckAccount;
-import com.lingyuango.seckill.mock.pojo.CheckAccountReturn;
 import com.lingyuango.seckill.mock.service.CheckService;
 import com.lingyuango.seckill.mock.service.SecretKeyService;
 import com.lingyuango.seckill.mock.utils.CheckDateStamp;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
@@ -33,8 +30,7 @@ public class CheckController {
     private final CheckService checkService;
 
     @PostMapping("/checkInformation")
-    @ResponseBody
-    public R CheckInformation(@RequestHeader("Appid") String appid,
+    public R<Void> checkInformation(@RequestHeader("Appid") String appid,
                               @RequestHeader("Date-Stamp") LocalDateTime date,
                               @RequestHeader("Signature") String signature,
                               @RequestBody CheckAccount inf,
@@ -55,13 +51,18 @@ public class CheckController {
                 resp.addHeader("Appid", appid);
                 resp.addHeader("Date-Stamp", String.valueOf(nowDate.toEpochSecond(ZoneOffset.of("+8"))));
                 resp.addHeader("Signature", Security.getSignature(appid, secKey, nowDate, result));
-                return R.ok().data(Map.of("Result", result));
+                return R.ok()
+                        .data(Map.of("Result", result));
 
             } else {
-                return R.error().msg(MsgMapping.OVERTIME);
+                return R.error()
+                        .msg(MsgMapping.OVERTIME)
+                        .build();
             }
         }
-        return R.error().msg(VERITY_ERROR);
+        return R.error()
+                .msg(VERITY_ERROR)
+                .build();
     }
 
 }

@@ -2,7 +2,7 @@ package com.lingyuango.seckill.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lingyuango.seckill.pojo.SeckillApplicationForm;
-import com.lingyuango.seckill.service.CustomerClient;
+import com.lingyuango.seckill.client.CustomerClient;
 import com.lingyuango.seckill.service.SeckillActivityService;
 import com.lingyuango.seckill.service.SeckillApplicationFormService;
 import com.lingyuango.seckill.dao.SeckillApplicationFormDao;

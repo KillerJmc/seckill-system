@@ -1,15 +1,10 @@
 package com.lingyuango.seckill.mock.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.lingyuango.seckill.mock.pojo.CheckAccount;
-import com.lingyuango.seckill.mock.pojo.PayInformation;
 import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author ChaconneLuo

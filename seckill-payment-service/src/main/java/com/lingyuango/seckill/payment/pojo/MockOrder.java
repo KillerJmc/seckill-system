@@ -5,12 +5,12 @@ import lombok.ToString;
 
 
 /**
+ * 模拟模块订单类
  * @author ChaconneLuo
  */
-
 @Data
 @ToString
-public class PayOrder {
+public class MockOrder {
 
     private Integer orderId;
 

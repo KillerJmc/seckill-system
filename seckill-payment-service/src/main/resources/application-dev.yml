@@ -8,8 +8,6 @@ spring:
     url: jdbc:mysql:///seckill_payment_db
     username: root
     password: 123456
-  main:
-    allow-bean-definition-overriding: true #当遇到同样名字的时候，是否允许覆盖注册
 
 rocketmq:
   producer:

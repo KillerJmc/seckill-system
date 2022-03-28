@@ -7,9 +7,9 @@ import com.lingyuango.seckill.payment.common.Const;
 import com.lingyuango.seckill.payment.common.MsgMapping;
 import com.lingyuango.seckill.payment.dao.OrderDao;
 import com.lingyuango.seckill.payment.pojo.*;
-import com.lingyuango.seckill.payment.client.AccountFeignService;
-import com.lingyuango.seckill.payment.client.ActivityFeignService;
-import com.lingyuango.seckill.payment.client.PayFeignService;
+import com.lingyuango.seckill.payment.client.CustomerClient;
+import com.lingyuango.seckill.payment.client.SeckillActivityClient;
+import com.lingyuango.seckill.payment.client.PayClient;
 import com.lingyuango.seckill.payment.service.OrderService;
 import com.lingyuango.seckill.payment.service.PayService;
 import com.lingyuango.seckill.payment.service.StorageService;
@@ -34,26 +34,26 @@ public class PayServiceImpl implements PayService {
     private final OrderDao orderDao;
     private final OrderService orderService;
     private final StorageService storageService;
-    private final AccountFeignService accountFeignService;
-    private final ActivityFeignService activityFeignService;
-    private final PayFeignService payFeignService;
+    private final CustomerClient customerClient;
+    private final SeckillActivityClient seckillActivityClient;
+    private final PayClient payClient;
 
     @Override
     @Transactional
     public synchronized R pay(ReceivePayMessage receivePayMessage) throws IOException {
         var orderId = receivePayMessage.getOrderId();
         var order = orderDao.selectOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderId, orderId));
-        var customer = accountFeignService.getCustomer(order.getAccountId());
-        var product = activityFeignService.getProduct(order.getSeckillId());
+        var customer = customerClient.get(order.getAccountId());
+        var product = seckillActivityClient.getProduct(order.getSeckillId());
 
         var date = LocalDateTime.now();
-        var checkAccount = new CheckAccountInf() {{
+        var checkAccount = new CheckAccountInfo() {{
             setName(customer.getName());
             setIdNumber(customer.getIdNumber());
         }};
         System.out.println(checkAccount);
         var checkSignature = Security.getSignature(Const.Appid, Const.secKey, date, checkAccount);
-        var checkResponse = payFeignService.checkInformation(Const.Appid, date, checkSignature, checkAccount);
+        var checkResponse = payClient.checkInformation(Const.Appid, date, checkSignature, checkAccount);
 
         var headers = checkResponse.headers();
         var checkInformation = JSON.parseObject(Arrays.toString(checkResponse.body().asInputStream().readAllBytes()), CheckAccountReturn.class);
@@ -64,14 +64,14 @@ public class PayServiceImpl implements PayService {
                 checkInformation);
 
         if (isSafe && checkInformation.getAccountExist()) {
-            var payInformation = new PayInf() {{
+            var payInformation = new MockPayInfo() {{
                 setMoney(product.getPrice());
                 setIdNumber(customer.getIdNumber());
                 setName(customer.getName());
             }};
             var signature = Security.getSignature(Const.Appid, Const.secKey, date, payInformation);
-            var response = payFeignService.pay(Const.Appid, date, signature, payInformation);
-            var payOrder = JSON.parseObject(Arrays.toString(response.body().asInputStream().readAllBytes()), PayOrder.class);
+            var response = payClient.pay(Const.Appid, date, signature, payInformation);
+            var payOrder = JSON.parseObject(Arrays.toString(response.body().asInputStream().readAllBytes()), MockOrder.class);
             if (payOrder.getPaySuccess()) {
                 var flag = orderService.update(orderId);
                 var storageFlag = storageService.decrease(order.getSeckillId());

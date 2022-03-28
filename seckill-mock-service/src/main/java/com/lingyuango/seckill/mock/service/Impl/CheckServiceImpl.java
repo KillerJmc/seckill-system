@@ -6,7 +6,6 @@ import com.lingyuango.seckill.mock.dao.AccountDao;
 import com.lingyuango.seckill.mock.dao.CheckDao;
 import com.lingyuango.seckill.mock.dao.MoneyDao;
 import com.lingyuango.seckill.mock.pojo.Account;
-import com.lingyuango.seckill.mock.pojo.CheckAccount;
 import com.lingyuango.seckill.mock.pojo.Money;
 import com.lingyuango.seckill.mock.service.CheckService;
 import com.lingyuango.seckill.mock.utils.RandomGeneratorTool;

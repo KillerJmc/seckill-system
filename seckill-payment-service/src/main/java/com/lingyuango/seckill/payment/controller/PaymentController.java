@@ -3,10 +3,8 @@ package com.lingyuango.seckill.payment.controller;
 import cn.hutool.core.util.ObjectUtil;
 import com.jmc.net.R;
 import com.lingyuango.seckill.payment.common.MsgMapping;
-import com.lingyuango.seckill.payment.pojo.OrderMessage;
-import com.lingyuango.seckill.payment.pojo.ReceivePayMessage;
+import com.lingyuango.seckill.payment.pojo.BasicOrder;
 import com.lingyuango.seckill.payment.producer.OrderProducer;
-import com.lingyuango.seckill.payment.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -15,38 +13,39 @@ import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 
-import java.io.IOException;
-
 /**
  * @author Lingyuango
  */
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class SeckillController {
-
+@RequestMapping("/payment")
+public class PaymentController {
     private final OrderProducer orderProducer;
-    private final MessageService messageService;
 
-
-    @PostMapping("/order")
-    @ResponseBody
-    public synchronized R order(@RequestBody OrderMessage msg) throws MQBrokerException, RemotingException, InterruptedException, MQClientException{
+    /**
+     * 下订单
+     */
+    @PostMapping("/placeOrder")
+    public R<Void> placeOrder(@RequestBody BasicOrder msg) throws MQBrokerException, RemotingException, InterruptedException, MQClientException{
         var message = new Message("RequestMsg", "ORDER", ObjectUtil.serialize(msg));
 
         var send = orderProducer.getProducer().send(message);
         log.info(send.toString());
-        return R.ok().msg(MsgMapping.ORDER_SEND_SUCCESS);
+        return R.ok()
+                .msg(MsgMapping.ORDER_SEND_SUCCESS)
+                .build();
     }
 
-    @PostMapping("/pay")
-    @ResponseBody
-    public synchronized R pay(@RequestBody ReceivePayMessage msg) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
-        Message message = new Message("RequestMsg", "PAY", ObjectUtil.serialize(msg));
+    @PostMapping("/requestForPay")
+    public R<Void> requestForPay(@RequestBody String orderId) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
+        Message message = new Message("RequestMsg", "PAY", ObjectUtil.serialize(orderId));
 
         var send = orderProducer.getProducer().send(message);
         log.info(send.toString());
-        return R.ok().msg(MsgMapping.PAY_SEND_SUCCESS);
+        return R.ok()
+                .msg(MsgMapping.PAY_SEND_SUCCESS)
+                .build();
     }
 
 }

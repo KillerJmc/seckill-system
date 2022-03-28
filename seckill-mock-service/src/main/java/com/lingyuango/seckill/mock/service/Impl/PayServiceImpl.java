@@ -5,7 +5,7 @@ import com.lingyuango.seckill.mock.common.Const;
 import com.lingyuango.seckill.mock.dao.MoneyDao;
 import com.lingyuango.seckill.mock.dao.OrderDao;
 import com.lingyuango.seckill.mock.pojo.Money;
-import com.lingyuango.seckill.mock.pojo.PayInformation;
+import com.lingyuango.seckill.mock.pojo.PayInfo;
 import com.lingyuango.seckill.mock.pojo.Order;
 import com.lingyuango.seckill.mock.service.PayService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class PayServiceImpl implements PayService {
     private final OrderDao orderDao;
 
     @Override
-    public Order Pay(PayInformation pay) {
+    public Order Pay(PayInfo pay) {
         boolean paySuccess;
         var payMoney = pay.getMoney();
         var accountId = moneyDao.getAccountId(pay);

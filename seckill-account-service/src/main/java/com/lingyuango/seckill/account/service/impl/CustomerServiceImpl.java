@@ -4,17 +4,14 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lingyuango.seckill.account.common.Const;
 import com.lingyuango.seckill.account.dao.CustomerDao;
 import com.lingyuango.seckill.account.pojo.Customer;
-import com.lingyuango.seckill.account.pojo.SeckillActivityRule;
 import com.lingyuango.seckill.account.service.CustomerInfoService;
 import com.lingyuango.seckill.account.service.CustomerService;
-import com.lingyuango.seckill.account.service.SeckillActivityClient;
+import com.lingyuango.seckill.account.client.SeckillActivityClient;
 import com.lingyuango.seckill.account.util.Calculator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
 
 /**
  * @author Jmc

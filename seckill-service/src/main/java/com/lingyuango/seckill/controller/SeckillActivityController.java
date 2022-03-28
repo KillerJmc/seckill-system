@@ -2,12 +2,16 @@ package com.lingyuango.seckill.controller;
 
 import com.jmc.lang.Strs;
 import com.jmc.net.R;
-import com.lingyuango.seckill.common.Const;
+import com.lingyuango.seckill.client.PreScreeningClient;
+import com.lingyuango.seckill.client.SeckillSuccessClient;
+import com.lingyuango.seckill.client.StorageClient;
 import com.lingyuango.seckill.common.MsgMapping;
+import com.lingyuango.seckill.pojo.Product;
 import com.lingyuango.seckill.pojo.SeckillActivity;
 import com.lingyuango.seckill.pojo.SeckillActivityRule;
 import com.lingyuango.seckill.pojo.SeckillSuccess;
 import com.lingyuango.seckill.service.*;
+import com.lingyuango.seckill.service.impl.ProductServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +48,17 @@ public class SeckillActivityController {
             return R.ok()
                     .data(res);
         }
+    }
+
+    /**
+     * 获取商品信息
+     * @return
+     */
+    @PostMapping("/getProduct")
+    public R<Product> getProduct() {
+        var activity = seckillActivityService.getLatest();
+        return R.ok()
+                .data(activity.getProduct());
     }
 
     /**

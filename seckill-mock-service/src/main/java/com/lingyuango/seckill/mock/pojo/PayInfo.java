@@ -8,7 +8,7 @@ import lombok.ToString;
  */
 @Data
 @ToString
-public class PayInformation {
+public class PayInfo {
 
     private String idNumber;
 

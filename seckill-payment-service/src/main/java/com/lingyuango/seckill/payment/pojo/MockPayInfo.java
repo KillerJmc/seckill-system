@@ -4,11 +4,12 @@ import lombok.Data;
 import lombok.ToString;
 
 /**
+ * 发给模拟模块的支付信息
  * @author ChaconneLuo
  */
 @Data
 @ToString
-public class PayInf {
+public class MockPayInfo {
 
     private String idNumber;
 

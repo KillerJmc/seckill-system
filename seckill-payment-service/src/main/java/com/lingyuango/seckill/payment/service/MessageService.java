@@ -1,7 +1,6 @@
 package com.lingyuango.seckill.payment.service;
 
-import com.lingyuango.seckill.payment.pojo.OrderMessage;
-import com.lingyuango.seckill.payment.pojo.ReceivePayMessage;
+import com.lingyuango.seckill.payment.pojo.BasicOrder;
 
 import java.io.IOException;
 
@@ -10,7 +9,7 @@ import java.io.IOException;
  */
 public interface MessageService {
 
-    void OrderHandle(OrderMessage orderMessage);
+    void OrderHandle(BasicOrder basicOrder);
 
     void PayHandle(ReceivePayMessage receivePayMessage) throws IOException;
 }

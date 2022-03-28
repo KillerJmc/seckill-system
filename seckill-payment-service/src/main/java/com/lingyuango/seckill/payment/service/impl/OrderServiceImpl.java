@@ -2,7 +2,7 @@ package com.lingyuango.seckill.payment.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lingyuango.seckill.payment.dao.OrderDao;
-import com.lingyuango.seckill.payment.pojo.OrderMessage;
+import com.lingyuango.seckill.payment.pojo.BasicOrder;
 import com.lingyuango.seckill.payment.pojo.Order;
 import com.lingyuango.seckill.payment.service.OrderService;
 import com.lingyuango.seckill.payment.utils.OrderUtil;
@@ -22,9 +22,9 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDao orderDao;
 
     @Override
-    public synchronized String insert(OrderMessage orderMessage) {
-        var seckillId = orderMessage.getSeckillId();
-        var accountId = orderMessage.getAccountId();
+    public synchronized String insert(BasicOrder basicOrder) {
+        var seckillId = basicOrder.getSeckillId();
+        var accountId = basicOrder.getAccountId();
         var date = LocalDateTime.now();
         var orderId = OrderUtil.getOrderId();
         var seckillOrder = new Order() {{

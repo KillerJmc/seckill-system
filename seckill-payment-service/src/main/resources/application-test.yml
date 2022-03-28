@@ -14,10 +14,6 @@ spring:
   redis:
     host: redis
 
-  # Deprecated!!!
-  main:
-    allow-bean-definition-overriding: true
-
 rocketmq:
   producer:
     group: cart-producer-group

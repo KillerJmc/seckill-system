@@ -4,7 +4,7 @@ import com.lingyuango.seckill.account.pojo.PreScreening;
 import com.lingyuango.seckill.account.service.CustomerService;
 import com.lingyuango.seckill.account.service.PreScreeningService;
 import com.lingyuango.seckill.account.dao.PreScreeningDao;
-import com.lingyuango.seckill.account.service.SeckillActivityClient;
+import com.lingyuango.seckill.account.client.SeckillActivityClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
