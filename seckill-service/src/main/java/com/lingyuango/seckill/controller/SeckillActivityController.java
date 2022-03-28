@@ -57,7 +57,7 @@ public class SeckillActivityController {
 
     @PostMapping("/getCurrent")
     @CrossOrigin(originPatterns = "*", allowCredentials = "true")
-    public synchronized R<Map<String, SeckillActivity>> getCurrent(@CookieValue(value = "token", required = false) String token) {
+    public synchronized R<SeckillActivity> getCurrent(@CookieValue(value = "token", required = false) String token) {
         Integer customerId;
         if (token == null || (customerId = tokenService.getAccountId(token)) == null) {
             return R.error()
@@ -73,8 +73,7 @@ public class SeckillActivityController {
         log.info("用户id {} 获取最新的秒杀活动：{}", customerId, activity);
 
         return R.ok()
-                .msg("获取成功")
-                .data(Map.of("activity", activity));
+                .data(activity);
     }
 
     /**
@@ -83,7 +82,7 @@ public class SeckillActivityController {
      */
     @PostMapping("/getCountDown")
     @CrossOrigin(originPatterns = "*", allowCredentials = "true")
-    public synchronized R<Map<String, Long>> getCountDown(@CookieValue(value = "token", required = false) String token) {
+    public synchronized R<Long> getCountDown(@CookieValue(value = "token", required = false) String token) {
         Integer customerId;
         if (token == null || (customerId = tokenService.getAccountId(token)) == null) {
             return R.error()
@@ -98,7 +97,7 @@ public class SeckillActivityController {
         log.info("用户id {} 获取最新的秒杀活动倒计时：{} 秒", customerId, activity);
 
         return R.ok()
-                .data(Map.of("countDown", countDown));
+                .data(countDown);
     }
 
     /**
@@ -130,7 +129,7 @@ public class SeckillActivityController {
      */
     @PostMapping("/getSeckillUrl")
     @CrossOrigin(originPatterns = "*", allowCredentials = "true")
-    public R<Map<String, Integer>> getSeckillUrl(@CookieValue(value = "token", required = false) String token) {
+    public R<String> getSeckillUrl(@CookieValue(value = "token", required = false) String token) {
         Integer customerId;
         if ((customerId = tokenService.getAccountId(token)) == null) {
             return R.error()
@@ -159,7 +158,7 @@ public class SeckillActivityController {
         log.info("用户id {} 获取秒杀链接 {}", customerId, seckillId);
 
         return R.ok()
-                .data(Map.of("seckillUrl", seckillId));
+                .data(seckillId.toString());
     }
 
     /**

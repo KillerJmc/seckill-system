@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Component
 @FeignClient(value = "seckill-service")
 public interface AccountFeignService {
-
     @PostMapping("/getCustomer")
     Customer getCustomer(Integer accountId);
-
 }

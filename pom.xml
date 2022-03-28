@@ -27,7 +27,7 @@
 		<spring-cloud.version>2021.0.1</spring-cloud.version>
 		<alibaba-cloud.version>2021.0.1.0</alibaba-cloud.version>
 		<mybatis-plus.version>3.5.1</mybatis-plus.version>
-		<jmc-utils.version>2.1.0</jmc-utils.version>
+		<jmc-utils.version>2.2.0</jmc-utils.version>
 	</properties>
 
 	<repositories>

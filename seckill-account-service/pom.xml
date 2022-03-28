@@ -60,7 +60,6 @@
         <dependency>
             <groupId>com.jmc</groupId>
             <artifactId>jmc-utils</artifactId>
-            <version>2.2.0</version>
         </dependency>
     </dependencies>
 </project>
