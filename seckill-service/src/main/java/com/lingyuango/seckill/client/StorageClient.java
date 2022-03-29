@@ -10,12 +10,6 @@ public interface StorageClient {
     /**
      * 获取库存
      */
-    @PostMapping("/getStorage")
+    @PostMapping("/get")
     R<Integer> getStorage(@RequestParam("seckillId") Integer seckillId);
-
-    /**
-     * 减少库存
-     */
-    @PostMapping("/decrease")
-    R<Boolean> decrease(@RequestParam("seckillId") Integer seckillId);
 }

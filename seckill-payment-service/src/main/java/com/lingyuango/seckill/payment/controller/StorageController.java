@@ -20,8 +20,8 @@ public class StorageController {
 
     @PostMapping("/get")
     @ResponseBody
-    public R<Storage> getStorage(Integer seckillId) {
+    public R<Integer> get(Integer seckillId) {
         return R.ok()
-                .data(storageService.getStorage(seckillId));
+                .data(storageService.getStorage(seckillId).getAmount());
     }
 }

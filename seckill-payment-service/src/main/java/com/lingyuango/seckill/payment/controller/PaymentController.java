@@ -37,6 +37,9 @@ public class PaymentController {
                 .build();
     }
 
+    /**
+     * 尝试支付
+     */
     @PostMapping("/requestForPay")
     public R<Void> requestForPay(@RequestBody String orderId) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
         Message message = new Message("RequestMsg", "PAY", ObjectUtil.serialize(orderId));

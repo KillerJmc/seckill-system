@@ -30,12 +30,12 @@ public class PaymentCallBackServiceImpl implements PaymentCallBackService {
     }
 
     @Override
-    public BasicOrder getOrderFromRedis(Integer seckillId, Integer accountId) {
+    public BasicOrder getOrder(Integer seckillId, Integer accountId) {
         return null;
     }
 
     @Override
-    public PaymentStatus getPaymentStatusFromRedis(String orderId) {
+    public PaymentStatus getPaymentStatus(String orderId) {
         return null;
     }
 }

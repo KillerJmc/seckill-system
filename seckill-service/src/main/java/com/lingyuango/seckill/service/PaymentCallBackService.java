@@ -19,10 +19,10 @@ public interface PaymentCallBackService {
     /**
      * 从Redis中获取订单信息
      */
-    BasicOrder getOrderFromRedis(Integer seckillId, Integer accountId);
+    BasicOrder getOrder(Integer seckillId, Integer accountId);
 
     /**
      * 从Redis获取订单支付状态
      */
-    PaymentStatus getPaymentStatusFromRedis(String orderId);
+    PaymentStatus getPaymentStatus(String orderId);
 }
