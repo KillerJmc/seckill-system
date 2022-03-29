@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 /**
  * 返回给秒杀模块的回调接口
  */
-@FeignClient(value = "seckill-service", path = "/seckillActivity", contextId = "callBackClient")
+@FeignClient(value = "seckill-service", path = "/paymentCallback", contextId = "callBackClient")
 public interface CallBackClient {
     @PostMapping("/putOrder")
     R<Void> putOrder(@RequestBody BasicOrder basicOrder);
