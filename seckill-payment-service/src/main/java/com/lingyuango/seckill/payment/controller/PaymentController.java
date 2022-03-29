@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.jmc.net.R;
 import com.lingyuango.seckill.payment.common.MsgMapping;
 import com.lingyuango.seckill.payment.pojo.BasicOrder;
+import com.lingyuango.seckill.payment.pojo.PaymentStatus;
 import com.lingyuango.seckill.payment.producer.OrderProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.exception.MQBrokerException;
@@ -50,5 +51,16 @@ public class PaymentController {
                 .msg(MsgMapping.PAY_SEND_SUCCESS)
                 .build();
     }
+
+    /**
+     * 获取订单信息
+     */
+    R<BasicOrder> getOrder(Integer accountId);
+
+
+    /**
+     * 获取订单支付状态
+     */
+    R<PaymentStatus> getPaymentStatus(String orderId);
 
 }

@@ -9,12 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value = "seckill-payment-service", path = "/seckillSuccess", contextId = "seckillSuccessClient")
 public interface SeckillSuccessClient {
     /**
-     * 插入秒杀成功的一条客户信息
-     */
-    @PostMapping("/insert")
-    R<SeckillSuccess> insert(@RequestParam("seckillId") Integer seckillId, @RequestParam("customerId") Integer customerId);
-
-    /**
      * 判断某客户是否在秒杀成功表里
      */
     @PostMapping("/contains")

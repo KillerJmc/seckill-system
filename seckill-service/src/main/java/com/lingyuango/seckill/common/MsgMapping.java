@@ -99,4 +99,9 @@ public interface MsgMapping {
      * 秒杀成功
      */
     String SECKILL_SUCCESS = "秒杀成功";
+
+    /**
+     * 下订单失败
+     */
+    String PUT_ORDER_ERROR = "下订单失败";
 }

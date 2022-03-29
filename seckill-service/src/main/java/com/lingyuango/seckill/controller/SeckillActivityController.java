@@ -1,18 +1,22 @@
 package com.lingyuango.seckill.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jmc.lang.Strs;
 import com.jmc.net.R;
+import com.lingyuango.seckill.client.PaymentClient;
 import com.lingyuango.seckill.client.PreScreeningClient;
 import com.lingyuango.seckill.client.SeckillSuccessClient;
 import com.lingyuango.seckill.client.StorageClient;
+import com.lingyuango.seckill.common.Const;
 import com.lingyuango.seckill.common.MsgMapping;
 import com.lingyuango.seckill.pojo.*;
 import com.lingyuango.seckill.service.*;
-import com.lingyuango.seckill.service.impl.ProductServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 
+import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -25,12 +29,29 @@ import java.util.Map;
 @RequestMapping("/seckillActivity")
 @Slf4j
 public class SeckillActivityController {
+    private final StringRedisTemplate redisTemplate;
     private final TokenService tokenService;
     private final SeckillActivityService seckillActivityService;
     private final SeckillApplicationFormService seckillApplicationFormService;
+    private final PaymentCallbackService paymentCallbackService;
     private final StorageClient storageClient;
     private final SeckillSuccessClient seckillSuccessClient;
     private final PreScreeningClient preScreeningClient;
+    private final PaymentClient paymentClient;
+
+    /**
+     * 初始化在Redis中秒杀产品的库存
+     */
+    @PostConstruct
+    public void initStorageInRedis() {
+        var seckillId = seckillActivityService.getLatestSeckillId();
+        var storage = storageClient.getStorage(seckillId).get();
+
+        // 初始化Redis库存
+        redisTemplate.opsForValue().set(Const.REDIS_STORAGE_PREFIX + seckillId, String.valueOf(storage));
+        log.info("初始化Redis库存：{}", storage);
+    }
+
 
     /**
      * 获取最新规则
@@ -71,7 +92,7 @@ public class SeckillActivityController {
     @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public synchronized R<SeckillActivity> getCurrent(@CookieValue(value = "token", required = false) String token) {
         Integer customerId;
-        if (token == null || (customerId = tokenService.getAccountId(token)) == null) {
+        if ((customerId = tokenService.getAccountId(token)) == null) {
             return R.error()
                     .msg(MsgMapping.NOT_LOGGED_ON)
                     .build();
@@ -175,11 +196,13 @@ public class SeckillActivityController {
 
     /**
      * 秒杀接口
-     * @return 成功的话返回订单
+     * @return 订单信息
      */
     @PostMapping("/seckill/{seckillUrl}")
     @CrossOrigin(originPatterns = "*", allowCredentials = "true")
-    public R<Map<String, SeckillSuccess>> seckill(@CookieValue(value = "token", required = false) String token, @PathVariable String seckillUrl) {
+    public R<BasicOrder> seckill(@CookieValue(value = "token", required = false) String token,
+                                 @PathVariable String seckillUrl) throws JsonProcessingException {
+        // region 检查信息安全
         Integer customerId;
         if ((customerId = tokenService.getAccountId(token)) == null) {
             return R.error()
@@ -211,16 +234,16 @@ public class SeckillActivityController {
                     .build();
         }
 
-        var storage = storageClient.getStorage(seckillId).get();
-
-        log.info("用户id：{}，当前活动库存为：{}", customerId, storage);
-
         // 检查重复购买
         if (seckillSuccessClient.contains(seckillId, customerId).get()) {
             return R.error()
                     .msg(MsgMapping.PURCHASE_REPEAT)
                     .build();
         }
+        // endregion
+
+        var storage = storageClient.getStorage(seckillId).get();
+        log.info("用户id：{}，当前活动库存为：{}", customerId, storage);
 
         // 检查库存
         if (storage <= 0) {
@@ -229,15 +252,16 @@ public class SeckillActivityController {
                     .build();
         }
 
-        // 减少库存
-        storageClient.decrease(seckillId);
+        // 下订单
+        paymentClient.placeOrder(new BasicOrder() {{
+            setSeckillId(seckillId);
+            setAccountId(customerId);
+        }}).get();
 
         log.info("用户id：{}，秒杀成功", customerId);
 
-        var order = seckillSuccessClient.insert(seckillId, customerId).get();
-
         return R.ok()
                 .msg(MsgMapping.SECKILL_SUCCESS)
-                .data(Map.of("order", order));
+                .build();
     }
 }
