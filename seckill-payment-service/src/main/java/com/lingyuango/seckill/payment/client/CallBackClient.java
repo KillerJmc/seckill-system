@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(value = "seckill-service", path = "/paymentCallback", contextId = "callBackClient")
 public interface CallBackClient {
     @PostMapping("/putOrder")
-    R<Void> putOrder(@RequestBody BasicOrder basicOrder);
+    void putOrder(@RequestBody BasicOrder basicOrder);
 
     @PostMapping("/putPaymentStatus")
-    R<Void> putPaymentStatus(@RequestBody String orderId);
+    void putPaymentStatus(@RequestBody String orderId);
 }

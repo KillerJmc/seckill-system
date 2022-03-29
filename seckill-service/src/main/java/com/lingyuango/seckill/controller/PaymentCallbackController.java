@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class PaymentCallbackController {
     @PostMapping("/putOrder")
-    R<Void> putOrder(BasicOrder basicOrder) {
+    public void putOrder(BasicOrder basicOrder) {
 
     }
 
     @PostMapping("/putPaymentStatus")
-    R<Void> putPaymentStatus(String orderId) {
+    public void putPaymentStatus(String orderId) {
 
     }
 }
