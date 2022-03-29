@@ -18,6 +18,6 @@ public class MockOrder {
 
     private Integer accountId;
 
-    private Integer money;
+    private Double money;
 
 }
