@@ -14,4 +14,5 @@ public class BasicOrder implements Serializable {
     private Integer accountId;
     private String orderId;
     private Double money;
+    private Boolean putOrderSuccess;
 }

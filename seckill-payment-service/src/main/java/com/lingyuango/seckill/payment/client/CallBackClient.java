@@ -2,6 +2,7 @@ package com.lingyuango.seckill.payment.client;
 
 import com.jmc.net.R;
 import com.lingyuango.seckill.payment.pojo.BasicOrder;
+import com.lingyuango.seckill.payment.pojo.PaymentStatus;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,5 +16,5 @@ public interface CallBackClient {
     void putOrder(@RequestBody BasicOrder basicOrder);
 
     @PostMapping("/putPaymentStatus")
-    void putPaymentStatus(@RequestBody String orderId);
+    void putPaymentStatus(@RequestBody PaymentStatus paymentStatus);
 }

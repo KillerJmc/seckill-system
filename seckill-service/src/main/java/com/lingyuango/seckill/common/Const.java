@@ -6,11 +6,6 @@ package com.lingyuango.seckill.common;
  */
 public interface Const {
     /**
-     * 客户账号id相对于自然id的偏移值
-     */
-    int ACCOUNT_ID_OFFSET = 10000;
-
-    /**
      * redis中token的组名
      */
     String REDIS_TOKEN_GROUP = "token:";
@@ -19,4 +14,14 @@ public interface Const {
      * token的cookie名称
      */
     String TOKEN_COOKIE_NAME = "token";
+
+    /**
+     * redis中订单的组名
+     */
+    String REDIS_ORDER_GROUP = "order:";
+
+    /**
+     * redis中支付状态的组名
+     */
+    String REDIS_PAYMENT_STATUS_GROUP = "paymentStatus:";
 }

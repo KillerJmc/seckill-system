@@ -29,4 +29,9 @@ public class BasicOrder implements Serializable {
      * 订单金额
      */
     private Double money;
+
+    /**
+     * 是否下订单成功
+     */
+    private Boolean putOrderSuccess;
 }
