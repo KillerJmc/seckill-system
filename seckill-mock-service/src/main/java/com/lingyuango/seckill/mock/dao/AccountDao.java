@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Select;
 public interface AccountDao extends BaseMapper<Account> {
 
     @Select("select account_id from account where id_number = #{idNumber} and name = #{name}")
-    Integer getAccountId(CheckAccount inf);
+    Integer getAccountId(Account inf);
 
     @Select("select max(id) from account")
     Integer getMaxId();

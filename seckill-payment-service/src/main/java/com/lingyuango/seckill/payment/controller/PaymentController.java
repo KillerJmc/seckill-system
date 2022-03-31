@@ -6,6 +6,7 @@ import com.lingyuango.seckill.payment.common.MsgMapping;
 import com.lingyuango.seckill.payment.pojo.BasicOrder;
 import com.lingyuango.seckill.payment.pojo.PaymentStatus;
 import com.lingyuango.seckill.payment.producer.OrderProducer;
+import com.lingyuango.seckill.payment.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -23,12 +24,13 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/payment")
 public class PaymentController {
     private final OrderProducer orderProducer;
+    private final RedisService redisService;
 
     /**
      * 下订单
      */
     @PostMapping("/placeOrder")
-    public R<Void> placeOrder(@RequestBody BasicOrder msg) throws MQBrokerException, RemotingException, InterruptedException, MQClientException{
+    public R<Void> placeOrder(@RequestBody BasicOrder msg) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
         var message = new Message("RequestMsg", "ORDER", ObjectUtil.serialize(msg));
 
         var send = orderProducer.getProducer().send(message);
@@ -55,12 +57,18 @@ public class PaymentController {
     /**
      * 获取订单信息
      */
-    R<BasicOrder> getOrder(Integer accountId);
+    @PostMapping("/getOrder")
+    R<BasicOrder> getOrder(Integer accountId) {
+        return R.ok().data(redisService.getBasicOrder(accountId));
+    }
 
 
     /**
      * 获取订单支付状态
      */
-    R<PaymentStatus> getPaymentStatus(String orderId);
+    @PostMapping("/getPaymentStatus")
+    R<PaymentStatus> getPaymentStatus(String orderId) {
+        return R.ok().data(redisService.getPaymentStatus(orderId));
+    }
 
 }

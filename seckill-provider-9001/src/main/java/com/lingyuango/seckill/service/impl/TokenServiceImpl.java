@@ -4,7 +4,6 @@ import com.jmc.lang.Objs;
 import com.jmc.lang.Strs;
 import com.lingyuango.seckill.common.Const;
 import com.lingyuango.seckill.service.TokenService;
-import com.lingyuango.seckill.util.Verify;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;

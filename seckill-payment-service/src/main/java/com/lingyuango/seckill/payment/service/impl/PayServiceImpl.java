@@ -40,14 +40,13 @@ public class PayServiceImpl implements PayService {
 
     @Override
     @Transactional
-    public synchronized R pay(ReceivePayMessage receivePayMessage) throws IOException {
-        var orderId = receivePayMessage.getOrderId();
+    public synchronized R<PaymentStatus> pay(String orderId) throws IOException {
         var order = orderDao.selectOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderId, orderId));
-        var customer = customerClient.get(order.getAccountId());
+        var customer = customerClient.getCustomer(order.getAccountId()).getData();
         var product = seckillActivityClient.getProduct(order.getSeckillId());
 
         var date = LocalDateTime.now();
-        var checkAccount = new CheckAccountInfo() {{
+        var checkAccount = new Customer() {{
             setName(customer.getName());
             setIdNumber(customer.getIdNumber());
         }};
@@ -56,14 +55,14 @@ public class PayServiceImpl implements PayService {
         var checkResponse = payClient.checkInformation(Const.Appid, date, checkSignature, checkAccount);
 
         var headers = checkResponse.headers();
-        var checkInformation = JSON.parseObject(Arrays.toString(checkResponse.body().asInputStream().readAllBytes()), CheckAccountReturn.class);
+        var checkInformation = JSON.parseObject(Arrays.toString(checkResponse.body().asInputStream().readAllBytes()), Boolean.class);
         Boolean isSafe = Security.verify(Const.Appid,
                 Const.secKey,
                 CheckDateStamp.convert(String.valueOf(headers.get("Date-Stamp"))),
                 String.valueOf(headers.get("Signature")),
                 checkInformation);
 
-        if (isSafe && checkInformation.getAccountExist()) {
+        if (isSafe && checkInformation) {
             var payInformation = new MockPayInfo() {{
                 setMoney(product.getPrice());
                 setIdNumber(customer.getIdNumber());
@@ -76,19 +75,19 @@ public class PayServiceImpl implements PayService {
                 var flag = orderService.update(orderId);
                 var storageFlag = storageService.decrease(order.getSeckillId());
                 if (flag && storageFlag) {
-                    return R.ok().data(new MessageReturn() {{
+                    return R.ok().data(new PaymentStatus() {{
                         setOrderId(orderId);
-                        setBuildSuccess(true);
+                        setPaymentSuccess(true);
                     }});
                 } else {
-                    return R.ok().data(new MessageReturn() {{
+                    return R.ok().data(new PaymentStatus() {{
                         setOrderId(orderId);
-                        setBuildSuccess(false);
+                        setPaymentSuccess(false);
                     }});
                 }
 
             }
         }
-        return R.ok().msg(MsgMapping.ACCOUNT_NOT_EXISTED);
+        return R.ok().msg(MsgMapping.ACCOUNT_NOT_EXISTED).build();
     }
 }

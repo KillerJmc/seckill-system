@@ -1,5 +1,6 @@
 package com.lingyuango.seckill.payment.client;
 
+import com.lingyuango.seckill.payment.pojo.Customer;
 import com.lingyuango.seckill.payment.pojo.MockPayInfo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -22,5 +23,5 @@ public interface PayClient {
     feign.Response checkInformation(@RequestHeader("Appid") String appid,
                                            @RequestHeader("Date-Stamp") LocalDateTime date,
                                            @RequestHeader("Signature") String signature,
-                                           @RequestBody CheckAccountInfo inf);
+                                           @RequestBody Customer inf);
 }

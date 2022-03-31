@@ -10,4 +10,8 @@ public interface Const {
     String secKey = "Secret_Keyc2b82f4483324035337255fb777122bb";
 
     int TEN_MILLIONS = 10 * 60 * 1000;
+
+    String REDIS_ORDER_PREFIX = "ORDER-";
+
+    String REDIS_PAY_PREFIX = "PAY-";
 }

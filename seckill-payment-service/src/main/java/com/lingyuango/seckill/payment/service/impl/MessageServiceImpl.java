@@ -7,6 +7,7 @@ import com.lingyuango.seckill.payment.dao.OrderDao;
 import com.lingyuango.seckill.payment.service.OrderService;
 import com.lingyuango.seckill.payment.service.PayService;
 import com.lingyuango.seckill.payment.client.CallBackClient;
+import com.lingyuango.seckill.payment.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
@@ -32,27 +33,28 @@ public class MessageServiceImpl implements MessageService, RocketMQListener<Mess
     private final OrderService orderService;
     private final PayService payService;
     private final CallBackClient callBackClient;
+    private final RedisService redisService;
 
     @Async
     public void OrderHandle(BasicOrder basicOrder) {
         var orderId = orderService.insert(basicOrder);
-        if (orderId != null) {
-            callBackClient.sendOrderMsg(new MessageReturn() {{
-                setOrderId(orderId);
-                setBuildSuccess(true);
-            }});
-        } else {
-            callBackClient.sendOrderMsg(new MessageReturn() {{
-                setOrderId(null);
-                setBuildSuccess(false);
-            }});
-        }
+        boolean payStatus;
+        payStatus= orderId != null;
+//        callBackClient.putOrder(new BasicOrder() {{
+//            setOrderId(orderId);
+//            setPutOrderSuccess(payStatus);
+//        }});
+        redisService.putBasicOrder(new BasicOrder() {{
+            setOrderId(orderId);
+            setPutOrderSuccess(payStatus);
+        }});
     }
 
     @Async
-    public void PayHandle(ReceivePayMessage receivePayMessage) throws IOException {
-        var pay = payService.pay(receivePayMessage);
-        callBackClient.sendPayMsg(pay);
+    public void PayHandle(String orderId) throws IOException {
+        var pay = payService.pay(orderId).get();
+        //callBackClient.putPaymentStatus(pay);
+        redisService.putPaymentStatus(pay);
     }
 
 
@@ -63,7 +65,7 @@ public class MessageServiceImpl implements MessageService, RocketMQListener<Mess
             OrderHandle((BasicOrder) obj);
         } else {
             try {
-                PayHandle((ReceivePayMessage) obj);
+                PayHandle((String) obj);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -21,6 +21,6 @@ public class SeckillSuccessController {
      */
     @PostMapping("/contains")
     R<Boolean> contains(Integer seckillId, Integer customerId) {
-
+        return null;
     }
 }

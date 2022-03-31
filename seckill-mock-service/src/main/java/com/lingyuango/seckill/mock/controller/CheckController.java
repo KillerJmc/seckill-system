@@ -2,6 +2,7 @@ package com.lingyuango.seckill.mock.controller;
 
 import com.jmc.net.R;
 import com.lingyuango.seckill.mock.common.MsgMapping;
+import com.lingyuango.seckill.mock.pojo.Account;
 import com.lingyuango.seckill.mock.service.CheckService;
 import com.lingyuango.seckill.mock.service.SecretKeyService;
 import com.lingyuango.seckill.mock.utils.CheckDateStamp;
@@ -30,10 +31,10 @@ public class CheckController {
     private final CheckService checkService;
 
     @PostMapping("/checkInformation")
-    public R<Void> checkInformation(@RequestHeader("Appid") String appid,
+    public R<Map<String,Boolean>> checkInformation(@RequestHeader("Appid") String appid,
                               @RequestHeader("Date-Stamp") LocalDateTime date,
                               @RequestHeader("Signature") String signature,
-                              @RequestBody CheckAccount inf,
+                              @RequestBody Account inf,
                               HttpServletResponse resp) {
 
         var secKey = secretKeyService.getSecretKey(appid);
@@ -44,15 +45,11 @@ public class CheckController {
                 boolean exist = checkService.checkAccount(inf);
                 var nowDate = LocalDateTime.now();
 
-                var result = new CheckAccountReturn() {{
-                    setAccountExist(exist);
-                }};
-
                 resp.addHeader("Appid", appid);
                 resp.addHeader("Date-Stamp", String.valueOf(nowDate.toEpochSecond(ZoneOffset.of("+8"))));
-                resp.addHeader("Signature", Security.getSignature(appid, secKey, nowDate, result));
+                resp.addHeader("Signature", Security.getSignature(appid, secKey, nowDate, exist));
                 return R.ok()
-                        .data(Map.of("Result", result));
+                        .data(Map.of("Result", exist));
 
             } else {
                 return R.error()

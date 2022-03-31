@@ -2,6 +2,7 @@ package com.lingyuango.seckill.mock.controller;
 
 import com.jmc.net.R;
 import com.lingyuango.seckill.mock.common.MsgMapping;
+import com.lingyuango.seckill.mock.pojo.Order;
 import com.lingyuango.seckill.mock.pojo.PayInfo;
 import com.lingyuango.seckill.mock.service.PayService;
 import com.lingyuango.seckill.mock.service.SecretKeyService;
@@ -34,11 +35,11 @@ public class PayController {
 
     @PostMapping("/Pay")
     @ResponseBody
-    public R pay(@RequestHeader("Appid") String appid,
-                 @RequestHeader("Date-Stamp") LocalDateTime date,
-                 @RequestHeader("Signature") String signature,
-                 @RequestBody PayInfo pay,
-                 HttpServletResponse resp) {
+    public R<Map<String, Order>> pay(@RequestHeader("Appid") String appid,
+                                     @RequestHeader("Date-Stamp") LocalDateTime date,
+                                     @RequestHeader("Signature") String signature,
+                                     @RequestBody PayInfo pay,
+                                     HttpServletResponse resp) {
 
         var secKey = secretKeyService.getSecretKey(appid);
 
@@ -53,8 +54,8 @@ public class PayController {
                 resp.addHeader("Signature", Security.getSignature(appid, secKey, nowDate, status));
                 return R.ok().data(Map.of("Result", status));
             }
-            return R.error().msg(MsgMapping.OVERTIME);
+            return R.error().msg(MsgMapping.OVERTIME).build();
         }
-        return R.error().msg(VERITY_ERROR);
+        return R.error().msg(VERITY_ERROR).build();
     }
 }

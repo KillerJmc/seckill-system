@@ -11,5 +11,5 @@ public interface MessageService {
 
     void OrderHandle(BasicOrder basicOrder);
 
-    void PayHandle(ReceivePayMessage receivePayMessage) throws IOException;
+    void PayHandle(String orderId) throws IOException;
 }

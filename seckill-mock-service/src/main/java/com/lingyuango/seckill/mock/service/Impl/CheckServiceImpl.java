@@ -28,10 +28,10 @@ public class CheckServiceImpl implements CheckService {
     private final MoneyDao moneyDao;
 
     @Override
-    public boolean checkAccount(CheckAccount inf) {
+    public boolean checkAccount(Account inf) {
 
-        var count = checkDao.selectCount(Wrappers.<CheckAccount>lambdaQuery()
-                .eq(CheckAccount::getIdNumber, inf.getIdNumber()));
+        var count = checkDao.selectCount(Wrappers.<Account>lambdaQuery()
+                .eq(Account::getIdNumber, inf.getIdNumber()));
 
         if (count != 0L) {
             return true;
@@ -40,7 +40,7 @@ public class CheckServiceImpl implements CheckService {
         }
     }
 
-    public Boolean randomInsertAccount(CheckAccount inf) {
+    public Boolean randomInsertAccount(Account inf) {
         if (RandomGeneratorTool.getRandomBoolean(0.8)) {
             var date = LocalDateTime.now();
             var maxId = accountDao.getMaxId();

@@ -1,6 +1,7 @@
 package com.lingyuango.seckill.mock.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.lingyuango.seckill.mock.pojo.Account;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -8,6 +9,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 
 @Mapper
-public interface CheckDao extends BaseMapper<CheckAccount> {
+public interface CheckDao extends BaseMapper<Account> {
 
 }
