@@ -21,15 +21,17 @@ public interface PaymentClient {
      * 尝试支付
      */
     @PostMapping("/requestForPay")
-    R<Void> requestForPay(@RequestBody String orderId);
+    R<Void> requestForPay(@RequestParam("orderId") String orderId);
 
     /**
      * 获取订单信息
      */
-    R<BasicOrder> getOrder(Integer accountId);
+    @PostMapping("/getOrder")
+    R<BasicOrder> getOrder(@RequestParam("accountId") Integer accountId);
 
     /**
      * 获取订单支付状态
      */
-    R<PaymentStatus> getPaymentStatus(String orderId);
+    @PostMapping("/getPaymentStatus")
+    R<PaymentStatus> getPaymentStatus(@RequestParam("orderId") String orderId);
 }

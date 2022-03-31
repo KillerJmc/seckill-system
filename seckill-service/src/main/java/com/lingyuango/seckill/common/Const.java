@@ -29,4 +29,14 @@ public interface Const {
      * redis中库存的前缀
      */
     String REDIS_STORAGE_PREFIX = "storage-";
+
+    /**
+     * redis中秒杀成功记录的前缀
+     */
+    String REDIS_SECKILL_SUCCESS_PREFIX = "seckillSuccess-";
+
+    /**
+     * redis中秒杀id的键名
+     */
+    String REDIS_SECKILL_ID_KEY = "seckillUrl";
 }
