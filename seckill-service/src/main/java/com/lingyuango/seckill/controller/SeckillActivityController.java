@@ -35,7 +35,6 @@ public class SeckillActivityController {
     private final TokenService tokenService;
     private final SeckillActivityService seckillActivityService;
     private final SeckillApplicationFormService seckillApplicationFormService;
-    private final PaymentCallbackService paymentCallbackService;
     private final StorageClient storageClient;
     private final SeckillSuccessClient seckillSuccessClient;
     private final PreScreeningClient preScreeningClient;
@@ -63,7 +62,6 @@ public class SeckillActivityController {
 
     /**
      * 获取商品信息
-     * @return
      */
     @PostMapping("/getProduct")
     public R<Product> getProduct() {
@@ -216,7 +214,6 @@ public class SeckillActivityController {
                     .build();
         }
 
-        // region 检查信息安全
         Integer customerId;
         if ((customerId = tokenService.getAccountId(token)) == null) {
             return R.error()
@@ -251,7 +248,6 @@ public class SeckillActivityController {
                     .msg(MsgMapping.INVALID_SECKILL_URL)
                     .build();
         }
-        // endregion
 
         // 直接扣库存并获取扣完的库存
         var storage = redisTemplate.opsForValue().decrement(Const.REDIS_STORAGE_PREFIX + seckillId);
@@ -280,14 +276,6 @@ public class SeckillActivityController {
         redisTemplate.opsForValue()
                 .set(Const.REDIS_SECKILL_SUCCESS_PREFIX + seckillId + ":" + randCustomerId, "1");
 
-        // 异步下订单，提升用户体验
-//        paymentClient.placeOrder(new BasicOrder() {{
-//            setSeckillId(seckillId);
-//            setAccountId(randCustomerId);
-//        }}).get();
-
-//        log.info("用户id：{}，秒杀成功", randCustomerId);
-
         // 返回秒杀成功信息
         return R.ok()
                 .msg(MsgMapping.SECKILL_SUCCESS)
@@ -300,7 +288,9 @@ public class SeckillActivityController {
     @PostMapping("/seckill/{seckillUrl}")
     @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public R<Void> seckill(@CookieValue(value = "token", required = false) String token,
-                                 @PathVariable String seckillUrl) throws JsonProcessingException {
+                           @PathVariable String seckillUrl)
+            throws JsonProcessingException {
+        // region 通过标记检查是否卖完
         // 如果已经卖完就直接返回
         if (this.soldOut) {
             // 返回商品售完信息
@@ -308,6 +298,7 @@ public class SeckillActivityController {
                     .msg(MsgMapping.PRODUCT_SOLD_OUT)
                     .build();
         }
+        // endregion
 
         // region 检查信息安全
         Integer customerId;
@@ -346,6 +337,7 @@ public class SeckillActivityController {
         }
         // endregion
 
+        // region 从redis检查重复购买
         // 从redis中检查重复购买
         var seckillSuccess = redisTemplate.opsForValue()
                 .get(Const.REDIS_SECKILL_SUCCESS_PREFIX + seckillUrl + ":" + customerId);
@@ -354,7 +346,9 @@ public class SeckillActivityController {
                     .msg(MsgMapping.PURCHASE_REPEAT)
                     .build();
         }
+        // endregion
 
+        // region 扣库存，若卖完就加上标记；秒杀成功用户加redis
         // 直接扣库存并获取扣完的库存
         var storage = redisTemplate.opsForValue().decrement(Const.REDIS_STORAGE_PREFIX + seckillId);
 
@@ -380,14 +374,14 @@ public class SeckillActivityController {
         // 把秒杀成功用户放进redis (seckillSuccess-seckillId:customerId -> 1)
         redisTemplate.opsForValue()
                 .set(Const.REDIS_SECKILL_SUCCESS_PREFIX + seckillId + ":" + customerId, "1");
+        // endregion
 
-        // 异步下订单，提升用户体验
+        // region 异步下订单，提升用户体验
         paymentClient.placeOrder(new BasicOrder() {{
             setSeckillId(Integer.valueOf(seckillId));
             setAccountId(customerId);
         }}).get();
-
-        log.info("用户id：{}，秒杀成功", customerId);
+        // endregion
 
         // 返回秒杀成功信息
         return R.ok()
@@ -431,5 +425,41 @@ public class SeckillActivityController {
         }
     }
 
+    /**
+     * 支付
+     */
+    @PostMapping("/pay")
+    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
+    public R<PaymentStatus> pay(@CookieValue(value = "token", required = false) String token, String orderId) {
+        // 检查token
+        if (tokenService.getAccountId(token) == null) {
+            return R.error()
+                    .msg(MsgMapping.NOT_LOGGED_ON)
+                    .build();
+        }
 
+        // 请求支付
+        paymentClient.requestForPay(orderId).get();
+
+        // 轮询获取支付状态信息
+        while (true) {
+            // 发送获取订单请求
+            var paymentStatusData = paymentClient.getPaymentStatus(orderId);
+
+            // 如果请求错误
+            if (paymentStatusData.getCode() == HttpStatus.ERROR) {
+                // 如果不是发生支付状态信息还未准备好的错误（其他错误）
+                if (!MsgMapping.PAYMENT_STATUS_NOT_READY.equals(paymentStatusData.getMessage())) {
+                    // 直接返回错误信息
+                    return paymentStatusData;
+                }
+                // 否则就是支付状态信息未准备好，延时重新获取
+                Threads.sleep(100);
+                continue;
+            }
+
+            // 请求成功直接返回订单数据
+            return paymentStatusData;
+        }
+    }
 }
