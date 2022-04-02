@@ -104,4 +104,14 @@ public interface MsgMapping {
      * 下订单失败
      */
     String PUT_ORDER_ERROR = "下订单失败";
+
+    /**
+     * 订单还没准备好
+     */
+    String ORDER_NOT_READY = "订单还没准备好";
+
+    /**
+     * 支付状态信息还没准备好
+     */
+    String PAYMENT_STATUS_NOT_READY = "支付状态信息还没准备好";
 }
