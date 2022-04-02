@@ -1,7 +1,8 @@
 package com.lingyuango.seckill.payment.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jmc.net.HttpStatus;
 import com.jmc.net.R;
 import com.lingyuango.seckill.payment.common.Const;
 import com.lingyuango.seckill.payment.common.MsgMapping;
@@ -16,17 +17,20 @@ import com.lingyuango.seckill.payment.service.StorageService;
 import com.lingyuango.seckill.payment.utils.CheckDateStamp;
 import com.lingyuango.seckill.payment.utils.Security;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.time.ZoneOffset;
+import java.util.Map;
 
 /**
  * @author ChaconneLuo
  */
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PayServiceImpl implements PayService {
@@ -46,32 +50,25 @@ public class PayServiceImpl implements PayService {
         var product = seckillActivityClient.getProduct(order.getSeckillId());
 
         var date = LocalDateTime.now();
-        var checkAccount = new Customer() {{
+        var checkAccount = new MockAccount() {{
             setName(customer.getName());
             setIdNumber(customer.getIdNumber());
         }};
-        System.out.println(checkAccount);
         var checkSignature = Security.getSignature(Const.Appid, Const.secKey, date, checkAccount);
         var checkResponse = payClient.checkInformation(Const.Appid, date, checkSignature, checkAccount);
 
-        var headers = checkResponse.headers();
-        var checkInformation = JSON.parseObject(Arrays.toString(checkResponse.body().asInputStream().readAllBytes()), Boolean.class);
-        Boolean isSafe = Security.verify(Const.Appid,
-                Const.secKey,
-                CheckDateStamp.convert(String.valueOf(headers.get("Date-Stamp"))),
-                String.valueOf(headers.get("Signature")),
-                checkInformation);
-
-        if (isSafe && checkInformation) {
-            var payInformation = new MockPayInfo() {{
+        Boolean isSuccess = Security.VerifyMapMessage(checkResponse, Boolean.class);
+        log.info(isSuccess + "");
+        if (Boolean.TRUE.equals(isSuccess)) {
+            var payInfo = new MockPayInfo() {{
                 setMoney(product.getPrice());
                 setIdNumber(customer.getIdNumber());
                 setName(customer.getName());
             }};
-            var signature = Security.getSignature(Const.Appid, Const.secKey, date, payInformation);
-            var response = payClient.pay(Const.Appid, date, signature, payInformation);
-            var payOrder = JSON.parseObject(Arrays.toString(response.body().asInputStream().readAllBytes()), MockOrder.class);
-            if (payOrder.getPaySuccess()) {
+            var signature = Security.getSignature(Const.Appid, Const.secKey, date, payInfo);
+            var response = payClient.pay(Const.Appid, date, signature, payInfo);
+            var payOrder = Security.VerifyMapMessage(response, MockOrder.class);
+            if (payOrder != null && payOrder.getPaySuccess()) {
                 var flag = orderService.update(orderId);
                 var storageFlag = storageService.decrease(order.getSeckillId());
                 if (flag && storageFlag) {
@@ -85,7 +82,6 @@ public class PayServiceImpl implements PayService {
                         setPaymentSuccess(false);
                     }});
                 }
-
             }
         }
         return R.ok().msg(MsgMapping.ACCOUNT_NOT_EXISTED).build();

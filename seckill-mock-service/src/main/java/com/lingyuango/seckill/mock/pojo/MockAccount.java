@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Data
 @TableName("account")
 @JsonIgnoreProperties({"id","gmtCreate","gmtModified"})
-public class Account {
+public class MockAccount {
 
     @TableId(type = IdType.AUTO)
     private Integer id;

@@ -44,11 +44,10 @@ public class PaymentController {
      * 尝试支付
      */
     @PostMapping("/requestForPay")
-    public R<Void> requestForPay(@RequestBody String orderId) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
+    public R<Void> requestForPay(String orderId) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
         Message message = new Message("RequestMsg", "PAY", ObjectUtil.serialize(orderId));
 
         var send = orderProducer.getProducer().send(message);
-        log.info(send.toString());
         return R.ok()
                 .msg(MsgMapping.PAY_SEND_SUCCESS)
                 .build();

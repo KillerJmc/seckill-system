@@ -1,8 +1,11 @@
 package com.lingyuango.seckill.payment.client;
 
+import com.lingyuango.seckill.payment.common.Const;
 import com.lingyuango.seckill.payment.pojo.Customer;
+import com.lingyuango.seckill.payment.pojo.MockAccount;
 import com.lingyuango.seckill.payment.pojo.MockPayInfo;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,13 +18,13 @@ public interface PayClient {
 
     @PostMapping("/pay")
     feign.Response pay(@RequestHeader("Appid") String appid,
-                                           @RequestHeader("Date-Stamp") LocalDateTime date,
-                                           @RequestHeader("Signature") String signature,
-                                           @RequestBody MockPayInfo inf);
+                       @RequestHeader("Date-Stamp") @DateTimeFormat(pattern = Const.DATE_TIME_FORMAT) LocalDateTime date,
+                       @RequestHeader("Signature") String signature,
+                       @RequestBody MockPayInfo inf);
 
     @PostMapping("/checkInformation")
     feign.Response checkInformation(@RequestHeader("Appid") String appid,
-                                           @RequestHeader("Date-Stamp") LocalDateTime date,
-                                           @RequestHeader("Signature") String signature,
-                                           @RequestBody Customer inf);
+                                    @RequestHeader("Date-Stamp") @DateTimeFormat(pattern = Const.DATE_TIME_FORMAT) LocalDateTime date,
+                                    @RequestHeader("Signature") String signature,
+                                    @RequestBody MockAccount inf);
 }

@@ -5,7 +5,7 @@ import com.lingyuango.seckill.mock.common.Const;
 import com.lingyuango.seckill.mock.dao.AccountDao;
 import com.lingyuango.seckill.mock.dao.CheckDao;
 import com.lingyuango.seckill.mock.dao.MoneyDao;
-import com.lingyuango.seckill.mock.pojo.Account;
+import com.lingyuango.seckill.mock.pojo.MockAccount;
 import com.lingyuango.seckill.mock.pojo.Money;
 import com.lingyuango.seckill.mock.service.CheckService;
 import com.lingyuango.seckill.mock.utils.RandomGeneratorTool;
@@ -28,10 +28,10 @@ public class CheckServiceImpl implements CheckService {
     private final MoneyDao moneyDao;
 
     @Override
-    public boolean checkAccount(Account inf) {
+    public boolean checkAccount(MockAccount inf) {
 
-        var count = checkDao.selectCount(Wrappers.<Account>lambdaQuery()
-                .eq(Account::getIdNumber, inf.getIdNumber()));
+        var count = checkDao.selectCount(Wrappers.<MockAccount>lambdaQuery()
+                .eq(MockAccount::getIdNumber, inf.getIdNumber()));
 
         if (count != 0L) {
             return true;
@@ -40,7 +40,7 @@ public class CheckServiceImpl implements CheckService {
         }
     }
 
-    public Boolean randomInsertAccount(Account inf) {
+    public Boolean randomInsertAccount(MockAccount inf) {
         if (RandomGeneratorTool.getRandomBoolean(0.8)) {
             var date = LocalDateTime.now();
             var maxId = accountDao.getMaxId();
@@ -48,7 +48,7 @@ public class CheckServiceImpl implements CheckService {
                 maxId = -1;
             }
             var id = maxId;
-            var account = new Account() {{
+            var account = new MockAccount() {{
                 setIdNumber(inf.getIdNumber());
                 setName(inf.getName());
                 setAccountId(id + Const.ACCOUNT_ID_OFFSET + 1);
@@ -58,7 +58,6 @@ public class CheckServiceImpl implements CheckService {
             accountDao.insert(account);
 
             var count = checkDao.selectCount(Wrappers.lambdaQuery(inf));
-            System.out.println(count);
             if (count == 1L) {
 
                 moneyDao.insert(new Money() {{

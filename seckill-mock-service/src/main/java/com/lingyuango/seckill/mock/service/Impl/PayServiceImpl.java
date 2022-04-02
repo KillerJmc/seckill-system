@@ -5,8 +5,8 @@ import com.lingyuango.seckill.mock.common.Const;
 import com.lingyuango.seckill.mock.dao.MoneyDao;
 import com.lingyuango.seckill.mock.dao.OrderDao;
 import com.lingyuango.seckill.mock.pojo.Money;
-import com.lingyuango.seckill.mock.pojo.PayInfo;
-import com.lingyuango.seckill.mock.pojo.Order;
+import com.lingyuango.seckill.mock.pojo.MockPayInfo;
+import com.lingyuango.seckill.mock.pojo.MockOrder;
 import com.lingyuango.seckill.mock.service.PayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,14 +24,12 @@ public class PayServiceImpl implements PayService {
     private final OrderDao orderDao;
 
     @Override
-    public Order Pay(PayInfo pay) {
+    public MockOrder Pay(MockPayInfo pay) {
         boolean paySuccess;
         var payMoney = pay.getMoney();
         var accountId = moneyDao.getAccountId(pay);
         var money = moneyDao.selectOne(Wrappers.<Money>lambdaQuery().eq(Money::getAccountId, accountId)).getMoney();
         var date = LocalDateTime.now();
-
-        System.out.println(accountId);
 
         if (money < payMoney) {
             paySuccess = false;
@@ -49,7 +47,7 @@ public class PayServiceImpl implements PayService {
             maxId = -1;
         }
         var id = maxId;
-        var order = new Order() {{
+        var order = new MockOrder() {{
             setAccountId(accountId);
             setMoney(-payMoney);
             setPaySuccess(paySuccess);

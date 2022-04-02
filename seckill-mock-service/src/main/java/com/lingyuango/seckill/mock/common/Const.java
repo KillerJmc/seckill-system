@@ -8,6 +8,6 @@ public interface Const {
 
     int ORDER_ID_OFFSET = 1000000;
 
-    String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss:SSS";
 
 }

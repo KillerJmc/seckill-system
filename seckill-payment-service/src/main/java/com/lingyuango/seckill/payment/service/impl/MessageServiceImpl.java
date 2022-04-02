@@ -1,7 +1,9 @@
 package com.lingyuango.seckill.payment.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lingyuango.seckill.payment.pojo.BasicOrder;
+import com.lingyuango.seckill.payment.pojo.PaymentStatus;
 import com.lingyuango.seckill.payment.service.MessageService;
 import com.lingyuango.seckill.payment.dao.OrderDao;
 import com.lingyuango.seckill.payment.service.OrderService;
@@ -17,6 +19,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Objects;
 
 
 /**
@@ -36,14 +39,10 @@ public class MessageServiceImpl implements MessageService, RocketMQListener<Mess
     private final RedisService redisService;
 
     @Async
-    public void OrderHandle(BasicOrder basicOrder) {
+    public void OrderHandle(BasicOrder basicOrder) throws JsonProcessingException {
         var orderId = orderService.insert(basicOrder);
         boolean payStatus;
-        payStatus= orderId != null;
-//        callBackClient.putOrder(new BasicOrder() {{
-//            setOrderId(orderId);
-//            setPutOrderSuccess(payStatus);
-//        }});
+        payStatus = orderId != null;
         redisService.putBasicOrder(new BasicOrder() {{
             setOrderId(orderId);
             setPutOrderSuccess(payStatus);
@@ -52,9 +51,12 @@ public class MessageServiceImpl implements MessageService, RocketMQListener<Mess
 
     @Async
     public void PayHandle(String orderId) throws IOException {
-        var pay = payService.pay(orderId).get();
-        //callBackClient.putPaymentStatus(pay);
-        redisService.putPaymentStatus(pay);
+        var rValue = payService.pay(orderId);
+        var pay = rValue.get();
+        redisService.putPaymentStatus(Objects.requireNonNullElseGet(pay, () -> new PaymentStatus() {{
+            setPaymentSuccess(false);
+            setOrderId(orderId);
+        }}));
     }
 
 
@@ -62,7 +64,11 @@ public class MessageServiceImpl implements MessageService, RocketMQListener<Mess
     public void onMessage(MessageExt message) {
         var obj = ObjectUtil.deserialize(message.getBody());
         if (message.getTags().equals("ORDER")) {
-            OrderHandle((BasicOrder) obj);
+            try {
+                OrderHandle((BasicOrder) obj);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
         } else {
             try {
                 PayHandle((String) obj);

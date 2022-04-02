@@ -23,6 +23,6 @@ public class CheckDateStamp {
     }
 
     public static LocalDateTime convert(String source) {
-        return LocalDateTime.parse(source, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return LocalDateTime.parse(source, DateTimeFormatter.ofPattern(Const.DATE_TIME_FORMAT));
     }
 }

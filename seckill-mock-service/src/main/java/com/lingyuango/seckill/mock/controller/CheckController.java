@@ -1,17 +1,21 @@
 package com.lingyuango.seckill.mock.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jmc.net.R;
+import com.jmc.time.Time;
+import com.lingyuango.seckill.mock.common.Const;
 import com.lingyuango.seckill.mock.common.MsgMapping;
-import com.lingyuango.seckill.mock.pojo.Account;
+import com.lingyuango.seckill.mock.pojo.MockAccount;
 import com.lingyuango.seckill.mock.service.CheckService;
 import com.lingyuango.seckill.mock.service.SecretKeyService;
 import com.lingyuango.seckill.mock.utils.CheckDateStamp;
 import com.lingyuango.seckill.mock.utils.Security;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
@@ -23,7 +27,8 @@ import static com.lingyuango.seckill.mock.common.MsgMapping.VERITY_ERROR;
 /**
  * @author ChaconneLuo
  */
-@Controller
+@Slf4j
+@RestController
 @RequiredArgsConstructor
 public class CheckController {
 
@@ -31,12 +36,11 @@ public class CheckController {
     private final CheckService checkService;
 
     @PostMapping("/checkInformation")
-    public R<Map<String,Boolean>> checkInformation(@RequestHeader("Appid") String appid,
-                              @RequestHeader("Date-Stamp") LocalDateTime date,
-                              @RequestHeader("Signature") String signature,
-                              @RequestBody Account inf,
-                              HttpServletResponse resp) {
-
+    public R<Map<String, Boolean>> checkInformation(@RequestHeader("Appid") String appid,
+                                                    @RequestHeader("Date-Stamp") LocalDateTime date,
+                                                    @RequestHeader("Signature") String signature,
+                                                    @RequestBody MockAccount inf,
+                                                    HttpServletResponse resp) throws JsonProcessingException {
         var secKey = secretKeyService.getSecretKey(appid);
         if (Security.verify(appid, secKey, date, signature, inf)) {
 
@@ -44,12 +48,13 @@ public class CheckController {
 
                 boolean exist = checkService.checkAccount(inf);
                 var nowDate = LocalDateTime.now();
+                Map<String, Boolean> result = Map.of("Result", exist);
 
                 resp.addHeader("Appid", appid);
-                resp.addHeader("Date-Stamp", String.valueOf(nowDate.toEpochSecond(ZoneOffset.of("+8"))));
-                resp.addHeader("Signature", Security.getSignature(appid, secKey, nowDate, exist));
+                resp.addHeader("Date-Stamp", Time.of(nowDate).toString(Const.DATE_TIME_FORMAT));
+                resp.addHeader("Signature", Security.getSignature(appid, secKey, nowDate, result));
                 return R.ok()
-                        .data(Map.of("Result", exist));
+                        .data(result);
 
             } else {
                 return R.error()

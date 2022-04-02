@@ -22,6 +22,7 @@ public class SecretKeyServiceImpl implements SecretKeyService {
         if (secretKey != null) {
             return secretKey.getSecretKey();
         } else {
+
             return null;
         }
     }

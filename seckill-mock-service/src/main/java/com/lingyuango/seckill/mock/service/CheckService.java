@@ -1,9 +1,9 @@
 package com.lingyuango.seckill.mock.service;
 
-import com.lingyuango.seckill.mock.pojo.Account;
+import com.lingyuango.seckill.mock.pojo.MockAccount;
 
 public interface CheckService {
 
-    boolean checkAccount(Account Inf);
+    boolean checkAccount(MockAccount Inf);
 
 }

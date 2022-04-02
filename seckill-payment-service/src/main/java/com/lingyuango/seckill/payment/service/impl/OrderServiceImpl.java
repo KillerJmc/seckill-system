@@ -44,7 +44,6 @@ public class OrderServiceImpl implements OrderService {
     public synchronized Boolean update(String orderId) {
         var order = orderDao.selectOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderId, orderId));
         order.setPaid(true);
-        orderDao.update(order,Wrappers.<Order>lambdaUpdate().eq(Order::getOrderId, orderId));
-        return true;
+        return orderDao.update(order, Wrappers.<Order>lambdaUpdate().eq(Order::getOrderId, orderId)) != 0;
     }
 }

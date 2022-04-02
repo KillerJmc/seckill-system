@@ -1,6 +1,7 @@
 package com.lingyuango.seckill.mock.controller;
 
 import com.jmc.net.R;
+import com.lingyuango.seckill.mock.pojo.CreditInformation;
 import com.lingyuango.seckill.mock.service.CreditMockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -16,7 +17,7 @@ public class CreditMockController {
 
     @RequestMapping("/getRandomCredit")
     @ResponseBody
-    public R getCreditInformation() {
+    public R<Map<String, CreditInformation>> getCreditInformation() {
         return R.ok()
                 .data(Map.of("randomCredit", creditMockService.getRandomCreditInformation()));
     }

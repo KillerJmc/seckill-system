@@ -14,4 +14,7 @@ public interface Const {
     String REDIS_ORDER_PREFIX = "ORDER-";
 
     String REDIS_PAY_PREFIX = "PAY-";
+
+    String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss:SSS";
+
 }

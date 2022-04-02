@@ -1,6 +1,8 @@
 package com.lingyuango.seckill.payment.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lingyuango.seckill.payment.common.Const;
 import com.lingyuango.seckill.payment.pojo.BasicOrder;
 import com.lingyuango.seckill.payment.pojo.PaymentStatus;
@@ -8,9 +10,6 @@ import com.lingyuango.seckill.payment.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.TimeUnit;
-
 /**
  * @author ChaconneLuo
  */
@@ -19,16 +18,17 @@ import java.util.concurrent.TimeUnit;
 public class RedisServiceImpl implements RedisService {
 
     private final StringRedisTemplate redisTemplate;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
 
     @Override
-    public void putPaymentStatus(PaymentStatus paymentStatus) {
-        redisTemplate.opsForValue().set(Const.REDIS_PAY_PREFIX + paymentStatus.getOrderId(), JSONObject.toJSONString(paymentStatus));
+    public void putPaymentStatus(PaymentStatus paymentStatus) throws JsonProcessingException {
+        redisTemplate.opsForValue().set(Const.REDIS_PAY_PREFIX + paymentStatus.getOrderId(), objectMapper.writeValueAsString(paymentStatus));
     }
 
     @Override
-    public void putBasicOrder(BasicOrder basicOrder) {
-        redisTemplate.opsForValue().set(Const.REDIS_PAY_PREFIX + basicOrder.getOrderId(), JSONObject.toJSONString(basicOrder));
+    public void putBasicOrder(BasicOrder basicOrder) throws JsonProcessingException {
+        redisTemplate.opsForValue().set(Const.REDIS_ORDER_PREFIX + basicOrder.getOrderId(), objectMapper.writeValueAsString(basicOrder));
     }
 
     @Override
