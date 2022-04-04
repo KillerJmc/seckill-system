@@ -14,8 +14,6 @@
 		<module>seckill-service</module>
 		<module>seckill-payment-service</module>
 		<module>seckill-mock-service</module>
-
-		<module>seckill-provider-9001</module>
 	</modules>
 
 	<properties>

@@ -39,4 +39,9 @@ public interface Const {
      * redis中秒杀id的键名
      */
     String REDIS_SECKILL_ID_KEY = "seckillUrl";
+
+    /**
+     * redis中占位字符串
+     */
+    String REDIS_NULL_STR = "1";
 }

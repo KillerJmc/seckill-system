@@ -1,7 +1,9 @@
 package com.lingyuango.seckill.payment.controller;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jmc.net.R;
+import com.lingyuango.seckill.payment.common.Const;
 import com.lingyuango.seckill.payment.common.MsgMapping;
 import com.lingyuango.seckill.payment.pojo.BasicOrder;
 import com.lingyuango.seckill.payment.pojo.PaymentStatus;
@@ -12,6 +14,7 @@ import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class PaymentController {
     private final OrderProducer orderProducer;
     private final RedisService redisService;
+    private final StringRedisTemplate redisTemplate;
 
     /**
      * 下订单
@@ -45,7 +49,11 @@ public class PaymentController {
      */
     @PostMapping("/requestForPay")
     public R<Void> requestForPay(String orderId) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
+
+        log.warn("requestForPay: orderId -> {}", orderId);
+
         Message message = new Message("RequestMsg", "PAY", ObjectUtil.serialize(orderId));
+        log.warn("requestForPay: message -> {}", message);
 
         var send = orderProducer.getProducer().send(message);
         return R.ok()
@@ -57,7 +65,7 @@ public class PaymentController {
      * 获取订单信息
      */
     @PostMapping("/getOrder")
-    R<BasicOrder> getOrder(Integer accountId) {
+    R<BasicOrder> getOrder(Integer accountId) throws JsonProcessingException {
         return R.ok().data(redisService.getBasicOrder(accountId));
     }
 
@@ -66,7 +74,7 @@ public class PaymentController {
      * 获取订单支付状态
      */
     @PostMapping("/getPaymentStatus")
-    R<PaymentStatus> getPaymentStatus(String orderId) {
+    R<PaymentStatus> getPaymentStatus(String orderId) throws JsonProcessingException {
         return R.ok().data(redisService.getPaymentStatus(orderId));
     }
 

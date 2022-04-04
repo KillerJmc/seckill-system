@@ -46,8 +46,8 @@ public class PayServiceImpl implements PayService {
     @Transactional
     public synchronized R<PaymentStatus> pay(String orderId) throws IOException {
         var order = orderDao.selectOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderId, orderId));
-        var customer = customerClient.getCustomer(order.getAccountId()).getData();
-        var product = seckillActivityClient.getProduct(order.getSeckillId());
+        var customer = customerClient.getCustomer(order.getAccountId()).get();
+        var product = seckillActivityClient.getProduct(order.getSeckillId()).get();
 
         var date = LocalDateTime.now();
         var checkAccount = new MockAccount() {{

@@ -28,22 +28,23 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void putBasicOrder(BasicOrder basicOrder) throws JsonProcessingException {
-        redisTemplate.opsForValue().set(Const.REDIS_ORDER_PREFIX + basicOrder.getOrderId(), objectMapper.writeValueAsString(basicOrder));
+        redisTemplate.opsForValue().set(Const.REDIS_ORDER_PREFIX + basicOrder.getAccountId(), objectMapper.writeValueAsString(basicOrder));
     }
 
     @Override
-    public PaymentStatus getPaymentStatus(String orderId) {
+    public PaymentStatus getPaymentStatus(String orderId) throws JsonProcessingException {
         String result = redisTemplate.opsForValue().get(Const.REDIS_PAY_PREFIX + orderId);
         if (result == null) {
             return null;
-        } else return JSONObject.parseObject(result, PaymentStatus.class);
+        } else return objectMapper.readValue(result, PaymentStatus.class);
     }
 
     @Override
-    public BasicOrder getBasicOrder(Integer accountId) {
+    public BasicOrder getBasicOrder(Integer accountId) throws JsonProcessingException {
         String result = redisTemplate.opsForValue().get(Const.REDIS_ORDER_PREFIX + accountId);
         if (result == null) {
             return null;
-        } else return JSONObject.parseObject(result, BasicOrder.class);
+        } else return objectMapper.readValue(result, BasicOrder.class);
     }
+
 }

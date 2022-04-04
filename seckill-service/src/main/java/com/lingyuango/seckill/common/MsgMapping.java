@@ -114,4 +114,24 @@ public interface MsgMapping {
      * 支付状态信息还没准备好
      */
     String PAYMENT_STATUS_NOT_READY = "支付状态信息还没准备好";
+
+    /**
+     * 还没有购买秒杀商品
+     */
+    String NOT_PURCHASE = "还没有购买秒杀商品";
+
+    /**
+     * 订单号为空
+     */
+    String EMPTY_ORDER_ID = "订单号为空";
+
+    /**
+     * 还未主动获取订单
+     */
+    String ORDER_NOT_REQUIRED = "还未主动获取订单";
+
+    /**
+     * 订单号错误
+     */
+    String WRONG_ORDER_ID = "订单号错误";
 }

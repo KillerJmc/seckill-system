@@ -1,9 +1,9 @@
 package com.lingyuango.seckill.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.jmc.lang.Objs;
 import com.jmc.lang.Strs;
 import com.jmc.lang.Threads;
-import com.jmc.net.HttpStatus;
 import com.jmc.net.R;
 import com.jmc.util.Rand;
 import com.lingyuango.seckill.client.PaymentClient;
@@ -14,6 +14,7 @@ import com.lingyuango.seckill.common.Const;
 import com.lingyuango.seckill.common.MsgMapping;
 import com.lingyuango.seckill.pojo.*;
 import com.lingyuango.seckill.service.*;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -191,13 +192,13 @@ public class SeckillActivityController {
     @PostConstruct
     public void initStorageInRedis() {
         var seckillId = seckillActivityService.getLatestSeckillId();
-//        var storage = storageClient.getStorage(seckillId).get();
+        var storage = storageClient.getStorage(seckillId).get();
 
         // 初始化Redis库存
         redisTemplate.opsForValue().set(Const.REDIS_SECKILL_ID_KEY, String.valueOf(seckillId));
-        redisTemplate.opsForValue().set(Const.REDIS_STORAGE_PREFIX + seckillId, String.valueOf(100000));
+        redisTemplate.opsForValue().set(Const.REDIS_STORAGE_PREFIX + seckillId, String.valueOf(storage));
         log.info("初始化Redis 秒杀id：{}", seckillId);
-        log.info("初始化Redis 库存：{}", 100000);
+        log.info("初始化Redis 库存：{}", storage);
     }
 
     /**
@@ -274,7 +275,7 @@ public class SeckillActivityController {
         // 把秒杀成功用户放进redis (seckillSuccess-seckillId:customerId -> 1)
         var randCustomerId = Rand.nextInt();
         redisTemplate.opsForValue()
-                .set(Const.REDIS_SECKILL_SUCCESS_PREFIX + seckillId + ":" + randCustomerId, "1");
+                .set(Const.REDIS_SECKILL_SUCCESS_PREFIX + seckillId + ":" + randCustomerId, Const.REDIS_NULL_STR);
 
         // 返回秒杀成功信息
         return R.ok()
@@ -380,6 +381,7 @@ public class SeckillActivityController {
         paymentClient.placeOrder(new BasicOrder() {{
             setSeckillId(Integer.valueOf(seckillId));
             setAccountId(customerId);
+            setMoney(12345d);
         }}).get();
         // endregion
 
@@ -403,26 +405,32 @@ public class SeckillActivityController {
                     .build();
         }
 
-        // 轮询获取订单信息
-        while (true) {
-            // 发送获取订单请求
-            var orderData = paymentClient.getOrder(accountId);
-
-            // 如果请求错误
-            if (orderData.getCode() == HttpStatus.ERROR) {
-                // 如果不是发生订单还未准备好的错误（其他错误）
-                if (!MsgMapping.ORDER_NOT_READY.equals(orderData.getMessage())) {
-                    // 直接返回错误信息
-                    return orderData;
-                }
-                // 否则就是订单未准备好，延时重新获取
-                Threads.sleep(100);
-                continue;
-            }
-
-            // 请求成功直接返回订单数据
-            return orderData;
+        // 从redis中检查用户是否已经购买
+        var seckillId = redisTemplate.opsForValue().get(Const.REDIS_SECKILL_ID_KEY);
+        var seckillSuccess = redisTemplate.opsForValue()
+                .get(Const.REDIS_SECKILL_SUCCESS_PREFIX + seckillId + ":" + accountId);
+        if (seckillSuccess == null) {
+            return R.error()
+                    .msg(MsgMapping.NOT_PURCHASE)
+                    .build();
         }
+
+        // 目标订单
+        BasicOrder order;
+
+        // 轮询获取订单信息
+        while ((order = paymentClient.getOrder(accountId).get()) == null) {
+            // 订单还没准备好，延时重新获取
+            Threads.sleep(100);
+        }
+
+        // 把订单号放进redis（seckillSuccess-seckillId:accountId -> orderId）
+        redisTemplate.opsForValue()
+                .set(Const.REDIS_SECKILL_SUCCESS_PREFIX + seckillId + ":" + accountId, order.getOrderId());
+
+        // 请求成功直接返回订单数据
+        return R.ok()
+                .data(order);
     }
 
     /**
@@ -431,35 +439,60 @@ public class SeckillActivityController {
     @PostMapping("/pay")
     @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public R<PaymentStatus> pay(@CookieValue(value = "token", required = false) String token, String orderId) {
+        // 检查订单号是否为空
+        if (Objs.nullOrEmpty(orderId)) {
+            return R.error()
+                    .msg(MsgMapping.EMPTY_ORDER_ID)
+                    .build();
+        }
+
         // 检查token
-        if (tokenService.getAccountId(token) == null) {
+        Integer accountId;
+        if ((accountId = tokenService.getAccountId(token)) == null) {
             return R.error()
                     .msg(MsgMapping.NOT_LOGGED_ON)
+                    .build();
+        }
+
+        var seckillId = redisTemplate.opsForValue().get(Const.REDIS_SECKILL_ID_KEY);
+        var realOrderId = redisTemplate.opsForValue()
+                .get(Const.REDIS_SECKILL_SUCCESS_PREFIX + seckillId + ":" + accountId);
+
+        // 从redis中检查用户是否已经购买
+        if (realOrderId == null) {
+            return R.error()
+                    .msg(MsgMapping.NOT_PURCHASE)
+                    .build();
+        }
+
+        // 检测用户是否获取订单
+        if (realOrderId.equals(Const.REDIS_NULL_STR)) {
+            return R.error()
+                    .msg(MsgMapping.ORDER_NOT_REQUIRED)
+                    .build();
+        }
+
+        // 检查用户订单号正确性
+        if (!realOrderId.equals(orderId)) {
+            return R.error()
+                    .msg(MsgMapping.WRONG_ORDER_ID)
                     .build();
         }
 
         // 请求支付
         paymentClient.requestForPay(orderId).get();
 
+        // 支付状态信息
+        PaymentStatus paymentStatus;
+
         // 轮询获取支付状态信息
-        while (true) {
-            // 发送获取订单请求
-            var paymentStatusData = paymentClient.getPaymentStatus(orderId);
-
-            // 如果请求错误
-            if (paymentStatusData.getCode() == HttpStatus.ERROR) {
-                // 如果不是发生支付状态信息还未准备好的错误（其他错误）
-                if (!MsgMapping.PAYMENT_STATUS_NOT_READY.equals(paymentStatusData.getMessage())) {
-                    // 直接返回错误信息
-                    return paymentStatusData;
-                }
-                // 否则就是支付状态信息未准备好，延时重新获取
-                Threads.sleep(100);
-                continue;
-            }
-
-            // 请求成功直接返回订单数据
-            return paymentStatusData;
+        while ((paymentStatus = paymentClient.getPaymentStatus(orderId).get()) == null) {
+            // 支付状态信息还没准备好，延时重新获取
+            Threads.sleep(100);
         }
+
+        // 请求成功直接返回支付状态信息
+        return R.ok()
+                .data(paymentStatus);
     }
 }

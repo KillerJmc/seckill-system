@@ -22,7 +22,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDao orderDao;
 
     @Override
-    public synchronized String insert(BasicOrder basicOrder) {
+    public synchronized Order insert(BasicOrder basicOrder) {
         var seckillId = basicOrder.getSeckillId();
         var accountId = basicOrder.getAccountId();
         var date = LocalDateTime.now();
@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
             setPaid(false);
         }};
         orderDao.insert(seckillOrder);
-        return orderId;
+        return seckillOrder;
     }
 
     @Override

@@ -11,7 +11,7 @@ public interface Const {
 
     int TEN_MILLIONS = 10 * 60 * 1000;
 
-    String REDIS_ORDER_PREFIX = "ORDER-";
+    String REDIS_ORDER_PREFIX = "ORDER:";
 
     String REDIS_PAY_PREFIX = "PAY-";
 

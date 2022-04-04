@@ -10,8 +10,8 @@ public interface RedisService {
 
     void putBasicOrder(BasicOrder basicOrder) throws JsonProcessingException;
 
-    PaymentStatus getPaymentStatus(String orderId);
+    PaymentStatus getPaymentStatus(String orderId) throws JsonProcessingException;
 
-    BasicOrder getBasicOrder(Integer accountId);
+    BasicOrder getBasicOrder(Integer accountId) throws JsonProcessingException;
 
 }
