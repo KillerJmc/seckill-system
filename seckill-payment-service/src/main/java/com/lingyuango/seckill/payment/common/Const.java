@@ -17,4 +17,8 @@ public interface Const {
 
     String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss:SSS";
 
+    String ORDER_IN_BINDING = "placeOrder-out-0";
+
+    String PAY_IN_BINDING = "requestForPay-out-0";
+
 }

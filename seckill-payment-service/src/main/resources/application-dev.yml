@@ -8,11 +8,27 @@ spring:
     url: jdbc:mysql:///seckill_payment_db
     username: root
     password: root
+  cloud:
+    stream:
+      default-binder: rocketmq
+      rocketmq:
+        binder:
+          name-server: localhost:9876
+          group: default
+      bindings:
+        placeOrder-out-0:
+          destination: order
+        requestForPay-out-0:
+          destination: pay
+        orderHandle-in-0:
+          destination: order
+          group: order
+        payHandle-in-0:
+          destination: pay
+          group: pay
 
-rocketmq:
-  producer:
-    group: cart-producer-group
-  name-server: localhost:9876
+    function:
+      definition: orderHandle;payHandle
 
 management:
   endpoints:

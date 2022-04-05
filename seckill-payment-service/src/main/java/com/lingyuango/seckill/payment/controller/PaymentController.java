@@ -1,20 +1,17 @@
 package com.lingyuango.seckill.payment.controller;
 
-import cn.hutool.core.util.ObjectUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jmc.net.R;
 import com.lingyuango.seckill.payment.common.Const;
 import com.lingyuango.seckill.payment.common.MsgMapping;
 import com.lingyuango.seckill.payment.pojo.BasicOrder;
 import com.lingyuango.seckill.payment.pojo.PaymentStatus;
-import com.lingyuango.seckill.payment.producer.OrderProducer;
 import com.lingyuango.seckill.payment.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 
@@ -25,20 +22,18 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/payment")
+
 public class PaymentController {
-    private final OrderProducer orderProducer;
+
     private final RedisService redisService;
-    private final StringRedisTemplate redisTemplate;
+    private final StreamBridge streamBridge;
 
     /**
      * 下订单
      */
     @PostMapping("/placeOrder")
-    public R<Void> placeOrder(@RequestBody BasicOrder msg) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
-        var message = new Message("RequestMsg", "ORDER", ObjectUtil.serialize(msg));
-
-        var send = orderProducer.getProducer().send(message);
-        log.info(send.toString());
+    public R<Void> placeOrder(@RequestBody BasicOrder msg) {
+        streamBridge.send(Const.ORDER_IN_BINDING, msg);
         return R.ok()
                 .msg(MsgMapping.ORDER_SEND_SUCCESS)
                 .build();
@@ -48,14 +43,11 @@ public class PaymentController {
      * 尝试支付
      */
     @PostMapping("/requestForPay")
-    public R<Void> requestForPay(String orderId) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
-
+    public R<Void> requestForPay(String orderId) {
         log.warn("requestForPay: orderId -> {}", orderId);
 
-        Message message = new Message("RequestMsg", "PAY", ObjectUtil.serialize(orderId));
-        log.warn("requestForPay: message -> {}", message);
+        streamBridge.send(Const.PAY_IN_BINDING, orderId);
 
-        var send = orderProducer.getProducer().send(message);
         return R.ok()
                 .msg(MsgMapping.PAY_SEND_SUCCESS)
                 .build();

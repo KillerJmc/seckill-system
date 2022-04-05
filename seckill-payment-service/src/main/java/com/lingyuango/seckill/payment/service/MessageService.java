@@ -10,7 +10,7 @@ import java.io.IOException;
  */
 public interface MessageService {
 
-    void OrderHandle(BasicOrder basicOrder) throws JsonProcessingException;
+    void orderHandle(BasicOrder basicOrder) throws JsonProcessingException;
 
-    void PayHandle(String orderId) throws IOException;
+    void payHandle(String orderId) throws IOException;
 }
