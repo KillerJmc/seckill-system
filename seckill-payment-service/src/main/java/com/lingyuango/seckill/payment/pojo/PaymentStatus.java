@@ -9,4 +9,5 @@ import lombok.Data;
 public class PaymentStatus {
     private String orderId;
     private Boolean paymentSuccess;
+    private Integer accountId;
 }

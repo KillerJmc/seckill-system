@@ -46,14 +46,8 @@ public class PayServiceImpl implements PayService {
     @Transactional
     public synchronized R<PaymentStatus> pay(String orderId) throws IOException {
         var order = orderDao.selectOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderId, orderId));
-        var customer = new Customer(){{
-            setAccountId(10000);
-            setName("Luo");
-            setIdNumber("610323200301070012");
-        }};//customerClient.getCustomer(order.getAccountId()).get();
-        var product = new Product(){{
-            setPrice(1000.0);
-        }};//seckillActivityClient.getProduct(order.getSeckillId()).get();
+        var customer = customerClient.getCustomer(order.getAccountId()).get();
+        var product = seckillActivityClient.getProduct(order.getSeckillId()).get();
 
         var date = LocalDateTime.now();
         var checkAccount = new MockAccount() {{
@@ -74,16 +68,26 @@ public class PayServiceImpl implements PayService {
             var signature = Security.getSignature(Const.Appid, Const.secKey, date, payInfo);
             var response = payClient.pay(Const.Appid, date, signature, payInfo);
             var payOrder = Security.VerifyMapMessage(response, MockOrder.class);
-            if (payOrder != null && payOrder.getPaySuccess()) {
-                var flag = orderService.update(orderId);
-                var storageFlag = storageService.decrease(order.getSeckillId());
-                if (flag && storageFlag) {
-                    return R.ok().data(new PaymentStatus() {{
-                        setOrderId(orderId);
-                        setPaymentSuccess(true);
-                    }});
+            if (payOrder != null) {
+                if (payOrder.getPaySuccess()) {
+                    var flag = orderService.update(orderId);
+                    var storageFlag = storageService.decrease(order.getSeckillId());
+                    if (flag && storageFlag) {
+                        return R.ok().data(new PaymentStatus() {{
+                            setAccountId(customer.getAccountId());
+                            setOrderId(orderId);
+                            setPaymentSuccess(true);
+                        }});
+                    } else {
+                        return R.ok().data(new PaymentStatus() {{
+                            setAccountId(customer.getAccountId());
+                            setOrderId(orderId);
+                            setPaymentSuccess(false);
+                        }});
+                    }
                 } else {
-                    return R.ok().data(new PaymentStatus() {{
+                    return R.ok().msg(MsgMapping.INSUFFICIENT_BALANCE).data(new PaymentStatus() {{
+                        setAccountId(customer.getAccountId());
                         setOrderId(orderId);
                         setPaymentSuccess(false);
                     }});

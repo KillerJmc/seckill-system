@@ -21,4 +21,6 @@ public interface Const {
 
     String PAY_IN_BINDING = "requestForPay-out-0";
 
+    int ORDER_OVERTIME_MILLIONS = 30 * 60 * 1000;
+
 }

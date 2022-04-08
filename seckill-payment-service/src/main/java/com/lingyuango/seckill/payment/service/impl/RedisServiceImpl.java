@@ -10,6 +10,9 @@ import com.lingyuango.seckill.payment.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author ChaconneLuo
  */
@@ -23,12 +26,13 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void putPaymentStatus(PaymentStatus paymentStatus) throws JsonProcessingException {
+        redisTemplate.delete(Const.REDIS_ORDER_PREFIX + paymentStatus.getAccountId());
         redisTemplate.opsForValue().set(Const.REDIS_PAY_PREFIX + paymentStatus.getOrderId(), objectMapper.writeValueAsString(paymentStatus));
     }
 
     @Override
     public void putBasicOrder(BasicOrder basicOrder) throws JsonProcessingException {
-        redisTemplate.opsForValue().set(Const.REDIS_ORDER_PREFIX + basicOrder.getAccountId(), objectMapper.writeValueAsString(basicOrder));
+        redisTemplate.opsForValue().set(Const.REDIS_ORDER_PREFIX + basicOrder.getAccountId(), objectMapper.writeValueAsString(basicOrder), Const.ORDER_OVERTIME_MILLIONS, TimeUnit.MILLISECONDS);
     }
 
     @Override
