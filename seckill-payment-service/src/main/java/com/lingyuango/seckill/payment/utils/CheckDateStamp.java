@@ -16,10 +16,10 @@ public class CheckDateStamp {
 
     }
 
-    public static boolean CheckOverTime(LocalDateTime dateTime) {
+    public static boolean CheckOverTime(LocalDateTime dateTime, int time) {
         var timeOne = dateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
         var timeTwo = System.currentTimeMillis();
-        return timeTwo - timeOne <= Const.TEN_MILLIONS;
+        return timeTwo - timeOne <= time;
     }
 
     public static LocalDateTime convert(String source) {

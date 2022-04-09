@@ -32,7 +32,6 @@ public class Order {
 
     private Boolean paid;
 
-    @TableField(select = false)
     private LocalDateTime gmtCreate;
 
     @TableField(select = false)

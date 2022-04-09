@@ -6,6 +6,8 @@ import com.lingyuango.seckill.payment.common.Const;
 import com.lingyuango.seckill.payment.common.MsgMapping;
 import com.lingyuango.seckill.payment.pojo.BasicOrder;
 import com.lingyuango.seckill.payment.pojo.PaymentStatus;
+import com.lingyuango.seckill.payment.service.OrderService;
+import com.lingyuango.seckill.payment.service.PayService;
 import com.lingyuango.seckill.payment.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.exception.MQBrokerException;
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 public class PaymentController {
 
+    private final OrderService orderService;
     private final RedisService redisService;
     private final StreamBridge streamBridge;
 
@@ -45,12 +48,22 @@ public class PaymentController {
     @PostMapping("/requestForPay")
     public R<Void> requestForPay(String orderId) {
         log.warn("requestForPay: orderId -> {}", orderId);
+        if (orderService.OrderOverTimeCheck(orderId)) {
+            streamBridge.send(Const.PAY_IN_BINDING, orderId);
 
-        streamBridge.send(Const.PAY_IN_BINDING, orderId);
+            return R.ok()
+                    .msg(MsgMapping.PAY_SEND_SUCCESS)
+                    .build();
+        } else {
+            Integer accountId = orderService.getAccountIdFromOrder(orderId);
+            redisService.putMessage(orderId);
+            redisService.deleteOrder(accountId);
+            return R.error()
+                    .msg(MsgMapping.ORDER_OVERTIME)
+                    .build();
+        }
 
-        return R.ok()
-                .msg(MsgMapping.PAY_SEND_SUCCESS)
-                .build();
+
     }
 
     /**

@@ -7,4 +7,5 @@ public interface MsgMapping {
     String PAY_REPEATED = "PAY_REPEATED";
     String UNKNOWN_ERROR = "UNKNOWN_ERROR";
     String INSUFFICIENT_BALANCE = "INSUFFICIENT_BALANCE";
+    String ORDER_OVERTIME = "ORDER_OVERTIME";
 }

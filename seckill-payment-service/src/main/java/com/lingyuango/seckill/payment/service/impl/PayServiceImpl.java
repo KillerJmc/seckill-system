@@ -1,8 +1,6 @@
 package com.lingyuango.seckill.payment.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jmc.net.HttpStatus;
 import com.jmc.net.R;
 import com.lingyuango.seckill.payment.common.Const;
 import com.lingyuango.seckill.payment.common.MsgMapping;
@@ -23,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Map;
 
 /**
  * @author ChaconneLuo

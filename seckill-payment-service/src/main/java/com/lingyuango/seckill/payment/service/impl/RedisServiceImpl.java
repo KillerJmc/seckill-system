@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lingyuango.seckill.payment.common.Const;
+import com.lingyuango.seckill.payment.common.MsgMapping;
 import com.lingyuango.seckill.payment.pojo.BasicOrder;
 import com.lingyuango.seckill.payment.pojo.PaymentStatus;
 import com.lingyuango.seckill.payment.service.RedisService;
@@ -49,6 +50,16 @@ public class RedisServiceImpl implements RedisService {
         if (result == null) {
             return null;
         } else return objectMapper.readValue(result, BasicOrder.class);
+    }
+
+    @Override
+    public void putMessage(String orderId) {
+        redisTemplate.opsForValue().set(Const.REDIS_PAY_PREFIX + orderId, MsgMapping.ORDER_OVERTIME);
+    }
+
+    @Override
+    public void deleteOrder(Integer accountId) {
+        redisTemplate.delete(Const.REDIS_ORDER_PREFIX + accountId);
     }
 
 }
