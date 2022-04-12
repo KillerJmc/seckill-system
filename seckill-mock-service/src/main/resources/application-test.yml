@@ -11,8 +11,6 @@ spring:
   cloud:
     nacos:
       server-addr: nacos:8848
-  redis:
-    host: redis
 
 management:
   endpoints:

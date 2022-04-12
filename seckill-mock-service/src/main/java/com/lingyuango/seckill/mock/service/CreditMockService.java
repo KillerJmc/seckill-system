@@ -1,9 +1,9 @@
 package com.lingyuango.seckill.mock.service;
 
-import com.lingyuango.seckill.mock.pojo.CreditInformation;
+import com.lingyuango.seckill.mock.pojo.MockCreditInfo;
 
 public interface CreditMockService {
 
-    CreditInformation getRandomCreditInformation();
+    MockCreditInfo getRandomCreditInformation();
 
 }

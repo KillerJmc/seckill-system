@@ -47,7 +47,6 @@ public class PaymentController {
      */
     @PostMapping("/requestForPay")
     public R<Void> requestForPay(String orderId) {
-        log.warn("requestForPay: orderId -> {}", orderId);
         if (orderService.OrderOverTimeCheck(orderId)) {
             streamBridge.send(Const.PAY_IN_BINDING, orderId);
 

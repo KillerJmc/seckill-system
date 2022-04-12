@@ -1,10 +1,13 @@
-package com.lingyuango.seckill.mock.pojo;
+package com.lingyuango.seckill.account.pojo;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * 模拟用户初筛信息
+ * @author Jmc
+ */
 @Data
-public class CreditInformation {
+public class MockCreditInfo {
     /**
      * 工作状态
      */
@@ -33,5 +36,5 @@ public class CreditInformation {
     /**
      * 三年内逾期金额
      */
-    private Integer overdueMoney;
+    private Double overdueMoney;
 }

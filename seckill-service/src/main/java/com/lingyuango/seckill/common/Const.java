@@ -44,4 +44,9 @@ public interface Const {
      * redis中占位字符串
      */
     String REDIS_NULL_STR = "1";
+
+    /**
+     * redis中商品金额的前缀
+     */
+    String REDIS_PRODUCT_PRICE_PREFIX = "productPrice-";
 }
