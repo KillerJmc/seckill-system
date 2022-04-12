@@ -73,21 +73,13 @@ public class PayServiceImpl implements PayService {
                             setPaymentSuccess(true);
                         }});
                     } else {
-                        return R.ok().data(new PaymentStatus() {{
-                            setAccountId(customer.getAccountId());
-                            setOrderId(orderId);
-                            setPaymentSuccess(false);
-                        }});
+                        return R.error().msg(MsgMapping.UNKNOWN_ERROR).build();
                     }
                 } else {
-                    return R.ok().msg(MsgMapping.INSUFFICIENT_BALANCE).data(new PaymentStatus() {{
-                        setAccountId(customer.getAccountId());
-                        setOrderId(orderId);
-                        setPaymentSuccess(false);
-                    }});
+                    return R.error().msg(MsgMapping.INSUFFICIENT_BALANCE).build();
                 }
             }
         }
-        return R.ok().msg(MsgMapping.ACCOUNT_NOT_EXISTED).build();
+        return R.error().msg(MsgMapping.ACCOUNT_NOT_EXISTED).build();
     }
 }

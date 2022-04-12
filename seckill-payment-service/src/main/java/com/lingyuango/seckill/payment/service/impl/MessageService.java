@@ -56,7 +56,7 @@ public class MessageService {
                     setOrderId(orderId);
                 }})));
             } else {
-                redisService.putMessage(orderId, MsgMapping.ACCOUNT_NOT_EXISTED);
+                redisService.putMessage(orderId, rValue.getMessage());
             }
 
         };
