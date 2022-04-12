@@ -8,6 +8,8 @@ spring:
     url: jdbc:mysql:///seckill_payment_db
     username: root
     password: plf,.123
+  redis:
+      database: 1
   cloud:
     stream:
       default-binder: rocketmq

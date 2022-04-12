@@ -2,9 +2,12 @@ package com.lingyuango.seckill.account.controller;
 
 import com.jmc.lang.Objs;
 import com.jmc.net.R;
+import com.lingyuango.seckill.account.client.MockCreditClient;
 import com.lingyuango.seckill.account.common.MsgMapping;
 import com.lingyuango.seckill.account.pojo.Customer;
+import com.lingyuango.seckill.account.pojo.MockCreditInfo;
 import com.lingyuango.seckill.account.pojo.PreScreening;
+import com.lingyuango.seckill.account.service.CustomerInfoService;
 import com.lingyuango.seckill.account.service.PreScreeningService;
 import com.lingyuango.seckill.account.client.SeckillApplicationFormClient;
 import com.lingyuango.seckill.account.service.TokenService;
@@ -27,8 +30,10 @@ import java.util.Map;
 public class CustomerController {
     private final TokenService tokenService;
     private final CustomerService customerService;
+    private final CustomerInfoService customerInfoService;
     private final PreScreeningService preScreeningService;
     private final SeckillApplicationFormClient seckillApplicationFormClient;
+    private final MockCreditClient mockCreditClient;
 
     /**
      * 通过账户id获取客户
@@ -72,6 +77,14 @@ public class CustomerController {
         if (!customerService.insert(customer)) {
             return R.error()
                     .msg(MsgMapping.ID_NUM_REPEATED)
+                    .build();
+        }
+
+        // 插入模拟的用户初筛信息
+        var mockCreditInfo = mockCreditClient.getCreditInfo().get();
+        if (!customerInfoService.insert(customer, mockCreditInfo)) {
+            return R.error()
+                    .msg(MsgMapping.USER_PRE_SCREEN_INFO_CREATE_ERROR)
                     .build();
         }
 

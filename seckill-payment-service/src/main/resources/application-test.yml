@@ -9,7 +9,8 @@ spring:
     username: root
     password: root
   redis:
-    host: redis
+    host: payment-redis
+    port: 6379
   cloud:
     nacos:
       server-addr: nacos:8848
@@ -31,8 +32,8 @@ spring:
           destination: pay
           group: pay
 
-      function:
-        definition: orderHandle;payHandle
+    function:
+      definition: orderHandle;payHandle
 
 management:
   endpoints:

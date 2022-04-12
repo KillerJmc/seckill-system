@@ -8,13 +8,10 @@ import com.jmc.net.R;
 import com.jmc.util.Rand;
 import com.lingyuango.seckill.client.PaymentClient;
 import com.lingyuango.seckill.client.PreScreeningClient;
-import com.lingyuango.seckill.client.SeckillSuccessClient;
-import com.lingyuango.seckill.client.StorageClient;
 import com.lingyuango.seckill.common.Const;
 import com.lingyuango.seckill.common.MsgMapping;
 import com.lingyuango.seckill.pojo.*;
 import com.lingyuango.seckill.service.*;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * @author Jmc
@@ -36,8 +34,6 @@ public class SeckillActivityController {
     private final TokenService tokenService;
     private final SeckillActivityService seckillActivityService;
     private final SeckillApplicationFormService seckillApplicationFormService;
-    private final StorageClient storageClient;
-    private final SeckillSuccessClient seckillSuccessClient;
     private final PreScreeningClient preScreeningClient;
     private final PaymentClient paymentClient;
 
@@ -187,100 +183,24 @@ public class SeckillActivityController {
     }
 
     /**
-     * 初始化在Redis中秒杀产品的库存
+     * 初始化在Redis中秒杀活动的基本信息
      */
     @PostConstruct
-    public void initStorageInRedis() {
+    public void initActivityInfoInRedis() {
+        // 从服务中获取秒杀活动信息
         var seckillId = seckillActivityService.getLatestSeckillId();
-        var storage = storageClient.getStorage(seckillId).get();
+        var storage = seckillActivityService.getLatest().getAmount();
+        var productPrice = seckillActivityService.getLatest().getProduct().getPrice();
 
         // 初始化Redis库存
         redisTemplate.opsForValue().set(Const.REDIS_SECKILL_ID_KEY, String.valueOf(seckillId));
         redisTemplate.opsForValue().set(Const.REDIS_STORAGE_PREFIX + seckillId, String.valueOf(storage));
-        log.info("初始化Redis 秒杀id：{}", seckillId);
-        log.info("初始化Redis 库存：{}", storage);
-    }
+        redisTemplate.opsForValue().set(Const.REDIS_PRODUCT_PRICE_PREFIX + seckillId, String.valueOf(productPrice));
 
-    /**
-     * 测试秒杀接口
-     */
-    @PostMapping("/testSeckill")
-    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
-    public R<Void> testSeckill(String token, String seckillUrl) {
-        // 如果已经卖完就直接返回
-        if (this.soldOut) {
-            // 返回商品售完信息
-            return R.error()
-                    .msg(MsgMapping.PRODUCT_SOLD_OUT)
-                    .build();
-        }
-
-        Integer customerId;
-        if ((customerId = tokenService.getAccountId(token)) == null) {
-            return R.error()
-                    .msg(MsgMapping.NOT_LOGGED_ON)
-                    .build();
-        }
-
-        var applied = seckillApplicationFormService.contains(customerId);
-        // 检查是否申请
-        if (!applied) {
-            return R.error()
-                    .msg(MsgMapping.DOES_NOT_APPLY)
-                    .build();
-        }
-
-        // 检查秒杀链接格式
-        if (!Strs.isNum(seckillUrl)) {
-            return R.error()
-                    .msg(MsgMapping.INVALID_SECKILL_URL)
-                    .build();
-        }
-
-        var seckillId = redisTemplate.opsForValue().get(Const.REDIS_SECKILL_ID_KEY);
-
-        if (seckillId == null) {
-            throw new RuntimeException("未从Redis中查询到秒杀id信息！");
-        }
-
-        // 检查秒杀链接
-        if (!seckillId.equals(seckillUrl)) {
-            return R.error()
-                    .msg(MsgMapping.INVALID_SECKILL_URL)
-                    .build();
-        }
-
-        // 直接扣库存并获取扣完的库存
-        var storage = redisTemplate.opsForValue().decrement(Const.REDIS_STORAGE_PREFIX + seckillId);
-
-        // 检查库存是否存在
-        if (storage == null) {
-            throw new RuntimeException("未从Redis中查询到库存信息！");
-        }
-
-        // 检查库存是否小于0
-        if (storage < 0) {
-            // 把库存加回去
-            redisTemplate.opsForValue().increment(Const.REDIS_STORAGE_PREFIX + seckillId);
-
-            // 标记商品已经售完
-            this.soldOut = true;
-
-            // 返回商品售完信息
-            return R.error()
-                    .msg(MsgMapping.PRODUCT_SOLD_OUT)
-                    .build();
-        }
-
-        // 把秒杀成功用户放进redis (seckillSuccess-seckillId:customerId -> 1)
-        var randCustomerId = Rand.nextInt();
-        redisTemplate.opsForValue()
-                .set(Const.REDIS_SECKILL_SUCCESS_PREFIX + seckillId + ":" + randCustomerId, Const.REDIS_NULL_STR);
-
-        // 返回秒杀成功信息
-        return R.ok()
-                .msg(MsgMapping.SECKILL_SUCCESS)
-                .build();
+        // 打印日志
+        log.info("初始化Redis: 秒杀id -> {}", seckillId);
+        log.info("初始化Redis: 库存 -> {}", storage);
+        log.info("初始化Redis: 商品金额 -> {}", productPrice);
     }
 
     /**
@@ -378,10 +298,13 @@ public class SeckillActivityController {
         // endregion
 
         // region 异步下订单，提升用户体验
+        // 获取订单金额
+        var orderPrice = redisTemplate.opsForValue().get(Const.REDIS_PRODUCT_PRICE_PREFIX + seckillId);
+        // 异步下订单
         paymentClient.placeOrder(new BasicOrder() {{
             setSeckillId(Integer.valueOf(seckillId));
             setAccountId(customerId);
-            setMoney(12345d);
+            setMoney(Double.valueOf(Objects.requireNonNull(orderPrice)));
         }}).get();
         // endregion
 
@@ -390,6 +313,98 @@ public class SeckillActivityController {
                 .msg(MsgMapping.SECKILL_SUCCESS)
                 .build();
     }
+
+    /**
+     * 测试秒杀接口
+     */
+    @PostMapping("/testSeckill")
+    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
+    public R<Void> testSeckill(String token, String seckillUrl) {
+        // 如果已经卖完就直接返回
+        if (this.soldOut) {
+            // 返回商品售完信息
+            return R.error()
+                    .msg(MsgMapping.PRODUCT_SOLD_OUT)
+                    .build();
+        }
+
+        Integer customerId;
+        if ((customerId = tokenService.getAccountId(token)) == null) {
+            return R.error()
+                    .msg(MsgMapping.NOT_LOGGED_ON)
+                    .build();
+        }
+
+        var applied = seckillApplicationFormService.contains(customerId);
+        // 检查是否申请
+        if (!applied) {
+            return R.error()
+                    .msg(MsgMapping.DOES_NOT_APPLY)
+                    .build();
+        }
+
+        // 检查秒杀链接格式
+        if (!Strs.isNum(seckillUrl)) {
+            return R.error()
+                    .msg(MsgMapping.INVALID_SECKILL_URL)
+                    .build();
+        }
+
+        var seckillId = redisTemplate.opsForValue().get(Const.REDIS_SECKILL_ID_KEY);
+
+        if (seckillId == null) {
+            throw new RuntimeException("未从Redis中查询到秒杀id信息！");
+        }
+
+        // 检查秒杀链接
+        if (!seckillId.equals(seckillUrl)) {
+            return R.error()
+                    .msg(MsgMapping.INVALID_SECKILL_URL)
+                    .build();
+        }
+
+        // 直接扣库存并获取扣完的库存
+        var storage = redisTemplate.opsForValue().decrement(Const.REDIS_STORAGE_PREFIX + seckillId);
+
+        // 检查库存是否存在
+        if (storage == null) {
+            throw new RuntimeException("未从Redis中查询到库存信息！");
+        }
+
+        // 检查库存是否小于0
+        if (storage < 0) {
+            // 把库存加回去
+            redisTemplate.opsForValue().increment(Const.REDIS_STORAGE_PREFIX + seckillId);
+
+            // 标记商品已经售完
+            this.soldOut = true;
+
+            // 返回商品售完信息
+            return R.error()
+                    .msg(MsgMapping.PRODUCT_SOLD_OUT)
+                    .build();
+        }
+
+        // 把秒杀成功用户放进redis (seckillSuccess-seckillId:customerId -> 1)
+        var randCustomerId = Rand.nextInt();
+        redisTemplate.opsForValue()
+                .set(Const.REDIS_SECKILL_SUCCESS_PREFIX + seckillId + ":" + randCustomerId, Const.REDIS_NULL_STR);
+
+        // 获取订单金额
+        var orderPrice = redisTemplate.opsForValue().get(Const.REDIS_PRODUCT_PRICE_PREFIX + seckillId);
+        // 异步下订单
+        paymentClient.placeOrder(new BasicOrder() {{
+            setSeckillId(Integer.valueOf(seckillId));
+            setAccountId(customerId);
+            setMoney(Double.valueOf(Objects.requireNonNull(orderPrice)));
+        }}).get();
+
+        // 返回秒杀成功信息
+        return R.ok()
+                .msg(MsgMapping.SECKILL_SUCCESS)
+                .build();
+    }
+
 
     /**
      * 获取订单

@@ -26,7 +26,6 @@ import java.time.LocalDateTime;
  * @author ChaconneLuo
  */
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PayServiceImpl implements PayService {
@@ -53,9 +52,8 @@ public class PayServiceImpl implements PayService {
         var checkSignature = Security.getSignature(Const.Appid, Const.secKey, date, checkAccount);
         var checkResponse = payClient.checkInformation(Const.Appid, date, checkSignature, checkAccount);
 
-        Boolean accountExist = Security.VerifyMapMessage(checkResponse, Boolean.class);
-        log.info(accountExist + "");
-        if (Boolean.TRUE.equals(accountExist)) {
+        Boolean isSuccess = Security.VerifyMapMessage(checkResponse, Boolean.class);
+        if (Boolean.TRUE.equals(isSuccess)) {
             var payInfo = new MockPayInfo() {{
                 setMoney(product.getPrice());
                 setIdNumber(customer.getIdNumber());

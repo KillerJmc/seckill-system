@@ -99,4 +99,9 @@ public interface MsgMapping {
      * 秒杀成功
      */
     String SECKILL_SUCCESS = "秒杀成功";
+
+    /**
+     * 用户初筛信息生成失败
+     */
+    String USER_PRE_SCREEN_INFO_CREATE_ERROR = "用户初筛信息生成失败";
 }
