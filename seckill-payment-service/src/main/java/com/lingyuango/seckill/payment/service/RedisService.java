@@ -14,7 +14,7 @@ public interface RedisService {
 
     BasicOrder getBasicOrder(Integer accountId) throws JsonProcessingException;
 
-    void putMessage(String orderId);
+    void putMessage(String orderId, String message);
 
     void deleteOrder(Integer accountId);
 

@@ -32,7 +32,6 @@ public class CheckServiceImpl implements CheckService {
 
         var count = checkDao.selectCount(Wrappers.<MockAccount>lambdaQuery()
                 .eq(MockAccount::getIdNumber, inf.getIdNumber()));
-
         if (count != 0L) {
             return true;
         } else {

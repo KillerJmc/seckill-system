@@ -53,8 +53,8 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    public void putMessage(String orderId) {
-        redisTemplate.opsForValue().set(Const.REDIS_PAY_PREFIX + orderId, MsgMapping.ORDER_OVERTIME);
+    public void putMessage(String orderId, String message) {
+        redisTemplate.opsForValue().set(Const.REDIS_PAY_PREFIX + orderId, message);
     }
 
     @Override

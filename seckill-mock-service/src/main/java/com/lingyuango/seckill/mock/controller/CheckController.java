@@ -47,6 +47,7 @@ public class CheckController {
             if (CheckDateStamp.CheckOverTime(date)) {
 
                 boolean exist = checkService.checkAccount(inf);
+                System.out.println("Insert Account:" + exist);
                 var nowDate = LocalDateTime.now();
                 Map<String, Boolean> result = Map.of("Result", exist);
 

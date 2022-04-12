@@ -53,9 +53,9 @@ public class PayServiceImpl implements PayService {
         var checkSignature = Security.getSignature(Const.Appid, Const.secKey, date, checkAccount);
         var checkResponse = payClient.checkInformation(Const.Appid, date, checkSignature, checkAccount);
 
-        Boolean isSuccess = Security.VerifyMapMessage(checkResponse, Boolean.class);
-        log.info(isSuccess + "");
-        if (Boolean.TRUE.equals(isSuccess)) {
+        Boolean accountExist = Security.VerifyMapMessage(checkResponse, Boolean.class);
+        log.info(accountExist + "");
+        if (Boolean.TRUE.equals(accountExist)) {
             var payInfo = new MockPayInfo() {{
                 setMoney(product.getPrice());
                 setIdNumber(customer.getIdNumber());

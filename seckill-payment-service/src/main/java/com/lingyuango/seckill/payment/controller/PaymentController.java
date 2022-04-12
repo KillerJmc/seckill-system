@@ -56,7 +56,7 @@ public class PaymentController {
                     .build();
         } else {
             Integer accountId = orderService.getAccountIdFromOrder(orderId);
-            redisService.putMessage(orderId);
+            redisService.putMessage(orderId, MsgMapping.ORDER_OVERTIME);
             redisService.deleteOrder(accountId);
             return R.error()
                     .msg(MsgMapping.ORDER_OVERTIME)

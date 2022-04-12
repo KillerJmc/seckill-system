@@ -17,7 +17,7 @@ public class RandomGeneratorTool {
         if (trueProbability < 0 || trueProbability > 1) {
             throw new IllegalArgumentException("The probability should in [0,1]");
         }
-        return generator.nextInt(1000000) <= 1000000 * trueProbability;
+        return generator.nextInt(1000000) < 1000000 * trueProbability;
     }
 
     public static Integer getRandomInteger(int from, int bound, double lessThanProbability, int flagValue) {
@@ -41,4 +41,5 @@ public class RandomGeneratorTool {
     public static Double getRandomMoney() {
         return generator.nextDouble(10000,50000);
     }
+
 }
