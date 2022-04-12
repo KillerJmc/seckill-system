@@ -1,12 +1,10 @@
 package com.lingyuango.seckill.payment.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jmc.net.R;
 import com.lingyuango.seckill.payment.client.SeckillActivityClient;
 import com.lingyuango.seckill.payment.common.Const;
-import com.lingyuango.seckill.payment.common.MsgMapping;
 import com.lingyuango.seckill.payment.pojo.BasicOrder;
 import com.lingyuango.seckill.payment.pojo.PaymentStatus;
 import com.lingyuango.seckill.payment.pojo.Product;
@@ -43,6 +41,7 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public R<PaymentStatus> getPaymentStatus(String orderId) throws JsonProcessingException {
         String result = redisTemplate.opsForValue().get(Const.REDIS_PAY_PREFIX + orderId);
+        System.out.println(result);
         if (result != null) {
             if (!(result.startsWith("{") && result.endsWith("}"))) {
                 return R.error().msg(result).build();
