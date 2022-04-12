@@ -23,4 +23,6 @@ public interface Const {
 
     int ORDER_OVERTIME_MILLIONS = 30 * 60 * 1000;
 
+    String REDIS_PRICE_PREFIX = "PRICE-";
+
 }

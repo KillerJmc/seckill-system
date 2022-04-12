@@ -11,11 +11,10 @@ import com.lingyuango.seckill.payment.client.SeckillActivityClient;
 import com.lingyuango.seckill.payment.client.PayClient;
 import com.lingyuango.seckill.payment.service.OrderService;
 import com.lingyuango.seckill.payment.service.PayService;
+import com.lingyuango.seckill.payment.service.RedisService;
 import com.lingyuango.seckill.payment.service.StorageService;
-import com.lingyuango.seckill.payment.utils.CheckDateStamp;
 import com.lingyuango.seckill.payment.utils.Security;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,13 +35,14 @@ public class PayServiceImpl implements PayService {
     private final CustomerClient customerClient;
     private final SeckillActivityClient seckillActivityClient;
     private final PayClient payClient;
+    private final RedisService redisService;
 
     @Override
     @Transactional
     public synchronized R<PaymentStatus> pay(String orderId) throws IOException {
         var order = orderDao.selectOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderId, orderId));
         var customer = customerClient.getCustomer(order.getAccountId()).get();
-        var product = seckillActivityClient.getProduct(order.getSeckillId()).get();
+        var product = redisService.getActivityProduct(order.getSeckillId());
 
         var date = LocalDateTime.now();
         var checkAccount = new MockAccount() {{
