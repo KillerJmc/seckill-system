@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jmc.net.R;
 import com.lingyuango.seckill.payment.client.SeckillActivityClient;
 import com.lingyuango.seckill.payment.common.Const;
+import com.lingyuango.seckill.payment.common.MsgMapping;
 import com.lingyuango.seckill.payment.pojo.BasicOrder;
 import com.lingyuango.seckill.payment.pojo.PaymentStatus;
 import com.lingyuango.seckill.payment.pojo.Product;
@@ -46,7 +47,7 @@ public class RedisServiceImpl implements RedisService {
             if (!(result.startsWith("{") && result.endsWith("}"))) {
                 return R.error().msg(result).build();
             } else return R.ok().data(objectMapper.readValue(result, PaymentStatus.class));
-        } else return null;
+        } else return R.error().msg(MsgMapping.REDIS_NOTFOUND).build();
     }
 
     @Override
@@ -56,7 +57,7 @@ public class RedisServiceImpl implements RedisService {
             if (!(result.startsWith("{") && result.endsWith("}"))) {
                 return R.error().msg(result).build();
             } else return R.ok().data(objectMapper.readValue(result, BasicOrder.class));
-        } else return null;
+        } else return R.error().msg(MsgMapping.REDIS_NOTFOUND).build();
     }
 
     @Override
