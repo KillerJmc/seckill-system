@@ -3,6 +3,7 @@ package com.lingyuango.seckill.payment.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jmc.net.R;
 import com.lingyuango.seckill.payment.client.SeckillActivityClient;
 import com.lingyuango.seckill.payment.common.Const;
 import com.lingyuango.seckill.payment.common.MsgMapping;
@@ -40,19 +41,23 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    public PaymentStatus getPaymentStatus(String orderId) throws JsonProcessingException {
+    public R<PaymentStatus> getPaymentStatus(String orderId) throws JsonProcessingException {
         String result = redisTemplate.opsForValue().get(Const.REDIS_PAY_PREFIX + orderId);
-        if (result == null) {
-            return null;
-        } else return objectMapper.readValue(result, PaymentStatus.class);
+        if (result != null) {
+            if (!(result.startsWith("{") && result.endsWith("}"))) {
+                return R.error().msg(result).build();
+            } else return R.ok().data(objectMapper.readValue(result, PaymentStatus.class));
+        } else return null;
     }
 
     @Override
-    public BasicOrder getBasicOrder(Integer accountId) throws JsonProcessingException {
+    public R<BasicOrder> getBasicOrder(Integer accountId) throws JsonProcessingException {
         String result = redisTemplate.opsForValue().get(Const.REDIS_ORDER_PREFIX + accountId);
-        if (result == null) {
-            return null;
-        } else return objectMapper.readValue(result, BasicOrder.class);
+        if (result != null) {
+            if (!(result.startsWith("{") && result.endsWith("}"))) {
+                return R.error().msg(result).build();
+            } else return R.ok().data(objectMapper.readValue(result, BasicOrder.class));
+        } else return null;
     }
 
     @Override
@@ -69,7 +74,7 @@ public class RedisServiceImpl implements RedisService {
     public Product getActivityProduct(Integer activityId) throws JsonProcessingException {
         String s = redisTemplate.opsForValue().get(Const.REDIS_PRICE_PREFIX + activityId);
         if (s != null) {
-            return objectMapper.readValue(s,Product.class);
+            return objectMapper.readValue(s, Product.class);
         } else {
             var product = seckillActivityClient.getProduct(activityId).get();
             if (product != null) {

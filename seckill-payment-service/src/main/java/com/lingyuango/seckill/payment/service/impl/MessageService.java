@@ -50,7 +50,7 @@ public class MessageService {
     public Consumer<String> payHandle() {
         return orderId -> {
             var rValue = Tries.tryReturnsT(() -> payService.pay(orderId));
-            if (rValue.get() != null) {
+            if (rValue.getData() != null) {
                 Tries.tryThis(() -> redisService.putPaymentStatus(Objects.requireNonNullElseGet(rValue.get(), () -> new PaymentStatus() {{
                     setPaymentSuccess(false);
                     setOrderId(orderId);

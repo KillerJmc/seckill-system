@@ -70,7 +70,7 @@ public class PaymentController {
      */
     @PostMapping("/getOrder")
     R<BasicOrder> getOrder(Integer accountId) throws JsonProcessingException {
-        return R.ok().data(redisService.getBasicOrder(accountId));
+        return redisService.getBasicOrder(accountId);
     }
 
 
@@ -79,7 +79,7 @@ public class PaymentController {
      */
     @PostMapping("/getPaymentStatus")
     R<PaymentStatus> getPaymentStatus(String orderId) throws JsonProcessingException {
-        return R.ok().data(redisService.getPaymentStatus(orderId));
+        return redisService.getPaymentStatus(orderId);
     }
 
 }
