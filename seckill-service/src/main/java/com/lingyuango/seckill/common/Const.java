@@ -6,34 +6,14 @@ package com.lingyuango.seckill.common;
  */
 public interface Const {
     /**
-     * redis中token的组名
-     */
-    String REDIS_TOKEN_GROUP = "token:";
-
-    /**
      * token的cookie名称
      */
     String TOKEN_COOKIE_NAME = "token";
 
     /**
-     * redis中订单的组名
+     * redis中库存的键名
      */
-    String REDIS_ORDER_GROUP = "order:";
-
-    /**
-     * redis中支付状态的组名
-     */
-    String REDIS_PAYMENT_STATUS_GROUP = "paymentStatus:";
-
-    /**
-     * redis中库存的前缀
-     */
-    String REDIS_STORAGE_PREFIX = "storage-";
-
-    /**
-     * redis中秒杀成功记录的前缀
-     */
-    String REDIS_SECKILL_SUCCESS_PREFIX = "seckillSuccess-";
+    String REDIS_STORAGE_KEY = "storage";
 
     /**
      * redis中秒杀id的键名
@@ -41,12 +21,31 @@ public interface Const {
     String REDIS_SECKILL_ID_KEY = "seckillUrl";
 
     /**
-     * redis中占位字符串
+     * redis中商品金额的键名
      */
-    String REDIS_NULL_STR = "1";
+    String REDIS_PRODUCT_PRICE_KEY = "productPrice";
 
     /**
-     * redis中商品金额的前缀
+     * redis中token的组名 <br>
+     * token:<b>tokenStr</b> -> <b>accountId</b>
      */
-    String REDIS_PRODUCT_PRICE_PREFIX = "productPrice-";
+    String REDIS_TOKEN_GROUP = "token:";
+
+    /**
+     * redis中秒杀成功记录的组名 <br>
+     * seckillSuccess:<b>accountId</b> -> <b>""</b>
+     */
+    String REDIS_SECKILL_SUCCESS_GROUP = "seckillSuccess:";
+
+    /**
+     * redis中订单的组名 <br>
+     * order:<b>accountId</b> -> <b>orderId</b>
+     */
+    String REDIS_ORDER_GROUP = "order:";
+
+    /**
+     * redis中表示已支付的组名 <br>
+     * purchased:<b>accountId</b> -> <b>""</b>
+     */
+    String REDIS_PURCHASED_GROUP = "purchased:";
 }

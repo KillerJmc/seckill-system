@@ -7,7 +7,7 @@ spring:
   datasource:
     url: jdbc:mysql:///seckill_payment_db
     username: root
-    password: plf,.123
+    password: root
   redis:
       database: 1
   cloud:
@@ -26,12 +26,12 @@ spring:
           destination: order
           group: order
           consumer:
-            maxAttempts: 10
+            maxAttempts: 30
         payHandle-in-0:
           destination: pay
           group: pay
           consumer:
-            maxAttempts: 10
+            maxAttempts: 30
 
     function:
       definition: orderHandle;payHandle

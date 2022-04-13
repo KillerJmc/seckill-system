@@ -47,7 +47,7 @@ public class RedisServiceImpl implements RedisService {
             if (!(result.startsWith("{") && result.endsWith("}"))) {
                 return R.error().msg(result).build();
             } else return R.ok().data(objectMapper.readValue(result, PaymentStatus.class));
-        } else return R.error().msg(MsgMapping.REDIS_NOTFOUND).build();
+        } else return R.error().msg(MsgMapping.PAYMENT_STATUS_NOT_READY).build();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class RedisServiceImpl implements RedisService {
             if (!(result.startsWith("{") && result.endsWith("}"))) {
                 return R.error().msg(result).build();
             } else return R.ok().data(objectMapper.readValue(result, BasicOrder.class));
-        } else return R.error().msg(MsgMapping.REDIS_NOTFOUND).build();
+        } else return R.error().msg(MsgMapping.ORDER_NOT_READY).build();
     }
 
     @Override

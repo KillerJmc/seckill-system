@@ -58,7 +58,6 @@ public class MessageService {
             } else {
                 redisService.putMessage(orderId, rValue.getMessage());
             }
-
         };
     }
 }
