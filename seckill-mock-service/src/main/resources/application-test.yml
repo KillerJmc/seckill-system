@@ -11,9 +11,3 @@ spring:
   cloud:
     nacos:
       server-addr: nacos:8848
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'

@@ -28,15 +28,13 @@ spring:
         orderHandle-in-0:
           destination: order
           group: order
+          consumer:
+            maxAttempts: 30
         payHandle-in-0:
           destination: pay
           group: pay
+          consumer:
+            maxAttempts: 30
 
     function:
       definition: orderHandle;payHandle
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
