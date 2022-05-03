@@ -22,11 +22,6 @@ erupt:
           username: root
           password: root
 
-        hikari:
-          pool-name: erupt-mysql
-          minimum-idle: 10
-          maximum-pool-size: 100
-
         jpa:
           show-sql: true
           database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
