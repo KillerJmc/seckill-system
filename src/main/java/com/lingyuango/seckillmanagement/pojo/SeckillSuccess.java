@@ -1,5 +1,6 @@
 package com.lingyuango.seckillmanagement.pojo;
 
+import com.lingyuango.seckillmanagement.handler.DataSourceBasedSqlChoiceFetchHandler;
 import com.lingyuango.seckillmanagement.model.BaseGmtModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,8 +38,12 @@ public class SeckillSuccess extends BaseGmtModel {
                     title = "秒杀活动id",
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
-                            fetchHandler = SqlChoiceFetchHandler.class,
-                            fetchHandlerParams = {"select seckill_id from seckill_service_db.sk_seckill_activity", "5000"}
+                            fetchHandler = DataSourceBasedSqlChoiceFetchHandler.class,
+                            fetchHandlerParams = {
+                                    "mysql_seckill_service_db",
+                                    "select seckill_id from seckill_service_db.sk_seckill_activity",
+                                    "5000"
+                            }
                     )
             )
     )

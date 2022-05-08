@@ -4,8 +4,6 @@ import com.jmc.util.Rand;
 import com.lingyuango.seckillmanagement.pojo.SeckillActivity;
 import xyz.erupt.annotation.fun.DataProxy;
 
-import java.util.Random;
-
 public class SeckillIdFillerProxy implements DataProxy<SeckillActivity> {
     @Override
     public void beforeAdd(SeckillActivity seckillActivity) {

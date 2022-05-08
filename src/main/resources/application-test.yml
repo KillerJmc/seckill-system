@@ -37,7 +37,6 @@ erupt:
           username: root
           password: root
 
-
         jpa:
             show-sql: true
             database-platform: org.hibernate.dialect.MySQL5InnoDBDialect

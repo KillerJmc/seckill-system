@@ -1,5 +1,6 @@
 package com.lingyuango.seckillmanagement.pojo;
 
+import com.lingyuango.seckillmanagement.handler.DataSourceBasedSqlChoiceFetchHandler;
 import com.lingyuango.seckillmanagement.model.BaseGmtModel;
 import com.lingyuango.seckillmanagement.proxy.BaseGmtModelProxy;
 import com.lingyuango.seckillmanagement.proxy.SeckillIdFillerProxy;
@@ -52,8 +53,12 @@ public class SeckillActivity extends BaseGmtModel {
                     title = "产品id",
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
-                            fetchHandler = SqlChoiceFetchHandler.class,
-                            fetchHandlerParams = {"select product_id from seckill_service_db.sk_product", "5000"}
+                            fetchHandler = DataSourceBasedSqlChoiceFetchHandler.class,
+                            fetchHandlerParams = {
+                                    "mysql_seckill_service_db",
+                                    "select product_id from seckill_service_db.sk_product",
+                                    "5000"
+                            }
                     )
             )
     )
@@ -101,8 +106,12 @@ public class SeckillActivity extends BaseGmtModel {
                     title = "规则id",
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
-                            fetchHandler = SqlChoiceFetchHandler.class,
-                            fetchHandlerParams = {"select rule_id from seckill_service_db.sk_seckill_activity_rule", "5000"}
+                            fetchHandler = DataSourceBasedSqlChoiceFetchHandler.class,
+                            fetchHandlerParams = {
+                                    "mysql_seckill_service_db",
+                                    "select rule_id from seckill_service_db.sk_seckill_activity_rule",
+                                    "5000"
+                            }
                     )
             )
     )
