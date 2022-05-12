@@ -1,0 +1,10 @@
+server:
+  port: 9010
+
+spring:
+  application:
+    name: seckill-account-service
+  datasource:
+    url: jdbc:mysql:///seckill_account_db
+    username: root
+    password: root
