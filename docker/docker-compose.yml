@@ -1,5 +1,6 @@
 version: '3'
 
+# Author: zwz15008, Jmc
 # Need at least 4G memory + 2G swap
 services:
   web:
