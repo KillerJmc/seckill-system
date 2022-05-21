@@ -7,6 +7,7 @@ import xyz.erupt.core.annotation.EruptScan;
 /**
  * A22秒杀后台管理系统启动类 <br>
  * VM Options: --add-opens java.base/sun.reflect.annotation=ALL-UNNAMED
+ * @author lmccc1, ChaconneLuo, Jmc
  */
 @SpringBootApplication
 @EruptScan

@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
+ * 秒杀模块
  * @author Jmc
  */
 @SpringBootApplication
