@@ -73,5 +73,5 @@ public interface MsgMapping {
     /**
      * 支付状态信息未准备好
      */
-    String PAYMENT_STATUS_NOT_READY = "支付状态信息未准备好";
+    String PAYMENT_STATUS_NOT_READY = "PAYMENT_STATUS_NOT_READY";
 }

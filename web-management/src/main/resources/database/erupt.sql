@@ -7,7 +7,7 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
- SET NAMES utf8mb4 ;
+SET NAMES utf8mb4 ;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -21,22 +21,22 @@
 
 DROP TABLE IF EXISTS `e_dict`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_dict` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `create_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `code` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `remark` varchar(255) DEFAULT NULL,
-  `create_user_id` bigint(20) DEFAULT NULL,
-  `update_user_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UKf5wwh5osfukkeebw7h2yb4kmp` (`code`),
-  KEY `FKi8lurtplfsktg01y6uevop5yp` (`create_user_id`),
-  KEY `FKhxpr89ae0g4rd9xpfgcdjf0sa` (`update_user_id`),
-  CONSTRAINT `FKhxpr89ae0g4rd9xpfgcdjf0sa` FOREIGN KEY (`update_user_id`) REFERENCES `e_upms_user` (`id`),
-  CONSTRAINT `FKi8lurtplfsktg01y6uevop5yp` FOREIGN KEY (`create_user_id`) REFERENCES `e_upms_user` (`id`)
+                          `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                          `create_time` datetime DEFAULT NULL,
+                          `update_time` datetime DEFAULT NULL,
+                          `code` varchar(255) DEFAULT NULL,
+                          `name` varchar(255) DEFAULT NULL,
+                          `remark` varchar(255) DEFAULT NULL,
+                          `create_user_id` bigint(20) DEFAULT NULL,
+                          `update_user_id` bigint(20) DEFAULT NULL,
+                          PRIMARY KEY (`id`),
+                          UNIQUE KEY `UKf5wwh5osfukkeebw7h2yb4kmp` (`code`),
+                          KEY `FKi8lurtplfsktg01y6uevop5yp` (`create_user_id`),
+                          KEY `FKhxpr89ae0g4rd9xpfgcdjf0sa` (`update_user_id`),
+                          CONSTRAINT `FKhxpr89ae0g4rd9xpfgcdjf0sa` FOREIGN KEY (`update_user_id`) REFERENCES `e_upms_user` (`id`),
+                          CONSTRAINT `FKi8lurtplfsktg01y6uevop5yp` FOREIGN KEY (`create_user_id`) REFERENCES `e_upms_user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -55,26 +55,26 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `e_dict_item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_dict_item` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `create_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `code` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `remark` varchar(255) DEFAULT NULL,
-  `sort` int(11) DEFAULT NULL,
-  `create_user_id` bigint(20) DEFAULT NULL,
-  `update_user_id` bigint(20) DEFAULT NULL,
-  `erupt_dict_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UKl0kiq8otpn3fvtlvarebt8xkh` (`code`,`erupt_dict_id`),
-  KEY `FKij9x8hwy16dra7d49h483lu2u` (`create_user_id`),
-  KEY `FKmlg0pjfxwih4i6r0g0iilh1lu` (`update_user_id`),
-  KEY `FKrrbi2dt94rjd8sjt830m3w0a` (`erupt_dict_id`),
-  CONSTRAINT `FKij9x8hwy16dra7d49h483lu2u` FOREIGN KEY (`create_user_id`) REFERENCES `e_upms_user` (`id`),
-  CONSTRAINT `FKmlg0pjfxwih4i6r0g0iilh1lu` FOREIGN KEY (`update_user_id`) REFERENCES `e_upms_user` (`id`),
-  CONSTRAINT `FKrrbi2dt94rjd8sjt830m3w0a` FOREIGN KEY (`erupt_dict_id`) REFERENCES `e_dict` (`id`)
+                               `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                               `create_time` datetime DEFAULT NULL,
+                               `update_time` datetime DEFAULT NULL,
+                               `code` varchar(255) DEFAULT NULL,
+                               `name` varchar(255) DEFAULT NULL,
+                               `remark` varchar(255) DEFAULT NULL,
+                               `sort` int(11) DEFAULT NULL,
+                               `create_user_id` bigint(20) DEFAULT NULL,
+                               `update_user_id` bigint(20) DEFAULT NULL,
+                               `erupt_dict_id` bigint(20) DEFAULT NULL,
+                               PRIMARY KEY (`id`),
+                               UNIQUE KEY `UKl0kiq8otpn3fvtlvarebt8xkh` (`code`,`erupt_dict_id`),
+                               KEY `FKij9x8hwy16dra7d49h483lu2u` (`create_user_id`),
+                               KEY `FKmlg0pjfxwih4i6r0g0iilh1lu` (`update_user_id`),
+                               KEY `FKrrbi2dt94rjd8sjt830m3w0a` (`erupt_dict_id`),
+                               CONSTRAINT `FKij9x8hwy16dra7d49h483lu2u` FOREIGN KEY (`create_user_id`) REFERENCES `e_upms_user` (`id`),
+                               CONSTRAINT `FKmlg0pjfxwih4i6r0g0iilh1lu` FOREIGN KEY (`update_user_id`) REFERENCES `e_upms_user` (`id`),
+                               CONSTRAINT `FKrrbi2dt94rjd8sjt830m3w0a` FOREIGN KEY (`erupt_dict_id`) REFERENCES `e_dict` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -93,20 +93,20 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `e_upms_login_log`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_login_log` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `browser` varchar(255) DEFAULT NULL,
-  `device_type` varchar(255) DEFAULT NULL,
-  `ip` varchar(255) DEFAULT NULL,
-  `login_time` datetime DEFAULT NULL,
-  `region` varchar(255) DEFAULT NULL,
-  `system_name` varchar(255) DEFAULT NULL,
-  `token` varchar(255) DEFAULT NULL,
-  `erupt_user_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKjqnr9oel32kajm6bpvqwomv6m` (`erupt_user_id`),
-  CONSTRAINT `FKjqnr9oel32kajm6bpvqwomv6m` FOREIGN KEY (`erupt_user_id`) REFERENCES `e_upms_user` (`id`)
+                                    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                                    `browser` varchar(255) DEFAULT NULL,
+                                    `device_type` varchar(255) DEFAULT NULL,
+                                    `ip` varchar(255) DEFAULT NULL,
+                                    `login_time` datetime DEFAULT NULL,
+                                    `region` varchar(255) DEFAULT NULL,
+                                    `system_name` varchar(255) DEFAULT NULL,
+                                    `token` varchar(255) DEFAULT NULL,
+                                    `erupt_user_id` bigint(20) DEFAULT NULL,
+                                    PRIMARY KEY (`id`),
+                                    KEY `FKjqnr9oel32kajm6bpvqwomv6m` (`erupt_user_id`),
+                                    CONSTRAINT `FKjqnr9oel32kajm6bpvqwomv6m` FOREIGN KEY (`erupt_user_id`) REFERENCES `e_upms_user` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -125,31 +125,31 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `e_upms_menu`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_menu` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `create_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `code` varchar(255) DEFAULT NULL,
-  `icon` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `param` varchar(2000) DEFAULT NULL,
-  `power_off` varchar(255) DEFAULT NULL,
-  `sort` int(11) DEFAULT NULL,
-  `status` int(11) DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
-  `value` varchar(255) DEFAULT NULL,
-  `create_user_id` bigint(20) DEFAULT NULL,
-  `update_user_id` bigint(20) DEFAULT NULL,
-  `parent_menu_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UK95xpkppt33d2bka0g2d7rgwqt` (`code`),
-  KEY `FK4p5siq6l1rf9y47bosayghcsv` (`create_user_id`),
-  KEY `FKtm66wffkyyluinneyva8kd2bc` (`update_user_id`),
-  KEY `FK5mkgea183mm02v7ic1pdwxy5s` (`parent_menu_id`),
-  CONSTRAINT `FK4p5siq6l1rf9y47bosayghcsv` FOREIGN KEY (`create_user_id`) REFERENCES `e_upms_user` (`id`),
-  CONSTRAINT `FK5mkgea183mm02v7ic1pdwxy5s` FOREIGN KEY (`parent_menu_id`) REFERENCES `e_upms_menu` (`id`),
-  CONSTRAINT `FKtm66wffkyyluinneyva8kd2bc` FOREIGN KEY (`update_user_id`) REFERENCES `e_upms_user` (`id`)
+                               `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                               `create_time` datetime DEFAULT NULL,
+                               `update_time` datetime DEFAULT NULL,
+                               `code` varchar(255) DEFAULT NULL,
+                               `icon` varchar(255) DEFAULT NULL,
+                               `name` varchar(255) DEFAULT NULL,
+                               `param` varchar(2000) DEFAULT NULL,
+                               `power_off` varchar(255) DEFAULT NULL,
+                               `sort` int(11) DEFAULT NULL,
+                               `status` int(11) DEFAULT NULL,
+                               `type` varchar(255) DEFAULT NULL,
+                               `value` varchar(255) DEFAULT NULL,
+                               `create_user_id` bigint(20) DEFAULT NULL,
+                               `update_user_id` bigint(20) DEFAULT NULL,
+                               `parent_menu_id` bigint(20) DEFAULT NULL,
+                               PRIMARY KEY (`id`),
+                               UNIQUE KEY `UK95xpkppt33d2bka0g2d7rgwqt` (`code`),
+                               KEY `FK4p5siq6l1rf9y47bosayghcsv` (`create_user_id`),
+                               KEY `FKtm66wffkyyluinneyva8kd2bc` (`update_user_id`),
+                               KEY `FK5mkgea183mm02v7ic1pdwxy5s` (`parent_menu_id`),
+                               CONSTRAINT `FK4p5siq6l1rf9y47bosayghcsv` FOREIGN KEY (`create_user_id`) REFERENCES `e_upms_user` (`id`),
+                               CONSTRAINT `FK5mkgea183mm02v7ic1pdwxy5s` FOREIGN KEY (`parent_menu_id`) REFERENCES `e_upms_menu` (`id`),
+                               CONSTRAINT `FKtm66wffkyyluinneyva8kd2bc` FOREIGN KEY (`update_user_id`) REFERENCES `e_upms_user` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -169,23 +169,23 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `e_upms_operate_log`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_operate_log` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `api_name` varchar(255) DEFAULT NULL,
-  `create_time` datetime DEFAULT NULL,
-  `error_info` longtext,
-  `ip` varchar(255) DEFAULT NULL,
-  `region` varchar(255) DEFAULT NULL,
-  `req_addr` varchar(4000) DEFAULT NULL,
-  `req_method` varchar(255) DEFAULT NULL,
-  `req_param` varchar(4000) DEFAULT NULL,
-  `status` bit(1) DEFAULT NULL,
-  `total_time` bigint(20) DEFAULT NULL,
-  `erupt_user_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK27xepkxthq9snq3yk6k7iad33` (`erupt_user_id`),
-  CONSTRAINT `FK27xepkxthq9snq3yk6k7iad33` FOREIGN KEY (`erupt_user_id`) REFERENCES `e_upms_user` (`id`)
+                                      `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                                      `api_name` varchar(255) DEFAULT NULL,
+                                      `create_time` datetime DEFAULT NULL,
+                                      `error_info` longtext,
+                                      `ip` varchar(255) DEFAULT NULL,
+                                      `region` varchar(255) DEFAULT NULL,
+                                      `req_addr` varchar(4000) DEFAULT NULL,
+                                      `req_method` varchar(255) DEFAULT NULL,
+                                      `req_param` varchar(4000) DEFAULT NULL,
+                                      `status` bit(1) DEFAULT NULL,
+                                      `total_time` bigint(20) DEFAULT NULL,
+                                      `erupt_user_id` bigint(20) DEFAULT NULL,
+                                      PRIMARY KEY (`id`),
+                                      KEY `FK27xepkxthq9snq3yk6k7iad33` (`erupt_user_id`),
+                                      CONSTRAINT `FK27xepkxthq9snq3yk6k7iad33` FOREIGN KEY (`erupt_user_id`) REFERENCES `e_upms_user` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=131 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -204,16 +204,16 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `e_upms_org`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_org` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `code` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `sort` int(11) DEFAULT NULL,
-  `parent_org_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKtj7222kjnkt7pv9kfn9g8ck4h` (`parent_org_id`),
-  CONSTRAINT `FKtj7222kjnkt7pv9kfn9g8ck4h` FOREIGN KEY (`parent_org_id`) REFERENCES `e_upms_org` (`id`)
+                              `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                              `code` varchar(255) DEFAULT NULL,
+                              `name` varchar(255) DEFAULT NULL,
+                              `sort` int(11) DEFAULT NULL,
+                              `parent_org_id` bigint(20) DEFAULT NULL,
+                              PRIMARY KEY (`id`),
+                              KEY `FKtj7222kjnkt7pv9kfn9g8ck4h` (`parent_org_id`),
+                              CONSTRAINT `FKtj7222kjnkt7pv9kfn9g8ck4h` FOREIGN KEY (`parent_org_id`) REFERENCES `e_upms_org` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -232,14 +232,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `e_upms_post`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_post` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `code` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `weight` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UKltq5h3n5cyyk5nxtjhg9lhidg` (`code`)
+                               `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                               `code` varchar(255) DEFAULT NULL,
+                               `name` varchar(255) DEFAULT NULL,
+                               `weight` int(11) DEFAULT NULL,
+                               PRIMARY KEY (`id`),
+                               UNIQUE KEY `UKltq5h3n5cyyk5nxtjhg9lhidg` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -258,15 +258,15 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `e_upms_role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_role` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `code` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `power_off` varchar(255) DEFAULT NULL,
-  `status` bit(1) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UKjgxkp7mr4183tcwosrbqpsl3a` (`code`)
+                               `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                               `code` varchar(255) DEFAULT NULL,
+                               `name` varchar(255) DEFAULT NULL,
+                               `power_off` varchar(255) DEFAULT NULL,
+                               `status` bit(1) DEFAULT NULL,
+                               PRIMARY KEY (`id`),
+                               UNIQUE KEY `UKjgxkp7mr4183tcwosrbqpsl3a` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -285,14 +285,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `e_upms_role_menu`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_role_menu` (
-  `role_id` bigint(20) NOT NULL,
-  `menu_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`role_id`,`menu_id`),
-  KEY `FKr6bl403chgwjnb6jk0uqqd9x8` (`menu_id`),
-  CONSTRAINT `FKgsdnakqsme4htxkiapwmf6tbi` FOREIGN KEY (`role_id`) REFERENCES `e_upms_role` (`id`),
-  CONSTRAINT `FKr6bl403chgwjnb6jk0uqqd9x8` FOREIGN KEY (`menu_id`) REFERENCES `e_upms_menu` (`id`)
+                                    `role_id` bigint(20) NOT NULL,
+                                    `menu_id` bigint(20) NOT NULL,
+                                    PRIMARY KEY (`role_id`,`menu_id`),
+                                    KEY `FKr6bl403chgwjnb6jk0uqqd9x8` (`menu_id`),
+                                    CONSTRAINT `FKgsdnakqsme4htxkiapwmf6tbi` FOREIGN KEY (`role_id`) REFERENCES `e_upms_role` (`id`),
+                                    CONSTRAINT `FKr6bl403chgwjnb6jk0uqqd9x8` FOREIGN KEY (`menu_id`) REFERENCES `e_upms_menu` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -311,38 +311,38 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `e_upms_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_user` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `create_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `account` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `is_admin` bit(1) DEFAULT NULL,
-  `is_md5` bit(1) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `phone` varchar(255) DEFAULT NULL,
-  `remark` varchar(2000) DEFAULT NULL,
-  `status` bit(1) DEFAULT NULL,
-  `white_ip` varchar(2000) DEFAULT NULL,
-  `erupt_org_id` bigint(20) DEFAULT NULL,
-  `erupt_post_id` bigint(20) DEFAULT NULL,
-  `create_user_id` bigint(20) DEFAULT NULL,
-  `update_user_id` bigint(20) DEFAULT NULL,
-  `erupt_menu_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UK812t22yn0295dkkvx5gjgahax` (`account`),
-  KEY `FK1re8jv3614mkk2wfxscvgvmnm` (`erupt_org_id`),
-  KEY `FK53cice19aydjcuykpv847ocdv` (`erupt_post_id`),
-  KEY `FKdvwfw4x66ahh1tavd69cnx4i0` (`create_user_id`),
-  KEY `FKct3f9stm4eti10401f7rbh5ey` (`update_user_id`),
-  KEY `FKga0jd7sahnn1tv14mq4dy5kba` (`erupt_menu_id`),
-  CONSTRAINT `FK1re8jv3614mkk2wfxscvgvmnm` FOREIGN KEY (`erupt_org_id`) REFERENCES `e_upms_org` (`id`),
-  CONSTRAINT `FK53cice19aydjcuykpv847ocdv` FOREIGN KEY (`erupt_post_id`) REFERENCES `e_upms_post` (`id`),
-  CONSTRAINT `FKct3f9stm4eti10401f7rbh5ey` FOREIGN KEY (`update_user_id`) REFERENCES `e_upms_user` (`id`),
-  CONSTRAINT `FKdvwfw4x66ahh1tavd69cnx4i0` FOREIGN KEY (`create_user_id`) REFERENCES `e_upms_user` (`id`),
-  CONSTRAINT `FKga0jd7sahnn1tv14mq4dy5kba` FOREIGN KEY (`erupt_menu_id`) REFERENCES `e_upms_menu` (`id`)
+                               `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                               `name` varchar(255) DEFAULT NULL,
+                               `create_time` datetime DEFAULT NULL,
+                               `update_time` datetime DEFAULT NULL,
+                               `account` varchar(255) DEFAULT NULL,
+                               `email` varchar(255) DEFAULT NULL,
+                               `is_admin` bit(1) DEFAULT NULL,
+                               `is_md5` bit(1) DEFAULT NULL,
+                               `password` varchar(255) DEFAULT NULL,
+                               `phone` varchar(255) DEFAULT NULL,
+                               `remark` varchar(2000) DEFAULT NULL,
+                               `status` bit(1) DEFAULT NULL,
+                               `white_ip` varchar(2000) DEFAULT NULL,
+                               `erupt_org_id` bigint(20) DEFAULT NULL,
+                               `erupt_post_id` bigint(20) DEFAULT NULL,
+                               `create_user_id` bigint(20) DEFAULT NULL,
+                               `update_user_id` bigint(20) DEFAULT NULL,
+                               `erupt_menu_id` bigint(20) DEFAULT NULL,
+                               PRIMARY KEY (`id`),
+                               UNIQUE KEY `UK812t22yn0295dkkvx5gjgahax` (`account`),
+                               KEY `FK1re8jv3614mkk2wfxscvgvmnm` (`erupt_org_id`),
+                               KEY `FK53cice19aydjcuykpv847ocdv` (`erupt_post_id`),
+                               KEY `FKdvwfw4x66ahh1tavd69cnx4i0` (`create_user_id`),
+                               KEY `FKct3f9stm4eti10401f7rbh5ey` (`update_user_id`),
+                               KEY `FKga0jd7sahnn1tv14mq4dy5kba` (`erupt_menu_id`),
+                               CONSTRAINT `FK1re8jv3614mkk2wfxscvgvmnm` FOREIGN KEY (`erupt_org_id`) REFERENCES `e_upms_org` (`id`),
+                               CONSTRAINT `FK53cice19aydjcuykpv847ocdv` FOREIGN KEY (`erupt_post_id`) REFERENCES `e_upms_post` (`id`),
+                               CONSTRAINT `FKct3f9stm4eti10401f7rbh5ey` FOREIGN KEY (`update_user_id`) REFERENCES `e_upms_user` (`id`),
+                               CONSTRAINT `FKdvwfw4x66ahh1tavd69cnx4i0` FOREIGN KEY (`create_user_id`) REFERENCES `e_upms_user` (`id`),
+                               CONSTRAINT `FKga0jd7sahnn1tv14mq4dy5kba` FOREIGN KEY (`erupt_menu_id`) REFERENCES `e_upms_menu` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -362,14 +362,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `e_upms_user_role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_user_role` (
-  `user_id` bigint(20) NOT NULL,
-  `role_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`user_id`,`role_id`),
-  KEY `FK3h4lekfh26f5f8b7by3ejges6` (`role_id`),
-  CONSTRAINT `FK3h4lekfh26f5f8b7by3ejges6` FOREIGN KEY (`role_id`) REFERENCES `e_upms_role` (`id`),
-  CONSTRAINT `FKes2ylim5w3ej690ss84sb956x` FOREIGN KEY (`user_id`) REFERENCES `e_upms_user` (`id`)
+                                    `user_id` bigint(20) NOT NULL,
+                                    `role_id` bigint(20) NOT NULL,
+                                    PRIMARY KEY (`user_id`,`role_id`),
+                                    KEY `FK3h4lekfh26f5f8b7by3ejges6` (`role_id`),
+                                    CONSTRAINT `FK3h4lekfh26f5f8b7by3ejges6` FOREIGN KEY (`role_id`) REFERENCES `e_upms_role` (`id`),
+                                    CONSTRAINT `FKes2ylim5w3ej690ss84sb956x` FOREIGN KEY (`user_id`) REFERENCES `e_upms_user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

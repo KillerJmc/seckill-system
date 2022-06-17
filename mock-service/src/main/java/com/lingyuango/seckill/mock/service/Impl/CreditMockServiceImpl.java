@@ -13,12 +13,12 @@ public class CreditMockServiceImpl implements CreditMockService {
     @Override
     public MockCreditInfo getRandomCreditInformation() {
         return new MockCreditInfo() {{
-            setWorkStatus(RandomGeneratorTool.getRandomBoolean(0.8));
-            setAge(RandomGeneratorTool.getRandomInteger(13, 85, 0.1, 18));
-            setInCreditBlacklist(RandomGeneratorTool.getRandomBoolean(0.1));
-            setOverdueTimes(RandomGeneratorTool.getRandomInteger(0, 10, 0.95, 1));
-            setOverdueDays(RandomGeneratorTool.getRandomInteger(0, 50, 0.95, 1));
-            setOverdueMoney((double) RandomGeneratorTool.getRandomInteger(0, 10000, 0.95, 1));
+            setWorkStatus(RandomGeneratorTool.getRandomBoolean(0.99));
+            setAge(RandomGeneratorTool.getRandomInteger(13, 35, 0.01, 18));
+            setInCreditBlacklist(RandomGeneratorTool.getRandomBoolean(0.01));
+            setOverdueTimes(RandomGeneratorTool.getRandomInteger(0, 10, 0.99, 1));
+            setOverdueDays(RandomGeneratorTool.getRandomInteger(0, 50, 0.99, 1));
+            setOverdueMoney((double) RandomGeneratorTool.getRandomInteger(0, 10000, 0.99, 1));
         }};
     }
 
