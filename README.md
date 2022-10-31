@@ -10,7 +10,7 @@ A simple seckill system.
 + **Database**: MySQL, Redis
 + **Server**: Tomcat, Nginx, Nacos
 + **Message Queue**: RabbitMQ
-+ **Build**: Docker Compose
++ **Run**: Docker Compose
 
 ## App
 1. [Seckill Web System](https://github.com/KillerJmc/seckill-system-web) on port `80`.

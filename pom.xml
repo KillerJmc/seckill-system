@@ -9,6 +9,7 @@
 	<version>1.0.0</version>
 
 	<modules>
+		<module>gateway</module>
 		<module>account-service</module>
 		<module>seckill-service</module>
 		<module>payment-service</module>
@@ -23,11 +24,11 @@
 		<docker-jar-name>app</docker-jar-name>
 		<docker-jar-output-path>../docker/services/${project.artifactId}</docker-jar-output-path>
 
-		<spring-boot.version>2.6.4</spring-boot.version>
-		<spring-cloud.version>2021.0.1</spring-cloud.version>
-		<alibaba-cloud.version>2021.0.1.0</alibaba-cloud.version>
-		<mybatis-plus.version>3.5.1</mybatis-plus.version>
-		<jmc-utils.version>2.3.0</jmc-utils.version>
+		<spring-boot.version>2.7.2</spring-boot.version>
+		<spring-cloud.version>2021.0.3</spring-cloud.version>
+		<alibaba-cloud.version>2021.1</alibaba-cloud.version>
+		<mybatis-plus.version>3.5.2</mybatis-plus.version>
+		<jmc-utils.version>2.4.1</jmc-utils.version>
 	</properties>
 
 	<repositories>

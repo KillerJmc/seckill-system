@@ -3,11 +3,13 @@ package com.lingyuango.seckill.service.impl;
 import com.jmc.lang.Objs;
 import com.jmc.lang.Strs;
 import com.jmc.lang.Threads;
+import com.jmc.lang.Tries;
 import com.jmc.lang.ref.Pointer;
 import com.jmc.net.R;
 import com.lingyuango.seckill.client.PaymentClient;
 import com.lingyuango.seckill.common.Const;
 import com.lingyuango.seckill.common.MsgMapping;
+import com.lingyuango.seckill.dao.SeckillActivityDao;
 import com.lingyuango.seckill.pojo.BasicOrder;
 import com.lingyuango.seckill.pojo.PaymentStatus;
 import com.lingyuango.seckill.pojo.SeckillActivity;
@@ -15,7 +17,6 @@ import com.lingyuango.seckill.pojo.SeckillActivityRule;
 import com.lingyuango.seckill.service.ProductService;
 import com.lingyuango.seckill.service.SeckillActivityRuleService;
 import com.lingyuango.seckill.service.SeckillActivityService;
-import com.lingyuango.seckill.dao.SeckillActivityDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -217,7 +218,7 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
         }
 
         // 订单信息
-        var order = orderData.get();
+        var order = Tries.tryReturnsT(orderData::getData);
 
         // 把订单号放进redis
         redisTemplate.opsForValue()
@@ -244,6 +245,6 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
         // 把支付完成信息放入redis
         redisTemplate.opsForValue().set(Const.REDIS_PURCHASED_GROUP + accountId, "");
 
-        return paymentStatusData.get();
+        return Tries.tryReturnsT(paymentStatusData::getData);
     }
 }

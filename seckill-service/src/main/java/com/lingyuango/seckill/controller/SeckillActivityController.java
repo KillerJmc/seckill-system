@@ -7,17 +7,19 @@ import com.jmc.util.Rand;
 import com.lingyuango.seckill.client.PaymentClient;
 import com.lingyuango.seckill.client.PreScreeningClient;
 import com.lingyuango.seckill.common.MsgMapping;
-import com.lingyuango.seckill.pojo.*;
-import com.lingyuango.seckill.service.*;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.*;
+import com.lingyuango.seckill.pojo.BasicOrder;
+import com.lingyuango.seckill.pojo.PaymentStatus;
+import com.lingyuango.seckill.pojo.SeckillActivity;
+import com.lingyuango.seckill.service.SeckillActivityService;
+import com.lingyuango.seckill.service.SeckillApplicationFormService;
+import com.lingyuango.seckill.service.TokenService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 /**
  * @author Jmc
@@ -33,39 +35,7 @@ public class SeckillActivityController {
     private final PreScreeningClient preScreeningClient;
     private final PaymentClient paymentClient;
 
-    /**
-     * 获取最新规则
-     */
-    @PostMapping("/getRule")
-    public R<SeckillActivityRule> getRule() {
-        SeckillActivityRule res;
-        if ((res = seckillActivityService.getRule()) == null) {
-            return R.error(MsgMapping.NO_RULES);
-        } else {
-            return R.ok(res);
-        }
-    }
-
-    /**
-     * 获取商品信息
-     */
-    @PostMapping("/getProduct")
-    public R<Product> getProduct() {
-        var activity = seckillActivityService.getLatest();
-        return R.ok(activity.getProduct());
-    }
-
-    /**
-     * 获取最新的秒杀id
-     */
-    @PostMapping("/getSeckillId")
-    public R<Integer> getSeckillId() {
-        var seckillId = seckillActivityService.getLatestSeckillId();
-        return seckillId == null ? R.error("Latest seckillId is null") : R.ok(seckillId);
-    }
-
     @PostMapping("/getCurrent")
-    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public synchronized R<SeckillActivity> getCurrent(@CookieValue(value = "token", required = false) String token) {
         var accountId = tokenService.getAccountId(token);
         if (accountId == null) {
@@ -75,7 +45,7 @@ public class SeckillActivityController {
         var activity = seckillActivityService.getLatest();
 
         // 往初筛表插入记录
-        preScreeningClient.insert(accountId).get();
+        preScreeningClient.insert(accountId);
 
         log.info("用户id {} 获取最新的秒杀活动：{}", accountId, activity);
 
@@ -87,7 +57,6 @@ public class SeckillActivityController {
      * @return 倒计时（单位：秒）
      */
     @PostMapping("/getCountDown")
-    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public synchronized R<Long> getCountDown(@CookieValue(value = "token", required = false) String token) {
         var accountId = tokenService.getAccountId(token);
         if (accountId == null) {
@@ -107,7 +76,6 @@ public class SeckillActivityController {
      * 申请秒杀
      */
     @PostMapping("/apply")
-    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public synchronized R<Void> apply(@CookieValue(value = "token", required = false) String token) {
         var accountId = tokenService.getAccountId(token);
         if (accountId == null) {
@@ -127,7 +95,6 @@ public class SeckillActivityController {
      * 获取暴露的秒杀地址
      */
     @PostMapping("/getSeckillUrl")
-    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public R<String> getSeckillUrl(@CookieValue(value = "token", required = false) String token) {
         var accountId = tokenService.getAccountId(token);
         if (accountId == null) {
@@ -165,7 +132,6 @@ public class SeckillActivityController {
      * 秒杀接口
      */
     @PostMapping("/seckill/{seckillUrl}")
-    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public R<Void> seckill(@CookieValue(value = "token", required = false) String token,
                            @PathVariable String seckillUrl)
             throws JsonProcessingException {
@@ -217,7 +183,6 @@ public class SeckillActivityController {
      * 测试秒杀接口
      */
     @PostMapping("/testSeckill")
-    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public R<Void> testSeckill(String token, String seckillUrl) {
         // 如果已经卖完就返回商品售完信息
         if (seckillActivityService.isSoldOut()) {
@@ -270,7 +235,6 @@ public class SeckillActivityController {
      * 获取订单
      */
     @PostMapping("/getOrder")
-    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public R<BasicOrder> getOrder(@CookieValue(value = "token", required = false) String token) {
         // 检查token
         var accountId = tokenService.getAccountId(token);
@@ -293,7 +257,6 @@ public class SeckillActivityController {
      * 支付
      */
     @PostMapping("/pay")
-    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public R<PaymentStatus> pay(@CookieValue(value = "token", required = false) String token, String orderId) {
         // 检查token
         var accountId = tokenService.getAccountId(token);
@@ -312,7 +275,7 @@ public class SeckillActivityController {
         }
 
         // 请求支付
-        paymentClient.requestForPay(orderId).get();
+        paymentClient.requestForPay(orderId);
 
         // 储存错误信息的指针
         Pointer<String> errorMsgPtr = Pointer.empty();

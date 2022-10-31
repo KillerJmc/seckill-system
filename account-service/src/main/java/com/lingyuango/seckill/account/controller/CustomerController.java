@@ -3,19 +3,18 @@ package com.lingyuango.seckill.account.controller;
 import com.jmc.lang.Objs;
 import com.jmc.net.R;
 import com.lingyuango.seckill.account.client.MockCreditClient;
+import com.lingyuango.seckill.account.client.SeckillApplicationFormClient;
 import com.lingyuango.seckill.account.common.MsgMapping;
 import com.lingyuango.seckill.account.pojo.Customer;
-import com.lingyuango.seckill.account.pojo.MockCreditInfo;
 import com.lingyuango.seckill.account.pojo.PreScreening;
 import com.lingyuango.seckill.account.service.CustomerInfoService;
+import com.lingyuango.seckill.account.service.CustomerService;
 import com.lingyuango.seckill.account.service.PreScreeningService;
-import com.lingyuango.seckill.account.client.SeckillApplicationFormClient;
 import com.lingyuango.seckill.account.service.TokenService;
 import com.lingyuango.seckill.account.util.Verify;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import lombok.RequiredArgsConstructor;
-import com.lingyuango.seckill.account.service.CustomerService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -36,28 +35,9 @@ public class CustomerController {
     private final MockCreditClient mockCreditClient;
 
     /**
-     * 通过账户id获取客户
-     */
-    @PostMapping("/getCustomer")
-    public R<Customer> getCustomer(Integer accountId) {
-        return R.ok()
-                .data(customerService.getByAccountId(accountId));
-    }
-
-    /**
-     * 用户是否能申请活动
-     */
-    @PostMapping("/canApply")
-    public R<Boolean> canApply(Integer customerId) {
-        return R.ok()
-                .data(customerService.canApply(customerId));
-    }
-
-    /**
      * 注册（提供真名，身份证，密码）
      */
     @PostMapping("/register")
-    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public synchronized R<Map<String, Integer>> register(@RequestBody Customer customer) {
         log.info("请求: {}", customer);
 
@@ -81,7 +61,7 @@ public class CustomerController {
         }
 
         // 插入模拟的用户初筛信息
-        var mockCreditInfo = mockCreditClient.getCreditInfo().get();
+        var mockCreditInfo = mockCreditClient.getCreditInfo().getData();
         if (!customerInfoService.insert(customer, mockCreditInfo)) {
             return R.error()
                     .msg(MsgMapping.USER_PRE_SCREEN_INFO_CREATE_ERROR)
@@ -101,7 +81,6 @@ public class CustomerController {
      * 返回token给客户端（token用{token:uuid} -> {accountId}存进redis）
      */
     @PostMapping("/login")
-    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public synchronized R<Void> login(@CookieValue(value = "token", required = false) String repeatedToken,
                                 @RequestBody Customer customer,
                                 HttpServletResponse resp) {
@@ -147,7 +126,6 @@ public class CustomerController {
     }
 
     @PostMapping("/getInfo")
-    @CrossOrigin(originPatterns = "*", allowCredentials = "true")
     public synchronized R<Map<String, Object>> getInfo(@CookieValue(value = "token", required = false) String token) {
         Integer customerId;
         if ((customerId = tokenService.getAccountId(token)) == null) {
@@ -158,7 +136,7 @@ public class CustomerController {
 
         var customer = customerService.getByAccountId(customerId);
         var canApply = customerService.canApply(customerId);
-        var applied = seckillApplicationFormClient.contains(customerId).get();
+        var applied = seckillApplicationFormClient.contains(customerId).getData();
 
         // 往初筛表插入记录
         preScreeningService.insert(customerId);

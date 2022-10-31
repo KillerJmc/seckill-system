@@ -1,4 +1,4 @@
-package com.lingyuango.seckill.account.controller;
+package com.lingyuango.seckill.account.expose;
 
 import com.jmc.net.R;
 import com.lingyuango.seckill.account.service.PreScreeningService;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author Jmc
  */
-@RestController
+@RestController("preScreeningExposeController")
 @RequiredArgsConstructor
 @RequestMapping("/preScreening")
 @Slf4j

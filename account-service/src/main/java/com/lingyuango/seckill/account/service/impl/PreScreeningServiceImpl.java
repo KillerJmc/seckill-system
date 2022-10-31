@@ -1,10 +1,10 @@
 package com.lingyuango.seckill.account.service.impl;
 
+import com.lingyuango.seckill.account.client.SeckillActivityClient;
+import com.lingyuango.seckill.account.dao.PreScreeningDao;
 import com.lingyuango.seckill.account.pojo.PreScreening;
 import com.lingyuango.seckill.account.service.CustomerService;
 import com.lingyuango.seckill.account.service.PreScreeningService;
-import com.lingyuango.seckill.account.dao.PreScreeningDao;
-import com.lingyuango.seckill.account.client.SeckillActivityClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class PreScreeningServiceImpl implements PreScreeningService {
         var customer = customerService.getByAccountId(customerId);
         var canApply = customerService.canApply(customerId);
 
-        int seckillId = seckillActivityClient.getSeckillId().get();
+        int seckillId = seckillActivityClient.getSeckillId().getData();
         var date = LocalDateTime.now();
 
         var preliminaryScreening = new PreScreening() {{

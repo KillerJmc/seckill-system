@@ -75,7 +75,7 @@ public class RedisServiceImpl implements RedisService {
         if (s != null) {
             return objectMapper.readValue(s, Product.class);
         } else {
-            var product = seckillActivityClient.getProduct(activityId).get();
+            var product = seckillActivityClient.getProduct(activityId).getData();
             if (product != null) {
                 putActivityPrice(activityId, product);
             }

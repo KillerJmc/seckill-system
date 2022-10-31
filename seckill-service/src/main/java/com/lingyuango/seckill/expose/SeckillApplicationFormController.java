@@ -1,4 +1,4 @@
-package com.lingyuango.seckill.controller;
+package com.lingyuango.seckill.expose;
 
 import com.jmc.net.R;
 import com.lingyuango.seckill.service.SeckillApplicationFormService;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author Jmc
  */
-@RestController
+@RestController("seckillApplicationFormExposeController")
 @RequiredArgsConstructor
 @RequestMapping("/seckillApplicationForm")
 @Slf4j

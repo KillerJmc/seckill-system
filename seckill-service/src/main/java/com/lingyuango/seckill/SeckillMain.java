@@ -10,8 +10,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 @SpringBootApplication
 @EnableFeignClients
-public class SeckillServiceMain {
+public class SeckillMain {
     public static void main(String[] args) {
-        SpringApplication.run(SeckillServiceMain.class, args);
+        SpringApplication.run(SeckillMain.class, args);
     }
 }

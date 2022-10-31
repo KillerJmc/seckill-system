@@ -1,12 +1,12 @@
 package com.lingyuango.seckill.account.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.lingyuango.seckill.account.client.SeckillActivityClient;
 import com.lingyuango.seckill.account.common.Const;
 import com.lingyuango.seckill.account.dao.CustomerDao;
 import com.lingyuango.seckill.account.pojo.Customer;
 import com.lingyuango.seckill.account.service.CustomerInfoService;
 import com.lingyuango.seckill.account.service.CustomerService;
-import com.lingyuango.seckill.account.client.SeckillActivityClient;
 import com.lingyuango.seckill.account.util.Calculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -69,7 +69,7 @@ public class CustomerServiceImpl implements CustomerService {
     public boolean canApply(Integer accountId) {
         var customer = getByAccountId(accountId);
 
-        var rule = seckillActivityClient.getRule().get();
+        var rule = seckillActivityClient.getRule().getData();
         var customerInfo = customerInfoService.getByAccountId(accountId);
         int customerAge = Calculator.getAge(customer.getIdNumber());
 

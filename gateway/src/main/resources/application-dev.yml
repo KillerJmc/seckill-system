@@ -1,0 +1,28 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      globalcors:
+        cors-configurations:
+          "[/**]":
+            allow-credentials: true
+            allowed-origin-patterns: "*"
+            allowed-methods: GET, POST
+            allowed-headers: "*"
+      routes:
+        - id: account-service
+          uri: lb://seckill-account-service
+          predicates:
+            - Path=/customer/**
+
+        - id: seckill-service
+          uri: lb://seckill-seckill-service
+          predicates:
+            - Path=/seckill/**

@@ -2,13 +2,12 @@ package com.lingyuango.seckill.payment.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.jmc.net.R;
+import com.lingyuango.seckill.payment.client.CustomerClient;
+import com.lingyuango.seckill.payment.client.PayClient;
 import com.lingyuango.seckill.payment.common.Const;
 import com.lingyuango.seckill.payment.common.MsgMapping;
 import com.lingyuango.seckill.payment.dao.OrderDao;
 import com.lingyuango.seckill.payment.pojo.*;
-import com.lingyuango.seckill.payment.client.CustomerClient;
-import com.lingyuango.seckill.payment.client.SeckillActivityClient;
-import com.lingyuango.seckill.payment.client.PayClient;
 import com.lingyuango.seckill.payment.service.OrderService;
 import com.lingyuango.seckill.payment.service.PayService;
 import com.lingyuango.seckill.payment.service.RedisService;
@@ -40,7 +39,7 @@ public class PayServiceImpl implements PayService {
     @Transactional
     public synchronized R<PaymentStatus> pay(String orderId) throws IOException {
         var order = orderDao.selectOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderId, orderId));
-        var customer = customerClient.getCustomer(order.getAccountId()).get();
+        var customer = customerClient.getCustomer(order.getAccountId()).getData();
         var product = redisService.getActivityProduct(order.getSeckillId());
 
         var date = LocalDateTime.now();

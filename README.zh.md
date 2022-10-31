@@ -8,12 +8,12 @@
 ## 技术栈
 + **后台服务**：Spring Boot
 + **数据库**：MySQL, Redis
-+ **服务器**：Tomcat，Nginx，Nacos
++ **服务器**：Tomcat, Nginx, Nacos
 + **消息队列**：RabbitMQ
-+ **编译**：Docker Compose
++ **运行**：Docker Compose
 
 ## 应用程序
-1. [秒杀前台系统](https://github.com/KillerJmc/seckill-system-web) 在 `80`端口。
+1. [秒杀前台系统](https://github.com/KillerJmc/seckill-system-web) 在 `80` 端口。
 2. 秒杀后台管理系统 在 `81`端口。
 
 ## 用法

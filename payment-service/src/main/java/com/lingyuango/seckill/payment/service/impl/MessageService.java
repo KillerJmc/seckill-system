@@ -1,7 +1,6 @@
 package com.lingyuango.seckill.payment.service.impl;
 
 import com.jmc.lang.Tries;
-import com.lingyuango.seckill.payment.common.MsgMapping;
 import com.lingyuango.seckill.payment.pojo.BasicOrder;
 import com.lingyuango.seckill.payment.pojo.PaymentStatus;
 import com.lingyuango.seckill.payment.service.OrderService;
@@ -50,8 +49,8 @@ public class MessageService {
     public Consumer<String> payHandle() {
         return orderId -> {
             var rValue = Tries.tryReturnsT(() -> payService.pay(orderId));
-            if (rValue.getData() != null) {
-                Tries.tryThis(() -> redisService.putPaymentStatus(Objects.requireNonNullElseGet(rValue.get(), () -> new PaymentStatus() {{
+            if (!rValue.failed()) {
+                Tries.tryThis(() -> redisService.putPaymentStatus(Objects.requireNonNullElseGet(rValue.getData(), () -> new PaymentStatus() {{
                     setPaymentSuccess(false);
                     setOrderId(orderId);
                 }})));
