@@ -1,0 +1,13 @@
+server:
+  port: 9040
+
+spring:
+  application:
+    name: mock-service
+  datasource:
+    url: jdbc:mysql://mock-db:3306/seckill_mock
+    username: root
+    password: root
+  cloud:
+    nacos:
+      server-addr: nacos:8848

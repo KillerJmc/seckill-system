@@ -1,0 +1,10 @@
+server:
+  port: 9040
+
+spring:
+  application:
+    name: mock-service
+  datasource:
+    url: jdbc:mysql:///seckill_mock
+    username: root
+    password: root

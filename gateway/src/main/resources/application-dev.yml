@@ -18,11 +18,11 @@ spring:
             allowed-headers: "*"
       routes:
         - id: account-service
-          uri: lb://seckill-account-service
+          uri: lb://account-service
           predicates:
             - Path=/customer/**
 
         - id: seckill-service
-          uri: lb://seckill-seckill-service
+          uri: lb://seckill-service
           predicates:
-            - Path=/seckill/**
+            - Path=/seckillActivity/**
