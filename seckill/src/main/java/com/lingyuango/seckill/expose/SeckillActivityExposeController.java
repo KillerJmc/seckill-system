@@ -6,7 +6,6 @@ import com.lingyuango.seckill.pojo.Product;
 import com.lingyuango.seckill.pojo.SeckillActivityRule;
 import com.lingyuango.seckill.service.SeckillActivityService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,11 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author Jmc
  */
-@RestController("seckillActivityExposeController")
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/seckillActivity")
-@Slf4j
-public class SeckillActivityController {
+@RequestMapping("/expose/seckillActivity")
+public class SeckillActivityExposeController {
     private final SeckillActivityService seckillActivityService;
 
     /**

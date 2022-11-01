@@ -6,9 +6,12 @@ spring:
     name: gateway
   cloud:
     gateway:
+      # 启动gateway
       discovery:
         locator:
           enabled: true
+
+      # 配置跨域
       globalcors:
         cors-configurations:
           "[/**]":
@@ -16,12 +19,16 @@ spring:
             allowed-origin-patterns: "*"
             allowed-methods: GET, POST
             allowed-headers: "*"
+
+      # 配置路径
       routes:
+        # 账号服务
         - id: account-service
           uri: lb://account-service
           predicates:
             - Path=/customer/**
 
+        # 秒杀服务
         - id: seckill-service
           uri: lb://seckill-service
           predicates:

@@ -4,16 +4,14 @@ import com.jmc.net.R;
 import com.lingyuango.seckill.account.pojo.Customer;
 import com.lingyuango.seckill.account.service.CustomerService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("customerExposeController")
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/customer")
-@Slf4j
-public class CustomerController {
+@RequestMapping("/expose/customer")
+public class CustomerExposeController {
     private final CustomerService customerService;
 
     /**
