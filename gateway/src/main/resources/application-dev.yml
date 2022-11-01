@@ -11,7 +11,7 @@ spring:
         locator:
           enabled: true
 
-      # 配置跨域
+      # 配置全局跨域
       globalcors:
         cors-configurations:
           "[/**]":
@@ -20,7 +20,7 @@ spring:
             allowed-methods: GET, POST
             allowed-headers: "*"
 
-      # 配置路径
+      # 配置暴露路径
       routes:
         # 账号服务
         - id: account-service
