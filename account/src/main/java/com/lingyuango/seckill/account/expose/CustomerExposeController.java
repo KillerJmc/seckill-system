@@ -4,7 +4,7 @@ import com.jmc.net.R;
 import com.lingyuango.seckill.account.pojo.Customer;
 import com.lingyuango.seckill.account.service.CustomerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,18 +15,18 @@ public class CustomerExposeController {
     private final CustomerService customerService;
 
     /**
-     * 通过账户id获取客户
+     * 通过账号获取客户对象
      */
-    @PostMapping("/getCustomer")
-    public R<Customer> getCustomer(Integer account) {
+    @GetMapping("/getByAccount")
+    public R<Customer> getByAccount(Integer account) {
         return R.ok(customerService.getByAccount(account));
     }
 
     /**
      * 用户是否能申请活动
      */
-    @PostMapping("/canApply")
-    public R<Boolean> canApply(Integer customerId) {
-        return R.ok(customerService.canApply(customerId));
+    @GetMapping("/canApply")
+    public R<Boolean> canApply(Integer account) {
+        return R.ok(customerService.canApply(account));
     }
 }

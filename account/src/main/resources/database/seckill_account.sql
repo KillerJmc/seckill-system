@@ -28,12 +28,12 @@ CREATE TABLE `sk_customer` (
   `id_number` char(18) NOT NULL COMMENT '身份证号',
   `name` varchar(20) NOT NULL COMMENT '客户姓名',
   `password` varchar(100) NOT NULL COMMENT '账号密码',
-  `gmt_create` datetime NOT NULL,
-  `gmt_modified` datetime NOT NULL,
+  `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
+  `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `customer_account_id_uindex` (`account`),
   UNIQUE KEY `customer_id_number_uindex` (`id_number`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='客户';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='客户';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `sk_customer` (
 
 LOCK TABLES `sk_customer` WRITE;
 /*!40000 ALTER TABLE `sk_customer` DISABLE KEYS */;
-INSERT INTO `sk_customer` VALUES (1,10000,'123456200108097890','江明畅','a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3','2022-03-04 13:12:34','2022-03-04 13:12:36');
+INSERT INTO `sk_customer` VALUES (1,10000,'123456200108097890','江明畅','a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3','2022-11-04 17:44:20','2022-11-04 17:44:40');
 /*!40000 ALTER TABLE `sk_customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -61,11 +61,11 @@ CREATE TABLE `sk_customer_info` (
   `overdue_times` int(11) NOT NULL DEFAULT '0' COMMENT '三年内逾期次数',
   `overdue_money` double NOT NULL DEFAULT '0' COMMENT '三年内逾期金额',
   `overdue_days` int(11) NOT NULL DEFAULT '0' COMMENT '三年内逾期天数',
-  `gmt_create` datetime NOT NULL,
-  `gmt_modified` datetime NOT NULL,
+  `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
+  `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `customer_info_id_number_uindex` (`account`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='客户信息';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='客户信息';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,7 +74,7 @@ CREATE TABLE `sk_customer_info` (
 
 LOCK TABLES `sk_customer_info` WRITE;
 /*!40000 ALTER TABLE `sk_customer_info` DISABLE KEYS */;
-INSERT INTO `sk_customer_info` VALUES (1,10000,1,0,0,0,0,'2022-03-04 13:13:49','2022-03-04 13:13:54');
+INSERT INTO `sk_customer_info` VALUES (1,10000,1,0,0,0,0,'2022-11-04 17:46:48','2022-11-04 17:47:02');
 /*!40000 ALTER TABLE `sk_customer_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,10 +91,10 @@ CREATE TABLE `sk_pre_screening` (
   `account` int(11) NOT NULL COMMENT '账号',
   `name` varchar(20) NOT NULL COMMENT '客户姓名',
   `pass` tinyint(1) NOT NULL COMMENT '是否通过初筛',
-  `gmt_create` datetime NOT NULL,
-  `gmt_modified` datetime NOT NULL,
+  `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
+  `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=493 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='初筛';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='初筛';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -115,4 +115,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-04 17:16:13
+-- Dump completed on 2022-11-04 17:54:16

@@ -7,5 +7,5 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 public interface PreScreeningService {
     @PostMapping("/insert")
-    int insert(Integer customerId);
+    void insert(Integer customerId);
 }

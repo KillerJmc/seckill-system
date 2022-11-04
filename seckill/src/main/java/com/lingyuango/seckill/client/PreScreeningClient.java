@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value = "account-service", path = "/expose/preScreening", contextId = "preScreenClient")
 public interface PreScreeningClient {
     @PostMapping("/insert")
-    R<Void> insert(@RequestParam("customerId") Integer customerId);
+    R<Void> insert(@RequestParam("account") Integer account);
 }

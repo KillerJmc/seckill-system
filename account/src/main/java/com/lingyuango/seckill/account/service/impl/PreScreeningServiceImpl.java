@@ -23,7 +23,7 @@ public class PreScreeningServiceImpl implements PreScreeningService {
     private final SeckillActivityClient seckillActivityClient;
 
     @Override
-    public int insert(Integer customerId) {
+    public void insert(Integer customerId) {
         var customer = customerService.getByAccount(customerId);
         var canApply = customerService.canApply(customerId);
 
@@ -40,6 +40,6 @@ public class PreScreeningServiceImpl implements PreScreeningService {
         }};
 
         log.info("初筛信息：{}", preliminaryScreening);
-        return preScreeningDao.insert(preliminaryScreening);
+        preScreeningDao.insert(preliminaryScreening);
     }
 }

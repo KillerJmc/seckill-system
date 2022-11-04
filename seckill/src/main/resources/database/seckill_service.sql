@@ -28,12 +28,12 @@ CREATE TABLE `sk_product` (
   `name` varchar(50) NOT NULL COMMENT '商品名称',
   `price` double NOT NULL COMMENT '商品价格',
   `info` varchar(100) NOT NULL COMMENT '商品信息',
-  `gmt_create` datetime NOT NULL,
-  `gmt_modified` datetime NOT NULL,
+  `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
+  `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `product_name_uindex` (`name`),
   UNIQUE KEY `product_product_id_uindex` (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='商品';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='商品';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `sk_product` (
 
 LOCK TABLES `sk_product` WRITE;
 /*!40000 ALTER TABLE `sk_product` DISABLE KEYS */;
-INSERT INTO `sk_product` VALUES (1,1,'限量一万元定期存款',10000,'一万元定期存款，限量出售，仅售10万份！有兴趣的朋友赶紧前来抢购。','2022-03-04 13:28:31','2022-03-04 13:28:33');
+INSERT INTO `sk_product` VALUES (1,1,'限量一万元定期存款',10000,'一万元定期存款，限量出售，仅售10万份！有兴趣的朋友赶紧前来抢购。','2022-11-04 17:49:18','2022-11-04 17:49:33');
 /*!40000 ALTER TABLE `sk_product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -61,11 +61,11 @@ CREATE TABLE `sk_seckill_activity` (
   `start_time` datetime NOT NULL COMMENT '秒杀活动开始时间',
   `activity_info` varchar(300) NOT NULL COMMENT '秒杀活动信息',
   `activity_rule_id` int(11) NOT NULL COMMENT '秒杀规则id',
-  `gmt_create` datetime NOT NULL,
-  `gmt_modified` datetime NOT NULL,
+  `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
+  `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `seckill_activity_seckill_id_uindex` (`seckill_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='秒杀活动';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='秒杀活动';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,7 +74,7 @@ CREATE TABLE `sk_seckill_activity` (
 
 LOCK TABLES `sk_seckill_activity` WRITE;
 /*!40000 ALTER TABLE `sk_seckill_activity` DISABLE KEYS */;
-INSERT INTO `sk_seckill_activity` VALUES (1,1298850693,1,100000,'2022-04-15 20:53:36','2022我们携手攻克时艰，感谢有你，对本行的支持，才有了我们今天的成功，为回馈广大客户，我们现决定将一件产品进行售卖，因为产品较为难得，所以采取抢购的方法。',1,'2022-03-04 13:21:23','2022-04-15 20:53:39');
+INSERT INTO `sk_seckill_activity` VALUES (1,1298850693,1,100000,'2022-11-04 12:00:00','2022我们携手攻克时艰，感谢有你，对本行的支持，才有了我们今天的成功，为回馈广大客户，我们现决定将一件产品进行售卖，因为产品较为难得，所以采取抢购的方法。',1,'2022-11-04 17:50:48','2022-11-04 17:51:01');
 /*!40000 ALTER TABLE `sk_seckill_activity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -96,10 +96,10 @@ CREATE TABLE `sk_seckill_activity_rule` (
   `max_overdue_times` int(11) DEFAULT '100' COMMENT '三年内最多逾期次数',
   `max_overdue_days` int(11) DEFAULT '365' COMMENT '三年内最多逾期天数',
   `max_overdue_money` double DEFAULT '100000000' COMMENT '三年内最多逾期金额',
-  `gmt_create` datetime NOT NULL,
-  `gmt_modified` datetime NOT NULL,
+  `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
+  `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='秒杀活动规则';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='秒杀活动规则';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -108,7 +108,7 @@ CREATE TABLE `sk_seckill_activity_rule` (
 
 LOCK TABLES `sk_seckill_activity_rule` WRITE;
 /*!40000 ALTER TABLE `sk_seckill_activity_rule` DISABLE KEYS */;
-INSERT INTO `sk_seckill_activity_rule` VALUES (1,1,'默认规则',1,18,35,0,3,30,100000,'2022-03-04 13:24:02','2022-03-04 13:24:04');
+INSERT INTO `sk_seckill_activity_rule` VALUES (1,1,'默认规则',1,18,35,0,3,30,100000,'2022-11-04 17:52:12','2022-11-04 17:52:26');
 /*!40000 ALTER TABLE `sk_seckill_activity_rule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -123,11 +123,11 @@ CREATE TABLE `sk_seckill_application_form` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `seckill_id` int(11) NOT NULL COMMENT '秒杀活动id',
   `account_id` int(11) NOT NULL COMMENT '客户id',
-  `gmt_create` datetime NOT NULL,
-  `gmt_modified` datetime NOT NULL,
+  `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
+  `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `seckill_application_account_id_uindex` (`account_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='秒杀活动客户申请表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='秒杀活动客户申请表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -148,4 +148,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-18 21:37:38
+-- Dump completed on 2022-11-04 17:55:00

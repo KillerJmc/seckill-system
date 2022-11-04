@@ -16,9 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class PreScreeningExposeController {
     private final PreScreeningService preScreeningService;
 
+    /**
+     * 插入初筛记录
+     * @param account 账号
+     */
     @PostMapping("/insert")
-    R<Void> insert(Integer customerId) {
-        return preScreeningService.insert(customerId) == 1 ?
-                R.ok().build() : R.error().build();
+    R<Void> insert(Integer account) {
+        return R.stream()
+                .exec(() -> preScreeningService.insert(account))
+                .build();
     }
 }

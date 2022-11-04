@@ -39,7 +39,7 @@ public class PayServiceImpl implements PayService {
     @Transactional
     public synchronized R<PaymentStatus> pay(String orderId) throws IOException {
         var order = orderDao.selectOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderId, orderId));
-        var customer = customerClient.getCustomer(order.getAccountId()).getData();
+        var customer = customerClient.getByAccount(order.getAccountId()).getData();
         var product = redisService.getActivityProduct(order.getSeckillId());
 
         var date = LocalDateTime.now();

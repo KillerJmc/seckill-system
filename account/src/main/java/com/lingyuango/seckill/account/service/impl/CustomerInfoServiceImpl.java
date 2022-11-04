@@ -22,7 +22,10 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
 
     @Override
     public CustomerInfo getByAccount(Integer account) {
-        return customerInfoDao.selectOne(Wrappers.<CustomerInfo>lambdaQuery().eq(CustomerInfo::getAccount, account));
+        return customerInfoDao.selectOne(
+                Wrappers.<CustomerInfo>lambdaQuery()
+                        .eq(CustomerInfo::getAccount, account)
+        );
     }
 
     @Override
