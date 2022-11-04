@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 /**
  * @author Jmc
  */
@@ -28,15 +26,12 @@ public class PreScreeningServiceImpl implements PreScreeningService {
         var canApply = customerService.canApply(customerId);
 
         int seckillId = seckillActivityClient.getSeckillId().getData();
-        var date = LocalDateTime.now();
 
         var preliminaryScreening = new PreScreening() {{
             setSeckillId(seckillId);
             setAccount(customerId);
             setName(customer.getName());
             setPass(canApply);
-            setGmtCreate(date);
-            setGmtModified(date);
         }};
 
         log.info("初筛信息：{}", preliminaryScreening);

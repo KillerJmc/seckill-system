@@ -57,9 +57,8 @@ public class TokenServiceImpl implements TokenService {
             return null;
         }
 
-        String res;
-        return (res = redisTemplate.opsForValue().get(Const.REDIS_TOKEN_GROUP + token)) == null ? null :
-                Strs.isNum(res) ? Integer.valueOf(res) : null;
+        var account = redisTemplate.opsForValue().get(Const.REDIS_TOKEN_GROUP + token);
+        return account == null ? null : Strs.isNum(account) ? Integer.valueOf(account) : null;
     }
 
     @Override

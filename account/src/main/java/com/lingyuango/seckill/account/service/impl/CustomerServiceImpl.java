@@ -14,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 /**
  * @author Jmc
  */
@@ -43,10 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
             maxId = 0;
         }
 
-        var now = LocalDateTime.now();
         customer.setAccount(Const.ACCOUNT_ID_OFFSET + maxId + 1);
-        customer.setGmtCreate(now);
-        customer.setGmtModified(now);
 
         customerDao.insert(customer);
         customerInfoService.insert(customer);

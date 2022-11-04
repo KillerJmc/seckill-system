@@ -9,8 +9,6 @@ import com.lingyuango.seckill.account.service.CustomerInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 /**
  * @author Jmc
  */
@@ -33,8 +31,6 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
         // 获取模拟客户信息
         var mockCreditInfo = mockCreditClient.getCreditInfo().getData();
 
-        var date = LocalDateTime.now();
-
         customerInfoDao.insert(new CustomerInfo() {{
             setAccount(customer.getAccount());
             setWorkStatus(mockCreditInfo.getWorkStatus());
@@ -42,8 +38,6 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
             setOverdueTimes(mockCreditInfo.getOverdueTimes());
             setOverdueMoney(mockCreditInfo.getOverdueMoney());
             setOverdueDays(mockCreditInfo.getOverdueDays());
-            setGmtCreate(date);
-            setGmtModified(date);
         }});
     }
 }
