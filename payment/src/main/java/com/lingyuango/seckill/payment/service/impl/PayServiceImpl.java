@@ -66,7 +66,7 @@ public class PayServiceImpl implements PayService {
                     var storageFlag = storageService.decrease(order.getSeckillId());
                     if (flag && storageFlag) {
                         return R.ok(new PaymentStatus() {{
-                            setAccountId(customer.getAccountId());
+                            setAccountId(customer.getAccount());
                             setOrderId(orderId);
                             setPaymentSuccess(true);
                         }});

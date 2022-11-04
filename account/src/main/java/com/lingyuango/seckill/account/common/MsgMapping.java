@@ -36,12 +36,7 @@ public interface MsgMapping {
     String LOGIN_REPEAT = "重复登录";
 
     /**
-     * 未登录
+     * 非法的token
      */
-    String NOT_LOGGED_ON = "您还未登录";
-
-    /**
-     * 用户初筛信息生成失败
-     */
-    String USER_PRE_SCREEN_INFO_CREATE_ERROR = "用户初筛信息生成失败";
+    String INVALID_TOKEN = "非法的token";
 }

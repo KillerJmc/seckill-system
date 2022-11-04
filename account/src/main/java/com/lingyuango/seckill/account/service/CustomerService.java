@@ -6,21 +6,23 @@ import com.lingyuango.seckill.account.pojo.Customer;
  * @author Jmc
  */
 public interface CustomerService {
-    /**
-     * 插入
-     * @return 是否插入成功（只要身份证号重复就失败）
-     */
-    boolean insert(Customer customer);
+    void insert(Customer customer) throws Exception;
 
     /**
      * 检查账号/身份证号和密码是否在数据库中有匹配
      */
     boolean contains(Customer customer);
 
-    Customer getByAccountId(Integer accountId);
+    Customer getByAccount(Integer account);
 
     /**
      * 是否能申请秒杀活动
      */
-    boolean canApply(Integer accountId);
+    boolean canApply(Integer account);
+
+    /**
+     * 检查客户的身份证是否合法
+     * @param idNumber 身份证号
+     */
+    void checkIdNum(String idNumber) throws Exception;
 }

@@ -3,12 +3,15 @@ package com.lingyuango.seckill.account.service.impl;
 import com.jmc.lang.Objs;
 import com.jmc.lang.Strs;
 import com.lingyuango.seckill.account.common.Const;
+import com.lingyuango.seckill.account.common.MsgMapping;
 import com.lingyuango.seckill.account.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Service
@@ -17,29 +20,39 @@ public class TokenServiceImpl implements TokenService {
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    public Cookie create(Integer accountId) {
+    public void createAndSetCookies(Integer account, HttpServletResponse resp) {
         // 定义token
         var token = UUID.randomUUID().toString();
 
         // 存入redis
-        putAccountId(token, accountId);
+        putAccount(token, account);
 
-        // 设置cookie
-        var cookie = new Cookie(Const.TOKEN_COOKIE_NAME, token);
+        // token的cookie
+        var tokenCookie = ResponseCookie
+                .from(Const.COOKIE_TOKEN_NAME, token)
+                .sameSite("Lax")
+                .path("/")
+                .build();
 
-        // 设置路径为根路径，对所有url可见
-        cookie.setPath("/");
+        // 账号的cookie
+        var accountCookie = ResponseCookie
+                .from(Const.COOKIE_ACCOUNT_NAME, account.toString())
+                .sameSite("Lax")
+                .path("/")
+                .build();
 
-        return cookie;
+        // 添加cookie
+        resp.addHeader(HttpHeaders.SET_COOKIE, tokenCookie.toString());
+        resp.addHeader(HttpHeaders.SET_COOKIE, accountCookie.toString());
     }
 
     @Override
-    public void putAccountId(String token, Integer accountId) {
-        redisTemplate.opsForValue().set(Const.REDIS_TOKEN_GROUP + token, String.valueOf(accountId));
+    public void putAccount(String token, Integer account) {
+        redisTemplate.opsForValue().set(Const.REDIS_TOKEN_GROUP + token, String.valueOf(account));
     }
 
     @Override
-    public Integer getAccountId(String token) {
+    public Integer getAccount(String token) {
         if (Objs.nullOrEmpty(token)) {
             return null;
         }
@@ -47,5 +60,12 @@ public class TokenServiceImpl implements TokenService {
         String res;
         return (res = redisTemplate.opsForValue().get(Const.REDIS_TOKEN_GROUP + token)) == null ? null :
                 Strs.isNum(res) ? Integer.valueOf(res) : null;
+    }
+
+    @Override
+    public void delete(String token) throws Exception {
+        if (Boolean.FALSE.equals(redisTemplate.delete(Const.REDIS_TOKEN_GROUP + token))) {
+            throw new Exception(MsgMapping.INVALID_TOKEN);
+        }
     }
 }

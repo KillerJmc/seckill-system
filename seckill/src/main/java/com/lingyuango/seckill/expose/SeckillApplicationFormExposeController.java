@@ -20,7 +20,7 @@ public class SeckillApplicationFormExposeController {
      * 判断某客户是否在申请表中
      */
     @PostMapping("/contains")
-    public R<Boolean> contains(Integer customerId) {
-        return R.ok(seckillApplicationFormService.contains(customerId));
+    public R<Boolean> contains(Integer account) {
+        return R.ok(seckillApplicationFormService.contains(account));
     }
 }

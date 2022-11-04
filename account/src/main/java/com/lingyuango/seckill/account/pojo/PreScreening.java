@@ -27,7 +27,7 @@ public class PreScreening {
     /**
      * 客户id
      */
-    private Integer accountId;
+    private Integer account;
 
     /**
      * 客户姓名

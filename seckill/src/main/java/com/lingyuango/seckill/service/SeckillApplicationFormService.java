@@ -4,7 +4,7 @@ package com.lingyuango.seckill.service;
  * @author Jmc
  */
 public interface SeckillApplicationFormService {
-    boolean contains(int customerId);
+    boolean contains(int account);
 
-    boolean insert(int customerId);
+    boolean insert(int account);
 }

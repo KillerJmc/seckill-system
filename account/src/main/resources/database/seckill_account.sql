@@ -24,16 +24,16 @@ DROP TABLE IF EXISTS `sk_customer`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `sk_customer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `account_id` int(11) NOT NULL COMMENT '账号id，等于自然主键 + 10000',
+  `account` int(11) NOT NULL COMMENT '账号，等于自然主键 + 10000',
   `id_number` char(18) NOT NULL COMMENT '身份证号',
   `name` varchar(20) NOT NULL COMMENT '客户姓名',
   `password` varchar(100) NOT NULL COMMENT '账号密码',
   `gmt_create` datetime NOT NULL,
   `gmt_modified` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `customer_account_id_uindex` (`account_id`),
+  UNIQUE KEY `customer_account_id_uindex` (`account`),
   UNIQUE KEY `customer_id_number_uindex` (`id_number`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='客户';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='客户';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -55,7 +55,7 @@ DROP TABLE IF EXISTS `sk_customer_info`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `sk_customer_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `account_id` int(11) NOT NULL COMMENT '客户id',
+  `account` int(11) NOT NULL COMMENT '账号',
   `work_status` tinyint(1) NOT NULL COMMENT '是否有工作',
   `in_credit_blacklist` tinyint(1) NOT NULL COMMENT '是否被列入失信人名单',
   `overdue_times` int(11) NOT NULL DEFAULT '0' COMMENT '三年内逾期次数',
@@ -64,8 +64,8 @@ CREATE TABLE `sk_customer_info` (
   `gmt_create` datetime NOT NULL,
   `gmt_modified` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `customer_info_id_number_uindex` (`account_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='客户信息';
+  UNIQUE KEY `customer_info_id_number_uindex` (`account`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='客户信息';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,13 +88,13 @@ DROP TABLE IF EXISTS `sk_pre_screening`;
 CREATE TABLE `sk_pre_screening` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `seckill_id` int(11) DEFAULT NULL COMMENT '秒杀活动id',
-  `account_id` int(11) NOT NULL COMMENT '客户id',
+  `account` int(11) NOT NULL COMMENT '账号',
   `name` varchar(20) NOT NULL COMMENT '客户姓名',
   `pass` tinyint(1) NOT NULL COMMENT '是否通过初筛',
   `gmt_create` datetime NOT NULL,
   `gmt_modified` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=456 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='初筛';
+) ENGINE=InnoDB AUTO_INCREMENT=493 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='初筛';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -115,4 +115,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-18 21:33:18
+-- Dump completed on 2022-11-04 17:16:13

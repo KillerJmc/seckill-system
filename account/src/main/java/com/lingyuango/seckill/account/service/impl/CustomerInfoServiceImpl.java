@@ -1,10 +1,10 @@
 package com.lingyuango.seckill.account.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.lingyuango.seckill.account.client.MockCreditClient;
 import com.lingyuango.seckill.account.dao.CustomerInfoDao;
 import com.lingyuango.seckill.account.pojo.Customer;
 import com.lingyuango.seckill.account.pojo.CustomerInfo;
-import com.lingyuango.seckill.account.pojo.MockCreditInfo;
 import com.lingyuango.seckill.account.service.CustomerInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,17 +18,22 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class CustomerInfoServiceImpl implements CustomerInfoService {
     private final CustomerInfoDao customerInfoDao;
+    private final MockCreditClient mockCreditClient;
 
     @Override
-    public CustomerInfo getByAccountId(Integer accountId) {
-        return customerInfoDao.selectOne(Wrappers.<CustomerInfo>lambdaQuery().eq(CustomerInfo::getAccountId, accountId));
+    public CustomerInfo getByAccount(Integer account) {
+        return customerInfoDao.selectOne(Wrappers.<CustomerInfo>lambdaQuery().eq(CustomerInfo::getAccount, account));
     }
 
     @Override
-    public boolean insert(Customer customer, MockCreditInfo mockCreditInfo) {
+    public void insert(Customer customer) {
+        // 获取模拟客户信息
+        var mockCreditInfo = mockCreditClient.getCreditInfo().getData();
+
         var date = LocalDateTime.now();
-        return customerInfoDao.insert(new CustomerInfo() {{
-            setAccountId(customer.getAccountId());
+
+        customerInfoDao.insert(new CustomerInfo() {{
+            setAccount(customer.getAccount());
             setWorkStatus(mockCreditInfo.getWorkStatus());
             setInCreditBlacklist(mockCreditInfo.getInCreditBlacklist());
             setOverdueTimes(mockCreditInfo.getOverdueTimes());
@@ -36,6 +41,6 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
             setOverdueDays(mockCreditInfo.getOverdueDays());
             setGmtCreate(date);
             setGmtModified(date);
-        }}) == 1;
+        }});
     }
 }

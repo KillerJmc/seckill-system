@@ -23,23 +23,23 @@ public class SeckillApplicationFormServiceImpl implements SeckillApplicationForm
     private final SeckillActivityService seckillActivityService;
 
     @Override
-    public boolean contains(int customerId) {
+    public boolean contains(int account) {
         return seckillApplicationFormDao.selectOne(
                 Wrappers.<SeckillApplicationForm>lambdaQuery()
-                        .eq(SeckillApplicationForm::getAccountId, customerId)
+                        .eq(SeckillApplicationForm::getAccountId, account)
         ) != null;
     }
 
     @Override
-    public boolean insert(int customerId) {
-        var canApply = Tries.tryReturnsT(customerClient.canApply(customerId)::getData);
+    public boolean insert(int account) {
+        var canApply = Tries.tryReturnsT(customerClient.canApply(account)::getData);
 
         if (canApply) {
             var seckillId = seckillActivityService.getLatestSeckillId();
             var date = LocalDateTime.now();
             var seckillApplicationForm = new SeckillApplicationForm() {{
                 setSeckillId(seckillId);
-                setAccountId(customerId);
+                setAccountId(account);
                 setGmtCreate(date);
                 setGmtModified(date);
             }};

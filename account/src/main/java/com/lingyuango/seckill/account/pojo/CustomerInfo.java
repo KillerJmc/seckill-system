@@ -20,9 +20,9 @@ public class CustomerInfo {
     private Integer id;
 
     /**
-     * 客户id
+     * 账号
      */
-    private Integer accountId;
+    private Integer account;
 
     /**
      * 是否有工作

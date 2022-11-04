@@ -18,8 +18,8 @@ public class CustomerExposeController {
      * 通过账户id获取客户
      */
     @PostMapping("/getCustomer")
-    public R<Customer> getCustomer(Integer accountId) {
-        return R.ok(customerService.getByAccountId(accountId));
+    public R<Customer> getCustomer(Integer account) {
+        return R.ok(customerService.getByAccount(account));
     }
 
     /**

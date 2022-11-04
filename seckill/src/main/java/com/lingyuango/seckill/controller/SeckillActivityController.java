@@ -12,7 +12,6 @@ import com.lingyuango.seckill.pojo.PaymentStatus;
 import com.lingyuango.seckill.pojo.SeckillActivity;
 import com.lingyuango.seckill.service.SeckillActivityService;
 import com.lingyuango.seckill.service.SeckillApplicationFormService;
-import com.lingyuango.seckill.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -29,25 +28,19 @@ import java.time.LocalDateTime;
 @RequestMapping("/seckillActivity")
 @Slf4j
 public class SeckillActivityController {
-    private final TokenService tokenService;
     private final SeckillActivityService seckillActivityService;
     private final SeckillApplicationFormService seckillApplicationFormService;
     private final PreScreeningClient preScreeningClient;
     private final PaymentClient paymentClient;
 
     @PostMapping("/getCurrent")
-    public synchronized R<SeckillActivity> getCurrent(@CookieValue(value = "token", required = false) String token) {
-        var accountId = tokenService.getAccountId(token);
-        if (accountId == null) {
-            return R.error(MsgMapping.NOT_LOGGED_ON);
-        }
-
+    public synchronized R<SeckillActivity> getCurrent(@CookieValue("account") Integer account) {
         var activity = seckillActivityService.getLatest();
 
         // 往初筛表插入记录
-        preScreeningClient.insert(accountId);
+        preScreeningClient.insert(account);
 
-        log.info("用户id {} 获取最新的秒杀活动：{}", accountId, activity);
+        log.info("用户id {} 获取最新的秒杀活动：{}", account, activity);
 
         return R.ok(activity);
     }
@@ -57,17 +50,12 @@ public class SeckillActivityController {
      * @return 倒计时（单位：秒）
      */
     @PostMapping("/getCountDown")
-    public synchronized R<Long> getCountDown(@CookieValue(value = "token", required = false) String token) {
-        var accountId = tokenService.getAccountId(token);
-        if (accountId == null) {
-            return R.error(MsgMapping.NOT_LOGGED_ON);
-        }
-
+    public synchronized R<Long> getCountDown(@CookieValue("account") Integer account) {
         var activity = seckillActivityService.getLatest();
         long countDown = Duration.between(LocalDateTime.now(), activity.getStartTime()).toSeconds();
         countDown = countDown < 0 ? 0 : countDown;
 
-        log.info("用户id {} 获取最新的秒杀活动倒计时：{} 秒", accountId, activity);
+        log.info("用户id {} 获取最新的秒杀活动倒计时：{} 秒", account, activity);
 
         return R.ok(countDown);
     }
@@ -76,17 +64,12 @@ public class SeckillActivityController {
      * 申请秒杀
      */
     @PostMapping("/apply")
-    public synchronized R<Void> apply(@CookieValue(value = "token", required = false) String token) {
-        var accountId = tokenService.getAccountId(token);
-        if (accountId == null) {
-            return R.error(MsgMapping.NOT_LOGGED_ON);
-        }
-
-        if (seckillApplicationFormService.contains(accountId)) {
+    public synchronized R<Void> apply(@CookieValue("account") Integer account) {
+        if (seckillApplicationFormService.contains(account)) {
             return R.error(MsgMapping.APPLY_REPEAT);
         }
 
-        var insertSuccess = seckillApplicationFormService.insert(accountId);
+        var insertSuccess = seckillApplicationFormService.insert(account);
         return insertSuccess ? R.ok().build() :
                 R.error(MsgMapping.APPLY_FAILED);
     }
@@ -95,14 +78,9 @@ public class SeckillActivityController {
      * 获取暴露的秒杀地址
      */
     @PostMapping("/getSeckillUrl")
-    public R<String> getSeckillUrl(@CookieValue(value = "token", required = false) String token) {
-        var accountId = tokenService.getAccountId(token);
-        if (accountId == null) {
-            return R.error(MsgMapping.NOT_LOGGED_ON);
-        }
-
+    public R<String> getSeckillUrl(@CookieValue("account") Integer account) {
         // 检查是否申请
-        if (!seckillApplicationFormService.contains(accountId)) {
+        if (!seckillApplicationFormService.contains(account)) {
             return R.error(MsgMapping.DOES_NOT_APPLY);
         }
 
@@ -114,7 +92,7 @@ public class SeckillActivityController {
         }
 
         var seckillId = seckillActivityService.getLatestSeckillId();
-        log.info("用户id {} 获取秒杀链接 {}", accountId, seckillId);
+        log.info("用户id {} 获取秒杀链接 {}", account, seckillId);
 
         return R.ok(seckillId.toString());
     }
@@ -131,7 +109,7 @@ public class SeckillActivityController {
      * 秒杀接口
      */
     @PostMapping("/seckill/{seckillUrl}")
-    public R<Void> seckill(@CookieValue(value = "token", required = false) String token,
+    public R<Void> seckill(@CookieValue("account") Integer account,
                            @PathVariable String seckillUrl)
             throws JsonProcessingException {
         // 如果售完就直接返回
@@ -139,14 +117,8 @@ public class SeckillActivityController {
             return R.error(MsgMapping.PRODUCT_SOLD_OUT);
         }
 
-        // 检查token
-        var accountId = tokenService.getAccountId(token);
-        if (accountId == null) {
-            return R.error(MsgMapping.NOT_LOGGED_ON);
-        }
-
         // 检查是否申请
-        if (!seckillApplicationFormService.contains(accountId)) {
+        if (!seckillApplicationFormService.contains(account)) {
             return R.error(MsgMapping.DOES_NOT_APPLY);
         }
 
@@ -156,19 +128,19 @@ public class SeckillActivityController {
         }
 
         // 检查重复购买
-        if (seckillActivityService.hasSeckillSuccess(seckillUrl, accountId)) {
+        if (seckillActivityService.hasSeckillSuccess(seckillUrl, account)) {
             return R.error(MsgMapping.PURCHASE_REPEAT);
         }
 
         // 扣库存，如果库存不足返回失败信息
-        if (!seckillActivityService.decreaseStorage(seckillUrl, accountId)) {
+        if (!seckillActivityService.decreaseStorage(seckillUrl, account)) {
             return R.error(MsgMapping.PRODUCT_SOLD_OUT);
         }
 
         // 异步下订单
         seckillActivityService.placeOrderAsync(new BasicOrder() {{
             setSeckillId(Integer.valueOf(seckillUrl));
-            setAccountId(accountId);
+            setAccountId(account);
             setMoney(seckillActivityService.getOrderPriceFromRedis(seckillUrl));
         }});
 
@@ -180,19 +152,14 @@ public class SeckillActivityController {
      * 测试秒杀接口
      */
     @PostMapping("/testSeckill")
-    public R<Void> testSeckill(String token, String seckillUrl) {
+    public R<Void> testSeckill(Integer account, String seckillUrl) {
         // 如果已经卖完就返回商品售完信息
         if (seckillActivityService.isSoldOut()) {
             return R.error(MsgMapping.PRODUCT_SOLD_OUT);
         }
 
-        // 检查token
-        var accountId = tokenService.getAccountId(token);
-        if (accountId == null) {
-            return R.error(MsgMapping.NOT_LOGGED_ON);
-        }
 
-        var applied = seckillApplicationFormService.contains(accountId);
+        var applied = seckillApplicationFormService.contains(account);
         // 检查是否申请
         if (!applied) {
             return R.error(MsgMapping.DOES_NOT_APPLY);
@@ -230,41 +197,29 @@ public class SeckillActivityController {
      * 获取订单
      */
     @PostMapping("/getOrder")
-    public R<BasicOrder> getOrder(@CookieValue(value = "token", required = false) String token) {
-        // 检查token
-        var accountId = tokenService.getAccountId(token);
-        if (accountId == null) {
-            return R.error(MsgMapping.NOT_LOGGED_ON);
-        }
-
+    public R<BasicOrder> getOrder(@CookieValue("account") Integer account) {
         var seckillId = seckillActivityService.getSeckillIdFromRedis();
         // 检查用户是否已经秒杀成功
-        if (!seckillActivityService.hasSeckillSuccess(seckillId, accountId)) {
+        if (!seckillActivityService.hasSeckillSuccess(seckillId, account)) {
             return R.error(MsgMapping.NOT_PURCHASE);
         }
 
         // 请求成功直接返回订单数据
-        return R.ok(seckillActivityService.getOrder(seckillId, accountId));
+        return R.ok(seckillActivityService.getOrder(seckillId, account));
     }
 
     /**
      * 支付
      */
     @PostMapping("/pay")
-    public R<PaymentStatus> pay(@CookieValue(value = "token", required = false) String token, String orderId) {
-        // 检查token
-        var accountId = tokenService.getAccountId(token);
-        if (accountId == null) {
-            return R.error(MsgMapping.NOT_LOGGED_ON);
-        }
-
+    public R<PaymentStatus> pay(@CookieValue("account") Integer account, String orderId) {
         // 检查用户订单号正确性
-        if (seckillActivityService.isInvalidOrderId(accountId, orderId)) {
+        if (seckillActivityService.isInvalidOrderId(account, orderId)) {
             return R.error(MsgMapping.WRONG_ORDER_ID);
         }
 
         // 检测用户重复支付
-        if (seckillActivityService.hasAlreadyPaid(accountId)) {
+        if (seckillActivityService.hasAlreadyPaid(account)) {
             return R.error(MsgMapping.PURCHASE_REPEAT);
         }
 
@@ -275,7 +230,7 @@ public class SeckillActivityController {
         Pointer<String> errorMsgPtr = Pointer.empty();
         // 获取支付状态信息
         var paymentStatus = seckillActivityService.getPaymentStatus(
-                accountId, orderId, errorMsgPtr);
+                account, orderId, errorMsgPtr);
 
         // 判断是否获取成功并返回
         return paymentStatus != null ? R.ok(paymentStatus) : R.error(errorMsgPtr.get());

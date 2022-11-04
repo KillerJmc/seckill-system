@@ -18,5 +18,10 @@ public interface Const {
     /**
      * token的cookie名称
      */
-    String TOKEN_COOKIE_NAME = "token";
+    String COOKIE_TOKEN_NAME = "token";
+
+    /**
+     * 账号的cookie名称
+     */
+    String COOKIE_ACCOUNT_NAME = "account";
 }

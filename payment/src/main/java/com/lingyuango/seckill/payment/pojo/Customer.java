@@ -18,9 +18,9 @@ public class Customer {
     private Integer id;
 
     /**
-     * 账号id，等于自然主键 + 10000
+     * 账号，等于自然主键 + 10000
      */
-    private Integer accountId;
+    private Integer account;
 
     /**
      * 身份证号

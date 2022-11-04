@@ -6,6 +6,7 @@ import com.lingyuango.seckill.account.pojo.PreScreening;
 import com.lingyuango.seckill.account.service.CustomerService;
 import com.lingyuango.seckill.account.service.PreScreeningService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PreScreeningServiceImpl implements PreScreeningService {
     private final PreScreeningDao preScreeningDao;
     private final CustomerService customerService;
@@ -22,7 +24,7 @@ public class PreScreeningServiceImpl implements PreScreeningService {
 
     @Override
     public int insert(Integer customerId) {
-        var customer = customerService.getByAccountId(customerId);
+        var customer = customerService.getByAccount(customerId);
         var canApply = customerService.canApply(customerId);
 
         int seckillId = seckillActivityClient.getSeckillId().getData();
@@ -30,13 +32,14 @@ public class PreScreeningServiceImpl implements PreScreeningService {
 
         var preliminaryScreening = new PreScreening() {{
             setSeckillId(seckillId);
-            setAccountId(customerId);
+            setAccount(customerId);
             setName(customer.getName());
             setPass(canApply);
             setGmtCreate(date);
             setGmtModified(date);
         }};
 
+        log.info("初筛信息：{}", preliminaryScreening);
         return preScreeningDao.insert(preliminaryScreening);
     }
 }

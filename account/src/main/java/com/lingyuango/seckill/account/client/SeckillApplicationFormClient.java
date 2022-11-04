@@ -11,5 +11,5 @@ public interface SeckillApplicationFormClient {
      * 判断某客户是否在申请表中
      */
     @PostMapping("/contains")
-    R<Boolean> contains(@RequestParam("customerId") Integer customerId);
+    R<Boolean> contains(@RequestParam("account") Integer account);
 }
