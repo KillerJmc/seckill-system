@@ -6,7 +6,7 @@ import com.lingyuango.seckill.pojo.Product;
 import com.lingyuango.seckill.pojo.SeckillActivityRule;
 import com.lingyuango.seckill.service.SeckillActivityService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +22,7 @@ public class SeckillActivityExposeController {
     /**
      * 获取最新规则
      */
-    @PostMapping("/getRule")
+    @GetMapping("/getRule")
     public R<SeckillActivityRule> getRule() {
         SeckillActivityRule res;
         if ((res = seckillActivityService.getRule()) == null) {
@@ -35,7 +35,7 @@ public class SeckillActivityExposeController {
     /**
      * 获取商品信息
      */
-    @PostMapping("/getProduct")
+    @GetMapping("/getProduct")
     public R<Product> getProduct() {
         var activity = seckillActivityService.getLatest();
         return R.ok(activity.getProduct());
@@ -44,7 +44,7 @@ public class SeckillActivityExposeController {
     /**
      * 获取最新的秒杀id
      */
-    @PostMapping("/getSeckillId")
+    @GetMapping("/getSeckillId")
     public R<Integer> getSeckillId() {
         var seckillId = seckillActivityService.getLatestSeckillId();
         return seckillId == null ? R.error("Latest seckillId is null") : R.ok(seckillId);

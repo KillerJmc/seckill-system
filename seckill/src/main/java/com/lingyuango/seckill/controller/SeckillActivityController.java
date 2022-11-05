@@ -33,7 +33,7 @@ public class SeckillActivityController {
     private final PreScreeningClient preScreeningClient;
     private final PaymentClient paymentClient;
 
-    @PostMapping("/getCurrent")
+    @GetMapping("/getCurrent")
     public synchronized R<SeckillActivity> getCurrent(@CookieValue("account") Integer account) {
         var activity = seckillActivityService.getLatest();
 
@@ -49,7 +49,7 @@ public class SeckillActivityController {
      * 获取当前秒杀活动倒计时
      * @return 倒计时（单位：秒）
      */
-    @PostMapping("/getCountDown")
+    @GetMapping("/getCountDown")
     public synchronized R<Long> getCountDown(@CookieValue("account") Integer account) {
         var activity = seckillActivityService.getLatest();
         long countDown = Duration.between(LocalDateTime.now(), activity.getStartTime()).toSeconds();
@@ -77,7 +77,7 @@ public class SeckillActivityController {
     /**
      * 获取暴露的秒杀地址
      */
-    @PostMapping("/getSeckillUrl")
+    @GetMapping("/getSeckillUrl")
     public R<String> getSeckillUrl(@CookieValue("account") Integer account) {
         // 检查是否申请
         if (!seckillApplicationFormService.contains(account)) {
@@ -196,7 +196,7 @@ public class SeckillActivityController {
     /**
      * 获取订单
      */
-    @PostMapping("/getOrder")
+    @GetMapping("/getOrder")
     public R<BasicOrder> getOrder(@CookieValue("account") Integer account) {
         var seckillId = seckillActivityService.getSeckillIdFromRedis();
         // 检查用户是否已经秒杀成功

@@ -3,19 +3,19 @@ package com.lingyuango.seckill.account.client;
 import com.jmc.net.R;
 import com.lingyuango.seckill.account.pojo.SeckillActivityRule;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @FeignClient(value = "seckill-service", path = "/expose/seckillActivity", contextId = "seckillActivityClient")
 public interface SeckillActivityClient {
     /**
      * 获取当前秒杀规则
      */
-    @PostMapping("/getRule")
+    @GetMapping("/getRule")
     R<SeckillActivityRule> getRule();
 
     /**
      * 获取当前秒杀id
      */
-    @PostMapping("/getSeckillId")
+    @GetMapping("/getSeckillId")
     R<Integer> getSeckillId();
 }
