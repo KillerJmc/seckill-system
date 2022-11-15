@@ -17,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 /**
  * @author Jmc
@@ -33,70 +31,6 @@ public class SeckillActivityController {
     private final PreScreeningClient preScreeningClient;
     private final PaymentClient paymentClient;
 
-    @GetMapping("/getCurrent")
-    public synchronized R<SeckillActivity> getCurrent(@CookieValue("account") Integer account) {
-        var activity = seckillActivityService.getLatest();
-
-        // 往初筛表插入记录
-        preScreeningClient.insert(account);
-
-        log.info("用户id {} 获取最新的秒杀活动：{}", account, activity);
-
-        return R.ok(activity);
-    }
-
-    /**
-     * 获取当前秒杀活动倒计时
-     * @return 倒计时（单位：秒）
-     */
-    @GetMapping("/getCountDown")
-    public synchronized R<Long> getCountDown(@CookieValue("account") Integer account) {
-        var activity = seckillActivityService.getLatest();
-        long countDown = Duration.between(LocalDateTime.now(), activity.getStartTime()).toSeconds();
-        countDown = countDown < 0 ? 0 : countDown;
-
-        log.info("用户id {} 获取最新的秒杀活动倒计时：{} 秒", account, activity);
-
-        return R.ok(countDown);
-    }
-
-    /**
-     * 申请秒杀
-     */
-    @PostMapping("/apply")
-    public synchronized R<Void> apply(@CookieValue("account") Integer account) {
-        if (seckillApplicationFormService.contains(account)) {
-            return R.error(MsgMapping.APPLY_REPEAT);
-        }
-
-        var insertSuccess = seckillApplicationFormService.insert(account);
-        return insertSuccess ? R.ok().build() :
-                R.error(MsgMapping.APPLY_FAILED);
-    }
-
-    /**
-     * 获取暴露的秒杀地址
-     */
-    @GetMapping("/getSeckillUrl")
-    public R<String> getSeckillUrl(@CookieValue("account") Integer account) {
-        // 检查是否申请
-        if (!seckillApplicationFormService.contains(account)) {
-            return R.error(MsgMapping.DOES_NOT_APPLY);
-        }
-
-        var between = Duration.between(LocalDateTime.now(), seckillActivityService.getLatest().getStartTime());
-
-        // 检查秒杀是否开始
-        if (between.toMillis() > 0) {
-            return R.error(MsgMapping.SECKILL_NOT_STARTED);
-        }
-
-        var seckillId = seckillActivityService.getLatestSeckillId();
-        log.info("用户id {} 获取秒杀链接 {}", account, seckillId);
-
-        return R.ok(seckillId.toString());
-    }
-
     /**
      * 初始化在Redis中秒杀活动的基本信息
      */
@@ -106,46 +40,77 @@ public class SeckillActivityController {
     }
 
     /**
+     * 获取秒杀活动信息
+     */
+    @GetMapping("/getCurrent")
+    public R<SeckillActivity> getCurrent(@CookieValue("account") Integer account) {
+        return R.stream()
+                // 往初筛表插入记录
+                .exec(() -> preScreeningClient.insert(account))
+                // 获取秒杀活动
+                .build(seckillActivityService::getLatest);
+    }
+
+    /**
+     * 获取秒杀活动倒计时
+     * @return 倒计时（单位：秒）
+     */
+    @GetMapping("/getCountDown")
+    public R<Long> getCountDown() {
+        return R.ok(seckillActivityService.getCountDown());
+    }
+
+    /**
+     * 申请秒杀
+     */
+    @PostMapping("/apply")
+    public R<Void> apply(@CookieValue("account") Integer account) {
+        return R.stream()
+                // 检查是否重复申请
+                .check(seckillApplicationFormService.contains(account), MsgMapping.APPLY_REPEAT)
+                // 插入申请信息
+                .exec(() -> seckillApplicationFormService.insert(account))
+                .build();
+    }
+
+    /**
+     * 获取暴露的秒杀地址
+     */
+    @GetMapping("/getSeckillUrl")
+    public R<String> getSeckillUrl(@CookieValue("account") Integer account) {
+        return R.stream()
+                // 检查是否申请
+                .check(!seckillApplicationFormService.contains(account), MsgMapping.DOES_NOT_APPLY)
+                // 检查秒杀是否还没开始
+                .check(seckillActivityService.seckillNotStarted(), MsgMapping.SECKILL_NOT_STARTED)
+                .exec(() -> log.info("用户id {} 获取秒杀链接", account))
+                // 获取秒杀链接
+                .build(() -> seckillActivityService.getLatestSeckillId().toString());
+    }
+
+    /**
      * 秒杀接口
      */
     @PostMapping("/seckill/{seckillUrl}")
     public R<Void> seckill(@CookieValue("account") Integer account,
                            @PathVariable String seckillUrl)
             throws JsonProcessingException {
-        // 如果售完就直接返回
-        if (seckillActivityService.isSoldOut()) {
-            return R.error(MsgMapping.PRODUCT_SOLD_OUT);
-        }
-
-        // 检查是否申请
-        if (!seckillApplicationFormService.contains(account)) {
-            return R.error(MsgMapping.DOES_NOT_APPLY);
-        }
-
-        // 检查秒杀链接是否合法
-        if (seckillActivityService.isInvalidSeckillUrl(seckillUrl)) {
-            return R.error(MsgMapping.INVALID_SECKILL_URL);
-        }
-
-        // 检查重复购买
-        if (seckillActivityService.hasSeckillSuccess(seckillUrl, account)) {
-            return R.error(MsgMapping.PURCHASE_REPEAT);
-        }
-
-        // 扣库存，如果库存不足返回失败信息
-        if (!seckillActivityService.decreaseStorage(seckillUrl, account)) {
-            return R.error(MsgMapping.PRODUCT_SOLD_OUT);
-        }
-
-        // 异步下订单
-        seckillActivityService.placeOrderAsync(new BasicOrder() {{
-            setSeckillId(Integer.valueOf(seckillUrl));
-            setAccountId(account);
-            setMoney(seckillActivityService.getOrderPriceFromRedis(seckillUrl));
-        }});
-
-        // 返回秒杀成功信息
-        return R.ok().build();
+        return R.stream()
+                // 检查是否申请
+                .check(!seckillApplicationFormService.contains(account), MsgMapping.DOES_NOT_APPLY)
+                // 检查秒杀链接是否合法
+                .check(seckillActivityService.isInvalidSeckillUrl(seckillUrl), MsgMapping.INVALID_SECKILL_URL)
+                // 检查非法访问
+                .check(!seckillActivityService.seckillNotStarted(), MsgMapping.INVALID_ACCESS)
+                // 检查重复购买
+                .check(seckillActivityService.hasSeckillSuccess(seckillUrl, account), MsgMapping.PURCHASE_REPEAT)
+                // 检查是否售完
+                .check(seckillActivityService.isSoldOut(), MsgMapping.PRODUCT_SOLD_OUT)
+                // 扣库存
+                .exec(() -> seckillActivityService.decreaseStorage(seckillUrl, account))
+                // 异步下订单
+                .exec(() -> seckillActivityService.placeOrderAsync(seckillUrl, account))
+                .build();
     }
 
     /**
@@ -153,43 +118,25 @@ public class SeckillActivityController {
      */
     @PostMapping("/testSeckill")
     public R<Void> testSeckill(Integer account, String seckillUrl) {
-        // 如果已经卖完就返回商品售完信息
-        if (seckillActivityService.isSoldOut()) {
-            return R.error(MsgMapping.PRODUCT_SOLD_OUT);
-        }
-
-
-        var applied = seckillApplicationFormService.contains(account);
-        // 检查是否申请
-        if (!applied) {
-            return R.error(MsgMapping.DOES_NOT_APPLY);
-        }
-
-        // 检查秒杀链接是否合法
-        if (seckillActivityService.isInvalidSeckillUrl(seckillUrl)) {
-            return R.error(MsgMapping.INVALID_SECKILL_URL);
-        }
-
         // 随机用户id
         var randCustomerId = Rand.nextInt();
 
-        // 扣库存，如果库存不足返回失败信息
-        if (!seckillActivityService.decreaseStorage(seckillUrl, randCustomerId)) {
-            return R.error(MsgMapping.PRODUCT_SOLD_OUT);
-        }
-
-        // 获取订单金额
-        var orderPrice = seckillActivityService.getOrderPriceFromRedis(seckillUrl);
-
-        // 异步下订单
-        seckillActivityService.placeOrderAsync(new BasicOrder() {{
-            setSeckillId(Integer.valueOf(seckillUrl));
-            setAccountId(randCustomerId);
-            setMoney(orderPrice);
-        }});
-
-        // 返回秒杀成功信息
-        return R.ok().build();
+        return R.stream()
+                // 检查是否申请
+                .check(!seckillApplicationFormService.contains(account), MsgMapping.DOES_NOT_APPLY)
+                // 检查秒杀链接是否合法
+                .check(seckillActivityService.isInvalidSeckillUrl(seckillUrl), MsgMapping.INVALID_SECKILL_URL)
+                // 检查非法访问
+                .check(!seckillActivityService.seckillNotStarted(), MsgMapping.INVALID_ACCESS)
+                // 检查重复购买
+                .check(seckillActivityService.hasSeckillSuccess(seckillUrl, account), MsgMapping.PURCHASE_REPEAT)
+                // 检查是否售完
+                .check(seckillActivityService.isSoldOut(), MsgMapping.PRODUCT_SOLD_OUT)
+                // 扣库存
+                .exec(() -> seckillActivityService.decreaseStorage(seckillUrl, randCustomerId))
+                // 异步下订单
+                .exec(() -> seckillActivityService.placeOrderAsync(seckillUrl, randCustomerId))
+                .build();
     }
 
 

@@ -16,9 +16,20 @@ public interface SeckillActivityService {
     SeckillActivity getLatest();
 
     /**
+     * 获取秒杀活动倒计时
+     * @return 倒计时（秒）
+     */
+    Long getCountDown();
+
+    /**
+     * 判断秒杀活动时候还没开始
+     */
+    boolean seckillNotStarted();
+
+    /**
      * 获取最新秒杀活动规则
      */
-    SeckillActivityRule getRule();
+    SeckillActivityRule getRule() throws Exception;
 
     /**
      * 获取最新秒杀id
@@ -27,8 +38,10 @@ public interface SeckillActivityService {
 
     /**
      * 利用线程池异步发送消息下单
+     * @param seckillUrl 秒杀url
+     * @param account 下订单的账号
      */
-    void placeOrderAsync(BasicOrder order);
+    void placeOrderAsync(String seckillUrl, Integer account);
 
     /**
      * 初始化在Redis中秒杀活动的基本信息
@@ -72,9 +85,8 @@ public interface SeckillActivityService {
 
     /**
      * 尝试扣库存
-     * @return 没有库存
      */
-    boolean decreaseStorage(String seckillId, Integer accountId);
+    void decreaseStorage(String seckillId, Integer accountId) throws Exception;
 
     /**
      * 尝试获取订单

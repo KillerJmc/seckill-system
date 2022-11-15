@@ -1,7 +1,6 @@
 package com.lingyuango.seckill.expose;
 
 import com.jmc.net.R;
-import com.lingyuango.seckill.common.MsgMapping;
 import com.lingyuango.seckill.pojo.Product;
 import com.lingyuango.seckill.pojo.SeckillActivityRule;
 import com.lingyuango.seckill.service.SeckillActivityService;
@@ -24,12 +23,8 @@ public class SeckillActivityExposeController {
      */
     @GetMapping("/getRule")
     public R<SeckillActivityRule> getRule() {
-        SeckillActivityRule res;
-        if ((res = seckillActivityService.getRule()) == null) {
-            return R.error(MsgMapping.NO_RULES);
-        } else {
-            return R.ok(res);
-        }
+        return R.stream()
+                .build(seckillActivityService::getRule);
     }
 
     /**
@@ -37,8 +32,7 @@ public class SeckillActivityExposeController {
      */
     @GetMapping("/getProduct")
     public R<Product> getProduct() {
-        var activity = seckillActivityService.getLatest();
-        return R.ok(activity.getProduct());
+        return R.ok(seckillActivityService.getLatest().getProduct());
     }
 
     /**
@@ -46,7 +40,6 @@ public class SeckillActivityExposeController {
      */
     @GetMapping("/getSeckillId")
     public R<Integer> getSeckillId() {
-        var seckillId = seckillActivityService.getLatestSeckillId();
-        return seckillId == null ? R.error("Latest seckillId is null") : R.ok(seckillId);
+        return R.ok(seckillActivityService.getLatestSeckillId());
     }
 }

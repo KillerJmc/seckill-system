@@ -3,14 +3,13 @@ package com.lingyuango.seckill.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.jmc.lang.Tries;
 import com.lingyuango.seckill.client.CustomerClient;
+import com.lingyuango.seckill.common.MsgMapping;
 import com.lingyuango.seckill.dao.SeckillApplicationFormDao;
 import com.lingyuango.seckill.pojo.SeckillApplicationForm;
 import com.lingyuango.seckill.service.SeckillActivityService;
 import com.lingyuango.seckill.service.SeckillApplicationFormService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 /**
  * @author Jmc
@@ -31,19 +30,18 @@ public class SeckillApplicationFormServiceImpl implements SeckillApplicationForm
     }
 
     @Override
-    public boolean insert(int account) {
+    public boolean insert(int account) throws Exception {
         var canApply = Tries.tryReturnsT(customerClient.canApply(account)::getData);
 
         if (canApply) {
             var seckillId = seckillActivityService.getLatestSeckillId();
-            var date = LocalDateTime.now();
             var seckillApplicationForm = new SeckillApplicationForm() {{
                 setSeckillId(seckillId);
                 setAccountId(account);
-                setGmtCreate(date);
-                setGmtModified(date);
             }};
-            seckillApplicationFormDao.insert(seckillApplicationForm);
+            if (seckillApplicationFormDao.insert(seckillApplicationForm) != 1) {
+                throw new Exception(MsgMapping.APPLY_FAILED);
+            }
         }
 
         return canApply;

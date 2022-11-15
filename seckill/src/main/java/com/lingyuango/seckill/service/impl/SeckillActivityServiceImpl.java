@@ -22,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -73,15 +75,29 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
     }
 
     @Override
-    public SeckillActivityRule getRule() {
+    public Long getCountDown() {
+        var activity = getLatest();
+        long countDown = Duration.between(LocalDateTime.now(), activity.getStartTime()).toSeconds();
+        countDown = countDown < 0 ? 0 : countDown;
+        return countDown;
+    }
+
+    @Override
+    public boolean seckillNotStarted() {
+        var between = Duration.between(LocalDateTime.now(), getLatest().getStartTime());
+        return between.toMillis() > 0;
+    }
+
+    @Override
+    public SeckillActivityRule getRule() throws Exception {
         var activity = seckillActivityDao.getLatest();
         if (activity == null) {
-            return null;
+            throw new Exception(MsgMapping.NO_ACTIVITY);
         }
 
         var res = seckillActivityRuleService.getById(activity.getActivityRuleId());
         if (res == null) {
-            return null;
+            throw new Exception(MsgMapping.NO_RULES);
         }
 
         res.setId(null);
@@ -95,7 +111,13 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
     }
 
     @Override
-    public void placeOrderAsync(BasicOrder order) {
+    public void placeOrderAsync(String seckillUrl, Integer account) {
+        var order = new BasicOrder() {{
+            setSeckillId(Integer.valueOf(seckillUrl));
+            setAccountId(account);
+            setMoney(getOrderPriceFromRedis(seckillUrl));
+        }};
+
         pool.submit(() -> {
             paymentClient.placeOrder(order);
             log.info("下订单成功：{}", order);
@@ -179,7 +201,7 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
     }
 
     @Override
-    public boolean decreaseStorage(String seckillId, Integer accountId) {
+    public void decreaseStorage(String seckillId, Integer accountId) throws Exception {
         // 直接扣库存并获取扣完的库存
         var storage = redisTemplate.opsForValue().decrement(Const.REDIS_STORAGE_KEY);
 
@@ -196,14 +218,12 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
             // 标记商品已经售完
             this.soldOut = true;
 
-            // 返回扣库存失败
-            return false;
+            throw new Exception(MsgMapping.PRODUCT_SOLD_OUT);
         }
 
         // 把秒杀成功用户放进redis (seckillSuccess:accountId -> 1)
         redisTemplate.opsForValue()
                 .set(Const.REDIS_SECKILL_SUCCESS_GROUP + accountId, "");
-        return true;
     }
 
     @Override

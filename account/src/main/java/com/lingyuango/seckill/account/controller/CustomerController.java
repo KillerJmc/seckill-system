@@ -33,15 +33,19 @@ public class CustomerController {
      * 注册（提供真名，身份证，密码）
      */
     @PostMapping("/register")
-    public synchronized R<Map<String, Integer>> register(@RequestBody Customer customer) {
+    public R<Map<String, Integer>> register(@RequestBody Customer customer) {
         // 客户对象是否为空
         var emptyCheck = Objs.nullOrEmpty(customer.getName(), customer.getIdNumber(), customer.getPassword());
 
         return R.stream()
-                .check(emptyCheck, MsgMapping.NAME_ID_NUM_PWD_NULL_OR_EMPTY)     // 非空检查
-                .check(() -> customerService.checkIdNum(customer.getIdNumber())) // 检查身份证号
-                .exec(() -> customerService.insert(customer))                    // 将客户对象放入数据库
-                .build(() -> Map.of("account", customer.getAccount()));      // 返回客户账号
+                // 非空检查
+                .check(emptyCheck, MsgMapping.NAME_ID_NUM_PWD_NULL_OR_EMPTY)
+                // 检查身份证号
+                .check(() -> customerService.checkIdNum(customer.getIdNumber()))
+                // 将客户对象放入数据库
+                .exec(() -> customerService.insert(customer))
+                // 返回客户账号
+                .build(() -> Map.of("account", customer.getAccount()));
     }
 
     /**
@@ -50,7 +54,7 @@ public class CustomerController {
      * 返回token给客户端（token用{token:uuid} -> {account}存进redis）
      */
     @PostMapping("/login")
-    public synchronized R<Void> login(@CookieValue(value = "token", required = false) String repeatedToken,
+    public R<Void> login(@CookieValue(value = "token", required = false) String repeatedToken,
                                 @RequestBody Customer customer,
                                 HttpServletResponse resp) {
         // 账号密码是否格式错误
@@ -58,29 +62,35 @@ public class CustomerController {
                 Objs.nullOrEmpty(customer.getIdNumber(), customer.getPassword());
 
         return R.stream()
-                .check(tokenService.getAccount(repeatedToken) != null, MsgMapping.LOGIN_REPEAT) // 重复登录检查
-                .check(formatError, MsgMapping.ACCOUNT_PWD_NULL_OR_EMPTY)                             // 账号密码格式检查
-                .check(!customerService.contains(customer), MsgMapping.ACCOUNT_OR_PWD_ERROR)          // 检查账号密码正确
-                .exec(() -> tokenService.createAndSetCookies(customer.getAccount(), resp))       // 创建token并设置cookie
+                // 重复登录检查
+                .check(tokenService.getAccount(repeatedToken) != null, MsgMapping.LOGIN_REPEAT)
+                // 账号密码格式检查
+                .check(formatError, MsgMapping.ACCOUNT_PWD_NULL_OR_EMPTY)
+                // 检查账号密码正确
+                .check(!customerService.contains(customer), MsgMapping.ACCOUNT_OR_PWD_ERROR)
+                // 创建token并设置cookie
+                .exec(() -> tokenService.createAndSetCookies(customer.getAccount(), resp))
                 .exec(() -> log.info("客户登录：{}", customer))
                 .build();
     }
 
     @PostMapping("/logout")
-    public synchronized R<Void> logout(@CookieValue(value = "token", required = false) String token) {
+    public R<Void> logout(@CookieValue(value = "token", required = false) String token) {
         return R.stream()
-                .exec(() -> tokenService.delete(token)) // 删除token
+                // 删除token
+                .exec(() -> tokenService.delete(token))
                 .build();
     }
 
     @GetMapping("/getInfo")
-    public synchronized R<Map<String, Object>> getInfo(@CookieValue("account") Integer account) {
+    public R<Map<String, Object>> getInfo(@CookieValue("account") Integer account) {
         var customer = customerService.getByAccount(account);
         var canApply = customerService.canApply(account);
         var applied = seckillApplicationFormClient.contains(account).getData();
 
         return R.stream()
-                .exec(() -> preScreeningService.insert(account)) // 往初筛表插入记录
+                // 往初筛表插入记录
+                .exec(() -> preScreeningService.insert(account))
                 .build(Map.of(
                         "name", customer.getName(),
                         "applied", applied,
