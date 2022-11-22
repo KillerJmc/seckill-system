@@ -5,13 +5,14 @@ import com.lingyuango.seckill.dao.ProductDao;
 import com.lingyuango.seckill.pojo.Product;
 import com.lingyuango.seckill.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
  * @author Jmc
  */
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class ProductServiceImpl implements ProductService {
     private final ProductDao productDao;
 

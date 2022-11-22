@@ -12,13 +12,14 @@ import com.lingyuango.seckill.account.util.Calculator;
 import com.lingyuango.seckill.account.util.Verify;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
  * @author Jmc
  */
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 @Slf4j
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerDao customerDao;

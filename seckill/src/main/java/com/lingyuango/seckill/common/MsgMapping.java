@@ -66,6 +66,11 @@ public interface MsgMapping {
     String NO_RULES = "没有规则信息";
 
     /**
+     * 支付超时
+     */
+    String PAYMENT_TIMEOUT = "支付超时";
+
+    /**
      * 支付状态信息未准备好
      */
     String PAYMENT_STATUS_NOT_READY = "PAYMENT_STATUS_NOT_READY";

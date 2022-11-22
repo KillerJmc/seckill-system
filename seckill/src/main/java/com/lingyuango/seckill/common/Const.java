@@ -6,30 +6,19 @@ package com.lingyuango.seckill.common;
  */
 public interface Const {
     /**
-     * token的cookie名称
-     */
-    String TOKEN_COOKIE_NAME = "token";
-
-    /**
      * redis中库存的键名
      */
     String REDIS_STORAGE_KEY = "storage";
 
     /**
-     * redis中秒杀id的键名
+     * redis中秒杀url的键名
      */
-    String REDIS_SECKILL_ID_KEY = "seckillUrl";
+    String REDIS_SECKILL_URL_KEY = "seckillUrl";
 
     /**
      * redis中商品金额的键名
      */
     String REDIS_PRODUCT_PRICE_KEY = "productPrice";
-
-    /**
-     * redis中token的组名 <br>
-     * token:<b>tokenStr</b> -> <b>accountId</b>
-     */
-    String REDIS_TOKEN_GROUP = "token:";
 
     /**
      * redis中秒杀成功记录的组名 <br>

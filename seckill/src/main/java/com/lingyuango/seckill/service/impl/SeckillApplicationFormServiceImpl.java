@@ -9,13 +9,14 @@ import com.lingyuango.seckill.pojo.SeckillApplicationForm;
 import com.lingyuango.seckill.service.SeckillActivityService;
 import com.lingyuango.seckill.service.SeckillApplicationFormService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
  * @author Jmc
  */
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class SeckillApplicationFormServiceImpl implements SeckillApplicationFormService {
     private final SeckillApplicationFormDao seckillApplicationFormDao;
     private final CustomerClient customerClient;

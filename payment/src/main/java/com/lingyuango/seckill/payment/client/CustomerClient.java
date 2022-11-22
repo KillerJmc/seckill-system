@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value = "account-service", path = "/expose/customer", contextId = "customerClient")
 public interface CustomerClient {
     @GetMapping("/getByAccount")
-    R<Customer> getByAccount(@RequestParam("accountId") Integer accountId);
+    R<Customer> getByAccount(@RequestParam("account") Integer account);
 }

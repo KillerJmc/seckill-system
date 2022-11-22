@@ -1,15 +1,13 @@
 package com.lingyuango.seckill.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.jmc.lang.ref.Pointer;
 import com.jmc.net.R;
 import com.jmc.util.Rand;
-import com.lingyuango.seckill.client.PaymentClient;
 import com.lingyuango.seckill.client.PreScreeningClient;
 import com.lingyuango.seckill.common.MsgMapping;
 import com.lingyuango.seckill.pojo.BasicOrder;
 import com.lingyuango.seckill.pojo.PaymentStatus;
 import com.lingyuango.seckill.pojo.SeckillActivity;
+import com.lingyuango.seckill.service.PaymentService;
 import com.lingyuango.seckill.service.SeckillActivityService;
 import com.lingyuango.seckill.service.SeckillApplicationFormService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +27,7 @@ public class SeckillActivityController {
     private final SeckillActivityService seckillActivityService;
     private final SeckillApplicationFormService seckillApplicationFormService;
     private final PreScreeningClient preScreeningClient;
-    private final PaymentClient paymentClient;
+    private final PaymentService paymentService;
 
     /**
      * 初始化在Redis中秒杀活动的基本信息
@@ -82,7 +80,7 @@ public class SeckillActivityController {
                 // 检查是否申请
                 .check(!seckillApplicationFormService.contains(account), MsgMapping.DOES_NOT_APPLY)
                 // 检查秒杀是否还没开始
-                .check(seckillActivityService.seckillNotStarted(), MsgMapping.SECKILL_NOT_STARTED)
+                .check(seckillActivityService.isSeckillNotStarted(), MsgMapping.SECKILL_NOT_STARTED)
                 .exec(() -> log.info("用户id {} 获取秒杀链接", account))
                 // 获取秒杀链接
                 .build(() -> seckillActivityService.getLatestSeckillId().toString());
@@ -93,23 +91,12 @@ public class SeckillActivityController {
      */
     @PostMapping("/seckill/{seckillUrl}")
     public R<Void> seckill(@CookieValue("account") Integer account,
-                           @PathVariable String seckillUrl)
-            throws JsonProcessingException {
+                           @PathVariable String seckillUrl) {
         return R.stream()
                 // 检查是否申请
                 .check(!seckillApplicationFormService.contains(account), MsgMapping.DOES_NOT_APPLY)
-                // 检查秒杀链接是否合法
-                .check(seckillActivityService.isInvalidSeckillUrl(seckillUrl), MsgMapping.INVALID_SECKILL_URL)
-                // 检查非法访问
-                .check(!seckillActivityService.seckillNotStarted(), MsgMapping.INVALID_ACCESS)
-                // 检查重复购买
-                .check(seckillActivityService.hasSeckillSuccess(seckillUrl, account), MsgMapping.PURCHASE_REPEAT)
-                // 检查是否售完
-                .check(seckillActivityService.isSoldOut(), MsgMapping.PRODUCT_SOLD_OUT)
-                // 扣库存
-                .exec(() -> seckillActivityService.decreaseStorage(seckillUrl, account))
-                // 异步下订单
-                .exec(() -> seckillActivityService.placeOrderAsync(seckillUrl, account))
+                // 秒杀
+                .exec(() -> seckillActivityService.seckill(seckillUrl, account))
                 .build();
     }
 
@@ -117,25 +104,12 @@ public class SeckillActivityController {
      * 测试秒杀接口
      */
     @PostMapping("/testSeckill")
-    public R<Void> testSeckill(Integer account, String seckillUrl) {
-        // 随机用户id
-        var randCustomerId = Rand.nextInt();
-
+    public R<Void> testSeckill(@CookieValue("account") Integer account, String seckillUrl) {
         return R.stream()
                 // 检查是否申请
                 .check(!seckillApplicationFormService.contains(account), MsgMapping.DOES_NOT_APPLY)
-                // 检查秒杀链接是否合法
-                .check(seckillActivityService.isInvalidSeckillUrl(seckillUrl), MsgMapping.INVALID_SECKILL_URL)
-                // 检查非法访问
-                .check(!seckillActivityService.seckillNotStarted(), MsgMapping.INVALID_ACCESS)
-                // 检查重复购买
-                .check(seckillActivityService.hasSeckillSuccess(seckillUrl, account), MsgMapping.PURCHASE_REPEAT)
-                // 检查是否售完
-                .check(seckillActivityService.isSoldOut(), MsgMapping.PRODUCT_SOLD_OUT)
-                // 扣库存
-                .exec(() -> seckillActivityService.decreaseStorage(seckillUrl, randCustomerId))
-                // 异步下订单
-                .exec(() -> seckillActivityService.placeOrderAsync(seckillUrl, randCustomerId))
+                // 用假帐户模拟秒杀
+                .exec(() -> seckillActivityService.seckill(seckillUrl, Rand.nextInt()))
                 .build();
     }
 
@@ -145,14 +119,8 @@ public class SeckillActivityController {
      */
     @GetMapping("/getOrder")
     public R<BasicOrder> getOrder(@CookieValue("account") Integer account) {
-        var seckillId = seckillActivityService.getSeckillIdFromRedis();
-        // 检查用户是否已经秒杀成功
-        if (!seckillActivityService.hasSeckillSuccess(seckillId, account)) {
-            return R.error(MsgMapping.NOT_PURCHASE);
-        }
-
-        // 请求成功直接返回订单数据
-        return R.ok(seckillActivityService.getOrder(seckillId, account));
+        return R.stream()
+                .build(() -> paymentService.getOrder(account));
     }
 
     /**
@@ -160,26 +128,7 @@ public class SeckillActivityController {
      */
     @PostMapping("/pay")
     public R<PaymentStatus> pay(@CookieValue("account") Integer account, String orderId) {
-        // 检查用户订单号正确性
-        if (seckillActivityService.isInvalidOrderId(account, orderId)) {
-            return R.error(MsgMapping.WRONG_ORDER_ID);
-        }
-
-        // 检测用户重复支付
-        if (seckillActivityService.hasAlreadyPaid(account)) {
-            return R.error(MsgMapping.PURCHASE_REPEAT);
-        }
-
-        // 请求支付
-        paymentClient.requestForPay(orderId);
-
-        // 储存错误信息的指针
-        Pointer<String> errorMsgPtr = Pointer.empty();
-        // 获取支付状态信息
-        var paymentStatus = seckillActivityService.getPaymentStatus(
-                account, orderId, errorMsgPtr);
-
-        // 判断是否获取成功并返回
-        return paymentStatus != null ? R.ok(paymentStatus) : R.error(errorMsgPtr.get());
+        return R.stream()
+                .build(() -> paymentService.pay(account, orderId));
     }
 }

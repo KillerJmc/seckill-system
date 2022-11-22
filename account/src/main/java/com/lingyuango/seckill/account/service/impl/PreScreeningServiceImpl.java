@@ -7,13 +7,14 @@ import com.lingyuango.seckill.account.service.CustomerService;
 import com.lingyuango.seckill.account.service.PreScreeningService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
  * @author Jmc
  */
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 @Slf4j
 public class PreScreeningServiceImpl implements PreScreeningService {
     private final PreScreeningDao preScreeningDao;

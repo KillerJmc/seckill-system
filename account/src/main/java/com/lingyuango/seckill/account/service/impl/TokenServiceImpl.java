@@ -6,6 +6,7 @@ import com.lingyuango.seckill.account.common.Const;
 import com.lingyuango.seckill.account.common.MsgMapping;
 import com.lingyuango.seckill.account.service.TokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class TokenServiceImpl implements TokenService {
     private final StringRedisTemplate redisTemplate;
 

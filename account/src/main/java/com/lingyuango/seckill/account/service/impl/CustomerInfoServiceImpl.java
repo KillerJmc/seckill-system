@@ -7,13 +7,14 @@ import com.lingyuango.seckill.account.pojo.Customer;
 import com.lingyuango.seckill.account.pojo.CustomerInfo;
 import com.lingyuango.seckill.account.service.CustomerInfoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
  * @author Jmc
  */
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class CustomerInfoServiceImpl implements CustomerInfoService {
     private final CustomerInfoDao customerInfoDao;
     private final MockCreditClient mockCreditClient;
