@@ -31,7 +31,7 @@ CREATE TABLE `sk_seckill_success` (
   `gmt_create` datetime NOT NULL,
   `gmt_modified` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='秒杀成功客户表';
+) ENGINE=InnoDB AUTO_INCREMENT=100137 DEFAULT CHARSET=utf8 COMMENT='秒杀成功客户表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,4 +80,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-18 21:35:45
+-- Dump completed on 2022-11-23  2:46:16

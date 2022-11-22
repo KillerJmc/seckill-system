@@ -74,7 +74,7 @@ CREATE TABLE `sk_seckill_activity` (
 
 LOCK TABLES `sk_seckill_activity` WRITE;
 /*!40000 ALTER TABLE `sk_seckill_activity` DISABLE KEYS */;
-INSERT INTO `sk_seckill_activity` VALUES (1,1298850693,1,100000,'2022-11-04 12:00:00','2022我们携手攻克时艰，感谢有你，对本行的支持，才有了我们今天的成功，为回馈广大客户，我们现决定将一件产品进行售卖，因为产品较为难得，所以采取抢购的方法。',1,'2022-11-04 17:50:48','2022-11-04 17:51:01');
+INSERT INTO `sk_seckill_activity` VALUES (1,1298850693,1,100000,'2022-11-21 16:47:00','2022我们携手攻克时艰，感谢有你，对本行的支持，才有了我们今天的成功，为回馈广大客户，我们现决定将一件产品进行售卖，因为产品较为难得，所以采取抢购的方法。',1,'2022-11-04 17:50:48','2022-11-21 16:46:32');
 /*!40000 ALTER TABLE `sk_seckill_activity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -127,7 +127,7 @@ CREATE TABLE `sk_seckill_application_form` (
   `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `seckill_application_account_id_uindex` (`account_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='秒杀活动客户申请表';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='秒杀活动客户申请表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -148,4 +148,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-04 17:55:00
+-- Dump completed on 2022-11-23  2:46:47
