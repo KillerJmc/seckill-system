@@ -13,7 +13,6 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.annotation.EruptDataSource;
-import xyz.erupt.upms.handler.SqlChoiceFetchHandler;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,7 +40,7 @@ public class SeckillSuccess extends BaseGmtModel {
                             fetchHandler = DataSourceBasedSqlChoiceFetchHandler.class,
                             fetchHandlerParams = {
                                     "mysql_seckill_service_db",
-                                    "select seckill_id from seckill_service_db.sk_seckill_activity",
+                                    "select seckill_id from seckill_service.sk_seckill_activity",
                                     "5000"
                             }
                     )
