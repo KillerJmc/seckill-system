@@ -49,9 +49,7 @@ public class PaymentController {
 
             return R.ok().build();
         } else {
-            Integer accountId = orderService.getAccountIdFromOrder(orderId);
             redisService.putMessage(orderId, MsgMapping.ORDER_OVERTIME);
-            redisService.deleteOrder(accountId);
             return R.error(MsgMapping.ORDER_OVERTIME);
         }
 

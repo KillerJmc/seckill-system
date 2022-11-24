@@ -30,7 +30,6 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void putPaymentStatus(PaymentStatus paymentStatus) throws JsonProcessingException {
-        redisTemplate.delete(Const.REDIS_ORDER_PREFIX + paymentStatus.getAccountId());
         redisTemplate.opsForValue().set(Const.REDIS_PAY_PREFIX + paymentStatus.getOrderId(), objectMapper.writeValueAsString(paymentStatus));
     }
 
@@ -62,11 +61,6 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void putMessage(String orderId, String message) {
         redisTemplate.opsForValue().set(Const.REDIS_PAY_PREFIX + orderId, message);
-    }
-
-    @Override
-    public void deleteOrder(Integer accountId) {
-        redisTemplate.delete(Const.REDIS_ORDER_PREFIX + accountId);
     }
 
     @Override
