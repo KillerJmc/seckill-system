@@ -1,204 +1,42 @@
 version: '3'
 
 # Author: zwz15008, Jmc
-# Need at least 4G memory + 2G swap
+# Need at least 4G memory
 services:
   web:
     build: web
     restart: always
     ports:
       - '80:80'
-      - '9010:9010'
-      - '9020:9020'
-      - '9030:9030'
-      - '9040:9040'
+      - '9000:9000'
     volumes:
       - ./web/conf/nginx.conf:/etc/nginx/nginx.conf
 
-  web-management:
-    build: services/web-management
-    restart: always
-    ports:
-      - '81:81'
-    volumes:
-      - ./bin/wait:/wait
-    environment:
-      TZ: Asia/Shanghai
-      WAIT_HOSTS: erupt-db:3306, seckill-db:3306, payment-db:3306
-      WAIT_TIMEOUT: 600
-      WAIT_SLEEP_INTERVAL: 10
+  # --------------------------------------------------------------- #
 
-  account-service-1:
-    build: services/account-service
+  nacos:
+    image: nacos/nacos-server:v2.0.4
     restart: always
-    ports:
-      - '9010'
-    volumes:
-      - ./bin/wait:/wait
     environment:
-      TZ: Asia/Shanghai
-      WAIT_HOSTS: account-db:3306, seckill-redis:6379, nacos:8848
-      WAIT_TIMEOUT: 600
-      WAIT_SLEEP_INTERVAL: 10
-
-  account-service-2:
-    build: services/account-service
-    restart: always
+      MODE: standalone
+      JVM_XMS: 128M
+      JVM_XMX: 128M
     ports:
-      - '9010'
-    volumes:
-      - ./bin/wait:/wait
-    environment:
-      TZ: Asia/Shanghai
-      WAIT_HOSTS: account-service-1:9010
-      WAIT_TIMEOUT: 600
-      WAIT_SLEEP_INTERVAL: 10
+      - '8848:8848'
 
-  payment-service-1:
-    build: services/payment-service
-    restart: always
-    ports:
-      - '9020'
-    volumes:
-      - ./bin/wait:/wait
-    environment:
-      TZ: Asia/Shanghai
-      WAIT_HOSTS: payment-db:3306, payment-redis:6379, rabbitmq:5672, nacos:8848
-      WAIT_TIMEOUT: 600
-      WAIT_SLEEP_INTERVAL: 10
-
-  payment-service-2:
-    build: services/payment-service
-    restart: always
-    ports:
-      - '9020'
-    volumes:
-      - ./bin/wait:/wait
-    environment:
-      TZ: Asia/Shanghai
-      WAIT_HOSTS: payment-service-1:9020
-      WAIT_TIMEOUT: 600
-      WAIT_SLEEP_INTERVAL: 10
-
-  seckill-service-1:
-    build: services/seckill-service
-    restart: always
-    ports:
-      - '9030'
-    volumes:
-      - ./bin/wait:/wait
-    environment:
-      TZ: Asia/Shanghai
-      WAIT_HOSTS: seckill-db:3306, seckill-redis:6379, nacos:8848
-      WAIT_TIMEOUT: 600
-      WAIT_SLEEP_INTERVAL: 10
-
-  seckill-service-2:
-    build: services/seckill-service
-    restart: always
-    ports:
-      - '9030'
-    volumes:
-      - ./bin/wait:/wait
-    environment:
-      TZ: Asia/Shanghai
-      WAIT_HOSTS: seckill-service-1:9030
-      WAIT_TIMEOUT: 600
-      WAIT_SLEEP_INTERVAL: 10
-
-  mock-service-1:
-    build: services/mock-service
-    restart: always
-    ports:
-      - '9040'
-    volumes:
-      - ./bin/wait:/wait
-    environment:
-      TZ: Asia/Shanghai
-      WAIT_HOSTS: mock-db:3306, nacos:8848
-      WAIT_TIMEOUT: 600
-      WAIT_SLEEP_INTERVAL: 10
-
-  mock-service-2:
-    build: services/mock-service
-    restart: always
-    ports:
-      - '9040'
-    volumes:
-      - ./bin/wait:/wait
-    environment:
-      TZ: Asia/Shanghai
-      WAIT_HOSTS: mock-service-1:9040
-      WAIT_TIMEOUT: 600
-      WAIT_SLEEP_INTERVAL: 10
-
-  account-db:
+  mysql:
     image: mysql:8.0.28
     restart: always
     environment:
       TZ: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: seckill_account_db
     ports:
-      - '3306'
+      - '3310:3306'
     volumes:
-      - ./mysql/account-db:/docker-entrypoint-initdb.d
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql/sql:/sql
 
-  mock-db:
-    image: mysql:8.0.28
-    restart: always
-    environment:
-      TZ: Asia/Shanghai
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: seckill_mock_db
-    ports:
-      - '3306'
-    volumes:
-      - ./mysql/mock-db:/docker-entrypoint-initdb.d
-
-  payment-db:
-    image: mysql:8.0.28
-    restart: always
-    environment:
-      TZ: Asia/Shanghai
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: seckill_payment_db
-    ports:
-      - '3306'
-    volumes:
-      - ./mysql/payment-db:/docker-entrypoint-initdb.d
-
-  seckill-db:
-    image: mysql:8.0.28
-    restart: always
-    environment:
-      TZ: Asia/Shanghai
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: seckill_service_db
-    ports:
-      - '3306'
-    volumes:
-      - ./mysql/seckill-db:/docker-entrypoint-initdb.d
-
-  erupt-db:
-      image: mysql:8.0.28
-      restart: always
-      environment:
-        TZ: Asia/Shanghai
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: erupt
-      ports:
-        - '3306'
-      volumes:
-        - ./mysql/erupt-db:/docker-entrypoint-initdb.d
-
-  seckill-redis:
-    image: redis:6.2.6
-    restart: always
-    ports:
-      - '6379'
-
-  payment-redis:
+  redis:
     image: redis:6.2.6
     restart: always
     ports:
@@ -214,12 +52,93 @@ services:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
 
-  nacos:
-    image: nacos/nacos-server:v2.0.4
+  # --------------------------------------------------------------- #
+
+  gateway:
+    build: services/gateway
     restart: always
-    environment:
-      MODE: standalone
-      JVM_XMS: 128M
-      JVM_XMX: 128M
     ports:
-      - '8848:8848'
+      - '9000'
+    volumes:
+      - ./bin/wait:/wait
+    environment:
+      TZ: Asia/Shanghai
+      WAIT_HOSTS: nacos:8848, redis:6379
+      WAIT_TIMEOUT: 600
+      WAIT_SLEEP_INTERVAL: 10
+
+  # --------------------------------------------------------------- #
+
+  account-service:
+    build: services/account
+    restart: always
+    ports:
+      - '9010'
+    volumes:
+      - ./bin/wait:/wait
+    environment:
+      TZ: Asia/Shanghai
+      WAIT_HOSTS: nacos:8848, mysql:3306, redis:6379
+      WAIT_TIMEOUT: 600
+      WAIT_SLEEP_INTERVAL: 10
+
+  # --------------------------------------------------------------- #
+
+  payment-service:
+    build: services/payment
+    restart: always
+    ports:
+      - '9020'
+    volumes:
+      - ./bin/wait:/wait
+    environment:
+      TZ: Asia/Shanghai
+      WAIT_HOSTS: nacos:8848, mysql:3306, redis:6379, rabbitmq:5672
+      WAIT_TIMEOUT: 600
+      WAIT_SLEEP_INTERVAL: 10
+
+  # --------------------------------------------------------------- #
+
+  seckill-service:
+    build: services/seckill
+    restart: always
+    ports:
+      - '9030'
+    volumes:
+      - ./bin/wait:/wait
+    environment:
+      TZ: Asia/Shanghai
+      WAIT_HOSTS: nacos:8848, mysql:3306, redis:6379
+      WAIT_TIMEOUT: 600
+      WAIT_SLEEP_INTERVAL: 10
+
+  # --------------------------------------------------------------- #
+
+  mock-service:
+    build: services/mock
+    restart: always
+    ports:
+      - '9040'
+    volumes:
+      - ./bin/wait:/wait
+    environment:
+      TZ: Asia/Shanghai
+      WAIT_HOSTS: nacos:8848, mysql:3306
+      WAIT_TIMEOUT: 600
+      WAIT_SLEEP_INTERVAL: 10
+
+  # --------------------------------------------------------------- #
+
+  web-management:
+    build: services/web-management
+    restart: always
+    ports:
+      - '81:81'
+    volumes:
+      - ./bin/wait:/wait
+    environment:
+      TZ: Asia/Shanghai
+      WAIT_HOSTS: mysql:3306
+      WAIT_TIMEOUT: 600
+      WAIT_SLEEP_INTERVAL: 10
+

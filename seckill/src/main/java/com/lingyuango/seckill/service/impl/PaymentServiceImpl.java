@@ -43,10 +43,17 @@ public class PaymentServiceImpl implements PaymentService {
         // 目标订单数据类
         R<BasicOrder> orderData;
 
+        int retry = 50;
+
         // 轮询获取订单信息
         while ((orderData = paymentClient.getOrder(account)).failed()) {
             // 订单还没准备好，延时重新获取
             Threads.sleep(100);
+
+            // 超时异常
+            if (--retry == 0) {
+                throw new Exception(MsgMapping.GET_ORDER_TIMEOUT);
+            }
         }
 
         // 订单信息

@@ -71,6 +71,11 @@ public interface MsgMapping {
     String PAYMENT_TIMEOUT = "支付超时";
 
     /**
+     * 获取订单超时
+     */
+    String GET_ORDER_TIMEOUT = "获取订单超时";
+
+    /**
      * 支付状态信息未准备好
      */
     String PAYMENT_STATUS_NOT_READY = "PAYMENT_STATUS_NOT_READY";
