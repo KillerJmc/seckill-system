@@ -14,12 +14,13 @@ A simple seckill system.
 
 ## App
 1. [Seckill Web System](https://github.com/KillerJmc/seckill-system-web) on port `80`.
-2. Seckill Web Management on port `81`.
+2. [Seckill Web Management](https://github.com/KillerJmc/seckill-system/tree/master/web-management) on port `81`.
 
 ## Usage
 1. Get Docker directory
     + From release: Download `docker.zip` from release and unzip.
-    + From repository: Under repository root, execute `mvn clean package` to get complete `docker` directory.
+    + From repository: Under repository root, execute `mvn clean package` to get complete docker directory.
 
 2. Start with Docker
+   + Execute `docker-compose up` under docker directory.
 
