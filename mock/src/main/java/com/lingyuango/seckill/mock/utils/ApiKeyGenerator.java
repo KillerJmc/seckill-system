@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * @author ChaconneLuo
  */
+@SuppressWarnings("unused")
 public class ApiKeyGenerator {
 
     private ApiKeyGenerator() {
@@ -28,10 +29,5 @@ public class ApiKeyGenerator {
                         .multiply(BigInteger.valueOf(RandomGeneratorTool.getRandomLong()))
                         .toString()
                         .getBytes(StandardCharsets.UTF_8));
-    }
-
-    public static void main(String[] args) {
-        System.out.println(appIdGenerator());
-        System.out.println(secretKeyGenerator());
     }
 }

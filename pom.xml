@@ -17,26 +17,26 @@
 		<module>web-management</module>
 	</modules>
 
-	<properties>
-		<java.version>17</java.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-		<docker-jar-name>app</docker-jar-name>
-		<docker-jar-output-path>../docker/services/${project.artifactId}</docker-jar-output-path>
-
-		<spring-boot.version>2.7.2</spring-boot.version>
-		<spring-cloud.version>2021.0.3</spring-cloud.version>
-		<alibaba-cloud.version>2021.1</alibaba-cloud.version>
-		<mybatis-plus.version>3.5.2</mybatis-plus.version>
-		<jmc-utils.version>2.6.0</jmc-utils.version>
-	</properties>
-
 	<repositories>
 		<repository>
 			<id>jmc-utils-repo</id>
 			<url>https://killerjmc.github.io/jmc-utils/repo/maven</url>
 		</repository>
 	</repositories>
+
+	<properties>
+		<java.version>17</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<jar-name>${project.artifactId}</jar-name>
+		<jar-output-path>../docker/services</jar-output-path>
+
+		<spring-boot.version>2.7.6</spring-boot.version>
+		<spring-cloud.version>2021.0.1</spring-cloud.version>
+		<alibaba-cloud.version>2021.1</alibaba-cloud.version>
+		<mybatis-plus.version>3.5.2</mybatis-plus.version>
+		<jmc-utils.version>2.6.0</jmc-utils.version>
+	</properties>
 
 	<dependencyManagement>
 		<dependencies>
@@ -84,16 +84,30 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jmc</groupId>
+			<artifactId>jmc-utils</artifactId>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring-boot.version}</version>
+
 				<configuration>
-					<finalName>${docker-jar-name}</finalName>
-					<outputDirectory>${docker-jar-output-path}</outputDirectory>
+					<finalName>${jar-name}</finalName>
+					<outputDirectory>${jar-output-path}</outputDirectory>
 				</configuration>
+
 				<executions>
 					<execution>
 						<goals>

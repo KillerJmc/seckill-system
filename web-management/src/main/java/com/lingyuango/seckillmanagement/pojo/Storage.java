@@ -1,7 +1,5 @@
 package com.lingyuango.seckillmanagement.pojo;
 
-import com.lingyuango.seckillmanagement.handler.DataSourceBasedSqlChoiceFetchHandler;
-import com.lingyuango.seckillmanagement.model.BaseGmtModel;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -12,10 +10,9 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.annotation.EruptDataSource;
+import xyz.erupt.toolkit.handler.SqlChoiceFetchHandler;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -23,7 +20,11 @@ import javax.persistence.Table;
 @EruptDataSource("mysql_seckill_payment_db")
 @Table(name = "sk_storage")
 @Erupt(name = "库存管理")
-public class Storage extends BaseGmtModel {
+public class Storage {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EruptField
+    private Integer id;
 
     /**
      * 秒杀活动id
@@ -36,12 +37,8 @@ public class Storage extends BaseGmtModel {
                     title = "秒杀活动id",
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
-                            fetchHandler = DataSourceBasedSqlChoiceFetchHandler.class,
-                            fetchHandlerParams = {
-                                    "mysql_seckill_service_db",
-                                    "select seckill_id from seckill_service.sk_seckill_activity",
-                                    "5000"
-                            }
+                            fetchHandler = SqlChoiceFetchHandler.class,
+                            fetchHandlerParams = "select seckill_id from seckill_service.sk_seckill_activity"
                     )
             )
     )

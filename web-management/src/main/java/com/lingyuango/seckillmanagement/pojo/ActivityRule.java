@@ -1,6 +1,5 @@
 package com.lingyuango.seckillmanagement.pojo;
 
-import com.lingyuango.seckillmanagement.model.BaseGmtModel;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -11,9 +10,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.annotation.EruptDataSource;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -21,7 +18,11 @@ import javax.persistence.Table;
 @EruptDataSource("mysql_seckill_service_db")
 @Table(name = "sk_seckill_activity_rule")
 @Erupt(name = "规则管理")
-public class ActivityRule extends BaseGmtModel {
+public class ActivityRule {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EruptField
+    private Integer id;
 
     /**
      * 规则id
@@ -39,7 +40,7 @@ public class ActivityRule extends BaseGmtModel {
     @Column(name = "rule_name")
     @EruptField(
             views = @View(title = "规则名", sortable = true),
-            edit = @Edit(title = "规则名", notNull = true, search = @Search)
+            edit = @Edit(title = "规则名", notNull = true)
     )
     private String ruleName;
 
@@ -59,7 +60,7 @@ public class ActivityRule extends BaseGmtModel {
     @Column(name = "min_age")
     @EruptField(
             views = @View(title = "最小年龄"),
-            edit = @Edit(title = "最小年龄", search = @Search)
+            edit = @Edit(title = "最小年龄")
     )
     private Integer minAge;
 
@@ -69,7 +70,7 @@ public class ActivityRule extends BaseGmtModel {
     @Column(name = "max_age")
     @EruptField(
             views = @View(title = "最大年龄"),
-            edit = @Edit(title = "最大年龄", search = @Search)
+            edit = @Edit(title = "最大年龄")
     )
     private Integer maxAge;
 
@@ -77,7 +78,8 @@ public class ActivityRule extends BaseGmtModel {
      * 是否在失信人名单中
      */
     @Column(name = "in_credit_blacklist")
-    @EruptField(edit = @Edit(title = "是否在失信人名单中",
+    @EruptField(
+            edit = @Edit(title = "是否在失信人名单中",
             boolType = @BoolType(trueText = "是", falseText = "否")))
     private Boolean inCreditBlacklist;
 
@@ -87,7 +89,7 @@ public class ActivityRule extends BaseGmtModel {
     @Column(name = "max_overdue_times")
     @EruptField(
             views = @View(title = "三年内最多逾期次数"),
-            edit = @Edit(title = "三年内最多逾期次数", search = @Search)
+            edit = @Edit(title = "三年内最多逾期次数")
     )
     private Integer maxOverdueTimes;
 
@@ -97,7 +99,7 @@ public class ActivityRule extends BaseGmtModel {
     @Column(name = "max_overdue_days")
     @EruptField(
             views = @View(title = "三年内最多逾期天数"),
-            edit = @Edit(title = "三年内最多逾期天数", search = @Search)
+            edit = @Edit(title = "三年内最多逾期天数")
     )
     private Integer maxOverdueDays;
 
@@ -107,7 +109,7 @@ public class ActivityRule extends BaseGmtModel {
     @Column(name = "max_overdue_money")
     @EruptField(
             views = @View(title = "三年内最多逾期金额"),
-            edit = @Edit(title = "三年内最多逾期金额", search = @Search)
+            edit = @Edit(title = "三年内最多逾期金额")
     )
     private double maxOverdueMoney;
 }

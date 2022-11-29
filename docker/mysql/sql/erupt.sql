@@ -24,20 +24,16 @@ DROP TABLE IF EXISTS `e_dict`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_dict` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `create_by` varchar(255) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `code` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `remark` varchar(255) DEFAULT NULL,
-  `create_user_id` bigint(20) DEFAULT NULL,
-  `update_user_id` bigint(20) DEFAULT NULL,
+  `update_by` varchar(255) DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `code` varchar(64) DEFAULT NULL COMMENT '编码',
+  `name` varchar(255) DEFAULT NULL COMMENT '名称',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UKf5wwh5osfukkeebw7h2yb4kmp` (`code`),
-  KEY `FKi8lurtplfsktg01y6uevop5yp` (`create_user_id`),
-  KEY `FKhxpr89ae0g4rd9xpfgcdjf0sa` (`update_user_id`),
-  CONSTRAINT `FKhxpr89ae0g4rd9xpfgcdjf0sa` FOREIGN KEY (`update_user_id`) REFERENCES `e_upms_user` (`id`),
-  CONSTRAINT `FKi8lurtplfsktg01y6uevop5yp` FOREIGN KEY (`create_user_id`) REFERENCES `e_upms_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `UKf5wwh5osfukkeebw7h2yb4kmp` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数据字典';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -58,24 +54,20 @@ DROP TABLE IF EXISTS `e_dict_item`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_dict_item` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `create_by` varchar(255) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `code` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `remark` varchar(255) DEFAULT NULL,
-  `sort` int(11) DEFAULT NULL,
-  `create_user_id` bigint(20) DEFAULT NULL,
-  `update_user_id` bigint(20) DEFAULT NULL,
+  `update_by` varchar(255) DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `code` varchar(64) DEFAULT NULL COMMENT '编码',
+  `name` varchar(255) DEFAULT NULL COMMENT '名称',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `sort` int(11) DEFAULT NULL COMMENT '显示顺序',
   `erupt_dict_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UKl0kiq8otpn3fvtlvarebt8xkh` (`code`,`erupt_dict_id`),
-  KEY `FKij9x8hwy16dra7d49h483lu2u` (`create_user_id`),
-  KEY `FKmlg0pjfxwih4i6r0g0iilh1lu` (`update_user_id`),
   KEY `FKrrbi2dt94rjd8sjt830m3w0a` (`erupt_dict_id`),
-  CONSTRAINT `FKij9x8hwy16dra7d49h483lu2u` FOREIGN KEY (`create_user_id`) REFERENCES `e_upms_user` (`id`),
-  CONSTRAINT `FKmlg0pjfxwih4i6r0g0iilh1lu` FOREIGN KEY (`update_user_id`) REFERENCES `e_upms_user` (`id`),
   CONSTRAINT `FKrrbi2dt94rjd8sjt830m3w0a` FOREIGN KEY (`erupt_dict_id`) REFERENCES `e_dict` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='字典项';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,18 +88,16 @@ DROP TABLE IF EXISTS `e_upms_login_log`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_login_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `browser` varchar(255) DEFAULT NULL,
-  `device_type` varchar(255) DEFAULT NULL,
-  `ip` varchar(255) DEFAULT NULL,
-  `login_time` datetime DEFAULT NULL,
-  `region` varchar(255) DEFAULT NULL,
-  `system_name` varchar(255) DEFAULT NULL,
+  `browser` varchar(255) DEFAULT NULL COMMENT '浏览器',
+  `device_type` varchar(255) DEFAULT NULL COMMENT '设备类型',
+  `ip` varchar(64) DEFAULT NULL COMMENT 'IP地址',
+  `login_time` datetime DEFAULT NULL COMMENT '登录时间',
+  `region` varchar(255) DEFAULT NULL COMMENT 'IP来源',
+  `system_name` varchar(255) DEFAULT NULL COMMENT '操作系统',
   `token` varchar(255) DEFAULT NULL,
-  `erupt_user_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKjqnr9oel32kajm6bpvqwomv6m` (`erupt_user_id`),
-  CONSTRAINT `FKjqnr9oel32kajm6bpvqwomv6m` FOREIGN KEY (`erupt_user_id`) REFERENCES `e_upms_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `user_name` varchar(255) DEFAULT NULL COMMENT '用户',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COMMENT='登录日志';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,29 +118,24 @@ DROP TABLE IF EXISTS `e_upms_menu`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_menu` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `create_by` varchar(255) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
+  `update_by` varchar(255) DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
-  `code` varchar(255) DEFAULT NULL,
-  `icon` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `param` varchar(2000) DEFAULT NULL,
-  `power_off` varchar(255) DEFAULT NULL,
-  `sort` int(11) DEFAULT NULL,
-  `status` int(11) DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
-  `value` varchar(255) DEFAULT NULL,
-  `create_user_id` bigint(20) DEFAULT NULL,
-  `update_user_id` bigint(20) DEFAULT NULL,
-  `parent_menu_id` bigint(20) DEFAULT NULL,
+  `code` varchar(64) DEFAULT NULL COMMENT '编码',
+  `icon` varchar(255) DEFAULT NULL COMMENT '图标',
+  `name` varchar(255) DEFAULT NULL COMMENT '名称',
+  `param` varchar(2000) DEFAULT NULL COMMENT '自定义参数',
+  `sort` int(11) DEFAULT NULL COMMENT '顺序',
+  `status` int(11) DEFAULT NULL COMMENT '状态',
+  `type` varchar(255) DEFAULT NULL COMMENT '菜单类型',
+  `value` varchar(255) DEFAULT NULL COMMENT '类型值',
+  `parent_menu_id` bigint(20) DEFAULT NULL COMMENT '上级菜单',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK95xpkppt33d2bka0g2d7rgwqt` (`code`),
-  KEY `FK4p5siq6l1rf9y47bosayghcsv` (`create_user_id`),
-  KEY `FKtm66wffkyyluinneyva8kd2bc` (`update_user_id`),
   KEY `FK5mkgea183mm02v7ic1pdwxy5s` (`parent_menu_id`),
-  CONSTRAINT `FK4p5siq6l1rf9y47bosayghcsv` FOREIGN KEY (`create_user_id`) REFERENCES `e_upms_user` (`id`),
-  CONSTRAINT `FK5mkgea183mm02v7ic1pdwxy5s` FOREIGN KEY (`parent_menu_id`) REFERENCES `e_upms_menu` (`id`),
-  CONSTRAINT `FKtm66wffkyyluinneyva8kd2bc` FOREIGN KEY (`update_user_id`) REFERENCES `e_upms_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `FK5mkgea183mm02v7ic1pdwxy5s` FOREIGN KEY (`parent_menu_id`) REFERENCES `e_upms_menu` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8 COMMENT='菜单管理';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,7 +144,7 @@ CREATE TABLE `e_upms_menu` (
 
 LOCK TABLES `e_upms_menu` WRITE;
 /*!40000 ALTER TABLE `e_upms_menu` DISABLE KEYS */;
-INSERT INTO `e_upms_menu` VALUES (1,'2022-02-14 18:12:44',NULL,'$manager','fa fa-cogs','系统管理',NULL,NULL,0,1,NULL,NULL,NULL,NULL,NULL),(2,'2022-02-14 18:12:44',NULL,'EruptMenu','fa fa-list-ul','菜单维护',NULL,NULL,10,1,'tree','EruptMenu',NULL,NULL,1),(3,'2022-02-14 18:12:44','2022-02-16 14:59:29','EruptRole',NULL,'角色维护',NULL,NULL,20,2,'table','EruptRole',NULL,1,1),(4,'2022-02-14 18:12:44','2022-02-16 14:59:55','EruptOrg','fa fa-users','组织维护',NULL,NULL,30,2,'tree','EruptOrg',NULL,1,1),(5,'2022-02-14 18:12:44','2022-02-16 14:59:37','EruptPost','fa fa-id-card','岗位维护',NULL,NULL,35,2,'table','EruptPost',NULL,1,1),(6,'2022-02-14 18:12:44',NULL,'EruptUser','fa fa-user','用户维护',NULL,NULL,40,1,'table','EruptUser',NULL,NULL,1),(7,'2022-02-14 18:12:44','2022-02-16 14:59:46','EruptDict',NULL,'字典维护',NULL,NULL,50,2,'table','EruptDict',NULL,1,1),(8,'2022-02-14 18:12:44',NULL,'EruptDictItem',NULL,'字典项',NULL,NULL,10,2,'table','EruptDictItem',NULL,NULL,7),(9,'2022-02-14 18:12:44',NULL,'EruptLoginLog',NULL,'登录日志',NULL,NULL,60,1,'table','EruptLoginLog',NULL,NULL,1),(10,'2022-02-14 18:12:44',NULL,'EruptOperateLog',NULL,'操作日志',NULL,NULL,70,1,'table','EruptOperateLog',NULL,NULL,1),(11,'2022-02-14 18:13:30',NULL,'Activity',NULL,'活动',NULL,NULL,80,1,NULL,NULL,1,NULL,NULL),(12,'2022-02-14 18:14:12','2022-02-16 16:19:54','ActivityRule',NULL,'规则管理',NULL,NULL,10,1,'table','ActivityRule',1,2,11),(13,'2022-02-14 18:14:34','2022-02-16 16:20:02','Product',NULL,'产品管理',NULL,NULL,20,1,'table','Product',1,2,11),(14,'2022-02-14 18:15:04','2022-02-16 16:23:23','SeckillActivity',NULL,'活动管理',NULL,NULL,30,1,'table','SeckillActivity',1,2,11),(16,'2022-02-15 00:21:05','2022-02-16 16:20:16','SeckillApplicationForm',NULL,'客户申请表',NULL,'NO_EDIT',50,1,'table','SeckillApplicationForm',1,2,11),(17,'2022-02-15 00:22:17','2022-02-16 16:20:20','SeckillSuccess',NULL,'秒杀成功客户表',NULL,'NO_EDIT',60,1,'table','SeckillSuccess',1,2,11),(18,'2022-02-16 16:17:45','2022-02-16 16:23:19','Storage',NULL,'库存管理',NULL,NULL,40,1,'table','Storage',2,2,11);
+INSERT INTO `e_upms_menu` VALUES (1,NULL,'2022-11-29 03:08:36',NULL,NULL,'$manager','fa fa-cogs','系统管理',NULL,1,1,NULL,NULL,NULL),(2,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptMenu','','菜单管理',NULL,0,1,'tree','EruptMenu',1),(3,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptMenu@ADD',NULL,'新增',NULL,10,1,'button','EruptMenu@ADD',2),(4,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptMenu@EDIT',NULL,'修改',NULL,20,1,'button','EruptMenu@EDIT',2),(5,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptMenu@DELETE',NULL,'删除',NULL,30,1,'button','EruptMenu@DELETE',2),(6,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptMenu@VIEW_DETAIL',NULL,'详情',NULL,40,1,'button','EruptMenu@VIEW_DETAIL',2),(7,NULL,'2022-11-29 03:08:36','Jmc','2022-11-29 03:11:19','EruptRole',NULL,'角色管理',NULL,10,2,'table','EruptRole',1),(8,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptRole@ADD',NULL,'新增',NULL,10,1,'button','EruptRole@ADD',7),(9,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptRole@EDIT',NULL,'修改',NULL,20,1,'button','EruptRole@EDIT',7),(10,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptRole@DELETE',NULL,'删除',NULL,30,1,'button','EruptRole@DELETE',7),(11,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptRole@VIEW_DETAIL',NULL,'详情',NULL,40,1,'button','EruptRole@VIEW_DETAIL',7),(12,NULL,'2022-11-29 03:08:36','Jmc','2022-11-29 03:11:27','EruptOrg',NULL,'组织维护',NULL,20,2,'tree','EruptOrg',1),(13,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptOrg@ADD',NULL,'新增',NULL,10,1,'button','EruptOrg@ADD',12),(14,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptOrg@EDIT',NULL,'修改',NULL,20,1,'button','EruptOrg@EDIT',12),(15,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptOrg@DELETE',NULL,'删除',NULL,30,1,'button','EruptOrg@DELETE',12),(16,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptOrg@VIEW_DETAIL',NULL,'详情',NULL,40,1,'button','EruptOrg@VIEW_DETAIL',12),(17,NULL,'2022-11-29 03:08:36','Jmc','2022-11-29 03:11:35','EruptPost',NULL,'岗位维护',NULL,30,2,'tree','EruptPost',1),(18,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptPost@ADD',NULL,'新增',NULL,10,1,'button','EruptPost@ADD',17),(19,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptPost@EDIT',NULL,'修改',NULL,20,1,'button','EruptPost@EDIT',17),(20,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptPost@DELETE',NULL,'删除',NULL,30,1,'button','EruptPost@DELETE',17),(21,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptPost@VIEW_DETAIL',NULL,'详情',NULL,40,1,'button','EruptPost@VIEW_DETAIL',17),(22,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptUser','','用户配置',NULL,40,1,'table','EruptUser',1),(23,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptUser@ADD',NULL,'新增',NULL,10,1,'button','EruptUser@ADD',22),(24,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptUser@EDIT',NULL,'修改',NULL,20,1,'button','EruptUser@EDIT',22),(25,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptUser@DELETE',NULL,'删除',NULL,30,1,'button','EruptUser@DELETE',22),(26,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptUser@VIEW_DETAIL',NULL,'详情',NULL,40,1,'button','EruptUser@VIEW_DETAIL',22),(27,NULL,'2022-11-29 03:08:36','Jmc','2022-11-29 03:11:42','EruptDict',NULL,'数据字典',NULL,50,2,'table','EruptDict',1),(28,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptDict@ADD',NULL,'新增',NULL,10,1,'button','EruptDict@ADD',27),(29,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptDict@EDIT',NULL,'修改',NULL,20,1,'button','EruptDict@EDIT',27),(30,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptDict@DELETE',NULL,'删除',NULL,30,1,'button','EruptDict@DELETE',27),(31,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptDict@EXPORT',NULL,'导出',NULL,40,1,'button','EruptDict@EXPORT',27),(32,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptDict@VIEW_DETAIL',NULL,'详情',NULL,50,1,'button','EruptDict@VIEW_DETAIL',27),(33,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptDictItem','','字典项',NULL,60,2,'table','EruptDictItem',1),(34,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptDictItem@ADD',NULL,'新增',NULL,10,1,'button','EruptDictItem@ADD',33),(35,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptDictItem@EDIT',NULL,'修改',NULL,20,1,'button','EruptDictItem@EDIT',33),(36,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptDictItem@DELETE',NULL,'删除',NULL,30,1,'button','EruptDictItem@DELETE',33),(37,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptDictItem@EXPORT',NULL,'导出',NULL,40,1,'button','EruptDictItem@EXPORT',33),(38,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptDictItem@VIEW_DETAIL',NULL,'详情',NULL,50,1,'button','EruptDictItem@VIEW_DETAIL',33),(39,NULL,'2022-11-29 03:08:36','Jmc','2022-11-29 12:42:33','EruptOnline',NULL,'在线用户',NULL,65,2,'table','EruptOnline',1),(40,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptOnline@EXPORT',NULL,'导出',NULL,10,1,'button','EruptOnline@EXPORT',39),(41,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptLoginLog','','登录日志',NULL,70,1,'table','EruptLoginLog',1),(42,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptLoginLog@EXPORT',NULL,'导出',NULL,10,1,'button','EruptLoginLog@EXPORT',41),(43,NULL,'2022-11-29 03:08:36',NULL,NULL,'EruptOperateLog','','操作日志',NULL,80,1,'table','EruptOperateLog',1),(44,'Jmc','2022-11-29 03:13:36','Jmc','2022-11-29 03:14:01','bn77Kyld',NULL,'活动',NULL,90,1,NULL,NULL,NULL),(45,'Jmc','2022-11-29 03:14:16','Jmc','2022-11-29 03:22:28','hSMgFYLN',NULL,'规则管理',NULL,100,1,'table','ActivityRule',44),(46,'Jmc','2022-11-29 03:14:29','Jmc','2022-11-29 03:33:24','iL38EDSu',NULL,'产品管理',NULL,110,1,'table','Product',44),(47,'Jmc','2022-11-29 03:14:42','Jmc','2022-11-29 03:37:12','aS5wk06w',NULL,'活动管理',NULL,120,1,'table','SeckillActivity',44),(48,'Jmc','2022-11-29 03:14:49','Jmc','2022-11-29 12:00:19','ekjpLQYW',NULL,'库存管理',NULL,130,1,'table','Storage',44),(49,'Jmc','2022-11-29 03:15:02','Jmc','2022-11-29 12:32:36','HYGAMsw2',NULL,'客户申请表',NULL,140,1,'table','SeckillApplicationForm',44),(50,'Jmc','2022-11-29 03:15:15','Jmc','2022-11-29 12:34:58','72dpjGl5',NULL,'秒杀成功客户表',NULL,150,1,'table','SeckillSuccess',44),(51,NULL,'2022-11-29 03:17:33',NULL,NULL,'8404BQSE',NULL,'新增',NULL,10,1,'button','ActivityRule@ADD',45),(52,NULL,'2022-11-29 03:17:33',NULL,NULL,'phrYvIcV',NULL,'修改',NULL,20,1,'button','ActivityRule@EDIT',45),(53,NULL,'2022-11-29 03:17:33',NULL,NULL,'wm4o84pB',NULL,'删除',NULL,30,1,'button','ActivityRule@DELETE',45),(54,NULL,'2022-11-29 03:17:33',NULL,NULL,'Kt6WiW4e',NULL,'详情',NULL,40,1,'button','ActivityRule@VIEW_DETAIL',45),(55,NULL,'2022-11-29 03:33:24',NULL,NULL,'DFBxNjo4',NULL,'新增',NULL,10,1,'button','Product@ADD',46),(56,NULL,'2022-11-29 03:33:24',NULL,NULL,'gSPxyY5M',NULL,'修改',NULL,20,1,'button','Product@EDIT',46),(57,NULL,'2022-11-29 03:33:24',NULL,NULL,'2Ukv52NY',NULL,'删除',NULL,30,1,'button','Product@DELETE',46),(58,NULL,'2022-11-29 03:33:24',NULL,NULL,'ZtkNCEg4',NULL,'详情',NULL,40,1,'button','Product@VIEW_DETAIL',46),(59,NULL,'2022-11-29 03:37:12',NULL,NULL,'4OEKyrTa',NULL,'新增',NULL,10,1,'button','SeckillActivity@ADD',47),(60,NULL,'2022-11-29 03:37:12',NULL,NULL,'5it07euC',NULL,'修改',NULL,20,1,'button','SeckillActivity@EDIT',47),(61,NULL,'2022-11-29 03:37:12',NULL,NULL,'Ctwtn9eh',NULL,'删除',NULL,30,1,'button','SeckillActivity@DELETE',47),(62,NULL,'2022-11-29 03:37:12',NULL,NULL,'XLatX7NI',NULL,'详情',NULL,40,1,'button','SeckillActivity@VIEW_DETAIL',47),(63,NULL,'2022-11-29 12:00:19',NULL,NULL,'xmyKprbV',NULL,'新增',NULL,10,1,'button','Storage@ADD',48),(64,NULL,'2022-11-29 12:00:19',NULL,NULL,'b9ng71Ze',NULL,'修改',NULL,20,1,'button','Storage@EDIT',48),(65,NULL,'2022-11-29 12:00:19',NULL,NULL,'sToXYzVf',NULL,'删除',NULL,30,1,'button','Storage@DELETE',48),(66,NULL,'2022-11-29 12:00:19',NULL,NULL,'0BUfHraB',NULL,'详情',NULL,40,1,'button','Storage@VIEW_DETAIL',48),(79,NULL,'2022-11-29 12:32:36','Jmc','2022-11-29 12:33:44','vsNeUgjM',NULL,'新增',NULL,10,1,'button','SeckillApplicationForm@NO_ADD',49),(80,NULL,'2022-11-29 12:32:36','Jmc','2022-11-29 12:33:28','Ecivl6uJ',NULL,'修改',NULL,20,1,'button','SeckillApplicationForm@NO_EDIT',49),(81,NULL,'2022-11-29 12:32:36',NULL,NULL,'H6rQmmZh',NULL,'删除',NULL,30,1,'button','SeckillApplicationForm@DELETE',49),(82,NULL,'2022-11-29 12:32:36',NULL,NULL,'LpUDTBZU',NULL,'导出',NULL,40,1,'button','SeckillApplicationForm@EXPORT',49),(83,NULL,'2022-11-29 12:32:36',NULL,NULL,'F1Tk3gGj',NULL,'导入',NULL,50,1,'button','SeckillApplicationForm@IMPORTABLE',49),(84,NULL,'2022-11-29 12:32:36',NULL,NULL,'s7uEHWgX',NULL,'详情',NULL,60,1,'button','SeckillApplicationForm@VIEW_DETAIL',49),(85,NULL,'2022-11-29 12:34:58','Jmc','2022-11-29 12:35:13','uqg9WmIt',NULL,'修改',NULL,10,1,'button','SeckillSuccess@NO_EDIT',50),(86,NULL,'2022-11-29 12:34:58',NULL,NULL,'opz6rbYO',NULL,'删除',NULL,20,1,'button','SeckillSuccess@DELETE',50),(87,NULL,'2022-11-29 12:34:58',NULL,NULL,'07GG4Xa0',NULL,'导出',NULL,30,1,'button','SeckillSuccess@EXPORT',50),(88,NULL,'2022-11-29 12:34:58',NULL,NULL,'ELrs3NbA',NULL,'导入',NULL,40,1,'button','SeckillSuccess@IMPORTABLE',50),(89,NULL,'2022-11-29 12:34:58',NULL,NULL,'fTF9W34D',NULL,'详情',NULL,50,1,'button','SeckillSuccess@VIEW_DETAIL',50);
 /*!40000 ALTER TABLE `e_upms_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -172,21 +157,19 @@ DROP TABLE IF EXISTS `e_upms_operate_log`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_operate_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `api_name` varchar(255) DEFAULT NULL,
-  `create_time` datetime DEFAULT NULL,
-  `error_info` longtext,
-  `ip` varchar(255) DEFAULT NULL,
-  `region` varchar(255) DEFAULT NULL,
-  `req_addr` varchar(4000) DEFAULT NULL,
-  `req_method` varchar(255) DEFAULT NULL,
-  `req_param` varchar(4000) DEFAULT NULL,
-  `status` bit(1) DEFAULT NULL,
-  `total_time` bigint(20) DEFAULT NULL,
-  `erupt_user_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK27xepkxthq9snq3yk6k7iad33` (`erupt_user_id`),
-  CONSTRAINT `FK27xepkxthq9snq3yk6k7iad33` FOREIGN KEY (`erupt_user_id`) REFERENCES `e_upms_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=131 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `api_name` varchar(255) DEFAULT NULL COMMENT '功能名称',
+  `create_time` datetime DEFAULT NULL COMMENT '记录时间',
+  `error_info` varchar(4000) DEFAULT NULL COMMENT '错误信息',
+  `ip` varchar(255) DEFAULT NULL COMMENT 'IP地址',
+  `operate_user` varchar(255) DEFAULT NULL COMMENT '操作人',
+  `region` varchar(255) DEFAULT NULL COMMENT 'IP来源',
+  `req_addr` varchar(4000) DEFAULT NULL COMMENT '请求地址',
+  `req_method` varchar(64) DEFAULT NULL COMMENT '请求方法',
+  `req_param` longtext COMMENT '请求参数',
+  `status` bit(1) DEFAULT NULL COMMENT '是否成功',
+  `total_time` bigint(20) DEFAULT NULL COMMENT '请求耗时',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8 COMMENT='操作日志';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,14 +190,15 @@ DROP TABLE IF EXISTS `e_upms_org`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_org` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `code` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `sort` int(11) DEFAULT NULL,
-  `parent_org_id` bigint(20) DEFAULT NULL,
+  `code` varchar(64) DEFAULT NULL COMMENT '组织编码',
+  `name` varchar(255) DEFAULT NULL COMMENT '组织名称',
+  `sort` int(11) DEFAULT NULL COMMENT '显示顺序',
+  `parent_org_id` bigint(20) DEFAULT NULL COMMENT '上级组织',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UKc2wj35ujq2m84uw59dx6wy3gj` (`code`),
   KEY `FKtj7222kjnkt7pv9kfn9g8ck4h` (`parent_org_id`),
   CONSTRAINT `FKtj7222kjnkt7pv9kfn9g8ck4h` FOREIGN KEY (`parent_org_id`) REFERENCES `e_upms_org` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组织维护';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -235,12 +219,12 @@ DROP TABLE IF EXISTS `e_upms_post`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_post` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `code` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `weight` int(11) DEFAULT NULL,
+  `code` varchar(64) DEFAULT NULL COMMENT '岗位编码',
+  `name` varchar(255) DEFAULT NULL COMMENT '岗位名称',
+  `weight` int(11) DEFAULT NULL COMMENT '岗位权重',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UKltq5h3n5cyyk5nxtjhg9lhidg` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='岗位维护';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -261,13 +245,21 @@ DROP TABLE IF EXISTS `e_upms_role`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_role` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `code` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `power_off` varchar(255) DEFAULT NULL,
-  `status` bit(1) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `code` varchar(64) DEFAULT NULL COMMENT '编码',
+  `name` varchar(255) DEFAULT NULL COMMENT '名称',
+  `sort` int(11) DEFAULT NULL COMMENT '展示顺序',
+  `status` bit(1) DEFAULT NULL COMMENT '状态',
+  `create_user_id` bigint(20) DEFAULT NULL,
+  `update_user_id` bigint(20) DEFAULT NULL COMMENT '更新人',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UKjgxkp7mr4183tcwosrbqpsl3a` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `UKjgxkp7mr4183tcwosrbqpsl3a` (`code`),
+  KEY `FKad39xpgtpmhq0fp5newnabv1g` (`create_user_id`),
+  KEY `FKbghup2p4f1x9eokeygyg8p658` (`update_user_id`),
+  CONSTRAINT `FKad39xpgtpmhq0fp5newnabv1g` FOREIGN KEY (`create_user_id`) REFERENCES `e_upms_user` (`id`),
+  CONSTRAINT `FKbghup2p4f1x9eokeygyg8p658` FOREIGN KEY (`update_user_id`) REFERENCES `e_upms_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色管理';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -293,7 +285,7 @@ CREATE TABLE `e_upms_role_menu` (
   KEY `FKr6bl403chgwjnb6jk0uqqd9x8` (`menu_id`),
   CONSTRAINT `FKgsdnakqsme4htxkiapwmf6tbi` FOREIGN KEY (`role_id`) REFERENCES `e_upms_role` (`id`),
   CONSTRAINT `FKr6bl403chgwjnb6jk0uqqd9x8` FOREIGN KEY (`menu_id`) REFERENCES `e_upms_menu` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -314,23 +306,25 @@ DROP TABLE IF EXISTS `e_upms_user`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `e_upms_user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `create_time` datetime DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL COMMENT '姓名',
+  `account` varchar(255) DEFAULT NULL COMMENT '用户名',
+  `is_admin` bit(1) DEFAULT NULL COMMENT '超管用户',
+  `status` bit(1) DEFAULT NULL COMMENT '账户状态',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL,
-  `account` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `is_admin` bit(1) DEFAULT NULL,
-  `is_md5` bit(1) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL COMMENT '邮箱',
+  `expire_date` datetime DEFAULT NULL COMMENT '账号失效时间',
+  `is_md5` bit(1) DEFAULT NULL COMMENT 'md5加密',
   `password` varchar(255) DEFAULT NULL,
-  `phone` varchar(255) DEFAULT NULL,
-  `remark` varchar(2000) DEFAULT NULL,
-  `status` bit(1) DEFAULT NULL,
-  `white_ip` varchar(2000) DEFAULT NULL,
-  `erupt_org_id` bigint(20) DEFAULT NULL,
-  `erupt_post_id` bigint(20) DEFAULT NULL,
-  `create_user_id` bigint(20) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL COMMENT '手机号码',
+  `remark` varchar(2000) DEFAULT NULL COMMENT '备注',
+  `reset_pwd_time` datetime DEFAULT NULL COMMENT '重置密码时间',
+  `white_ip` varchar(2000) DEFAULT NULL COMMENT 'ip白名单',
+  `erupt_org_id` bigint(20) DEFAULT NULL COMMENT '所属组织',
+  `erupt_post_id` bigint(20) DEFAULT NULL COMMENT '岗位',
+  `create_user_id` bigint(20) DEFAULT NULL COMMENT '创建人',
   `update_user_id` bigint(20) DEFAULT NULL,
-  `erupt_menu_id` bigint(20) DEFAULT NULL,
+  `erupt_menu_id` bigint(20) DEFAULT NULL COMMENT '首页菜单',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK812t22yn0295dkkvx5gjgahax` (`account`),
   KEY `FK1re8jv3614mkk2wfxscvgvmnm` (`erupt_org_id`),
@@ -343,7 +337,7 @@ CREATE TABLE `e_upms_user` (
   CONSTRAINT `FKct3f9stm4eti10401f7rbh5ey` FOREIGN KEY (`update_user_id`) REFERENCES `e_upms_user` (`id`),
   CONSTRAINT `FKdvwfw4x66ahh1tavd69cnx4i0` FOREIGN KEY (`create_user_id`) REFERENCES `e_upms_user` (`id`),
   CONSTRAINT `FKga0jd7sahnn1tv14mq4dy5kba` FOREIGN KEY (`erupt_menu_id`) REFERENCES `e_upms_menu` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='用户配置';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -352,7 +346,7 @@ CREATE TABLE `e_upms_user` (
 
 LOCK TABLES `e_upms_user` WRITE;
 /*!40000 ALTER TABLE `e_upms_user` DISABLE KEYS */;
-INSERT INTO `e_upms_user` VALUES (1,'erupt','2022-02-14 18:12:43',NULL,'erupt',NULL,_binary '',_binary '','610d44f73b7709169e8e06ca4ac5af8e',NULL,NULL,_binary '',NULL,NULL,NULL,NULL,NULL,NULL),(2,'Jmc','2022-02-16 15:09:24','2022-02-16 15:09:24','Jmc',NULL,_binary '',_binary '','202cb962ac59075b964b07152d234b70',NULL,NULL,_binary '',NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `e_upms_user` VALUES (1,'erupt','erupt',_binary '',_binary '','2022-11-29 03:08:36',NULL,NULL,NULL,_binary '','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,'2022-11-29 03:12:22',NULL,NULL,NULL,NULL,NULL,NULL),(2,'Jmc','Jmc',_binary '',_binary '','2022-11-29 03:09:49','2022-11-29 03:09:55',NULL,NULL,_binary '','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,'2022-11-29 03:10:46',NULL,NULL,NULL,1,1,NULL);
 /*!40000 ALTER TABLE `e_upms_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -366,11 +360,11 @@ DROP TABLE IF EXISTS `e_upms_user_role`;
 CREATE TABLE `e_upms_user_role` (
   `user_id` bigint(20) NOT NULL,
   `role_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`user_id`,`role_id`),
-  KEY `FK3h4lekfh26f5f8b7by3ejges6` (`role_id`),
+  PRIMARY KEY (`role_id`,`user_id`),
+  KEY `FKes2ylim5w3ej690ss84sb956x` (`user_id`),
   CONSTRAINT `FK3h4lekfh26f5f8b7by3ejges6` FOREIGN KEY (`role_id`) REFERENCES `e_upms_role` (`id`),
   CONSTRAINT `FKes2ylim5w3ej690ss84sb956x` FOREIGN KEY (`user_id`) REFERENCES `e_upms_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -391,4 +385,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-18 21:48:42
+-- Dump completed on 2022-11-29 12:43:29

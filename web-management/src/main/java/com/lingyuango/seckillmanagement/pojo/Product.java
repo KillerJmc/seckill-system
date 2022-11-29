@@ -1,6 +1,6 @@
 package com.lingyuango.seckillmanagement.pojo;
 
-import com.lingyuango.seckillmanagement.model.BaseGmtModel;
+
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -11,9 +11,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.annotation.EruptDataSource;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -21,7 +19,11 @@ import javax.persistence.Table;
 @EruptDataSource("mysql_seckill_service_db")
 @Table(name = "sk_product")
 @Erupt(name = "产品管理")
-public class Product extends BaseGmtModel {
+public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EruptField
+    private Integer id;
 
     /**
      * 商品id
@@ -49,7 +51,7 @@ public class Product extends BaseGmtModel {
     @Column(name = "price")
     @EruptField(
             views = @View(title = "商品价格", sortable = true),
-            edit = @Edit(title = "商品价格", notNull = true, search = @Search)
+            edit = @Edit(title = "商品价格", notNull = true)
     )
     private double price;
 
