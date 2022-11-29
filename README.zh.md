@@ -52,8 +52,8 @@
 
 ## 页面
 
-1. [秒杀页面系统](https://github.com/KillerJmc/seckill-system-web) 在 `80` 端口。
-2. [秒杀后台管理系统](https://github.com/KillerJmc/seckill-system/tree/master/web-management) 在 `81` 端口。
+1. [秒杀页面系统](https://github.com/KillerJmc/seckill-system-web) 暴露在 `80` 端口。
+2. [秒杀后台管理系统](https://github.com/KillerJmc/seckill-system/tree/master/web-management) 暴露在 `81` 端口。
 
 
 
