@@ -14,22 +14,11 @@
 
 ## 应用程序
 1. [秒杀前台系统](https://github.com/KillerJmc/seckill-system-web) 在 `80` 端口。
-2. 秒杀后台管理系统 在 `81`端口。
+2. 秒杀后台管理系统 在 `81` 端口。
 
 ## 用法
 1. 获取Docker文件夹
-    + 从发行版中获取
-        1. 从发行版中下载 `docker.zip`。
-        2. 解压得到 `docker` 文件夹。
-
-    + 从仓库中获取
-        1. 克隆仓库。
-        2. 在仓库根路径下，执行 `mvn clean package` 在 `docker` 文件夹中生成 jar 文件。
-        3. `docker` 文件夹最后生成于仓库的根路径中。
-
+    + 从发行版中获取：从发行版中下载 `docker.zip` 并解压。
+    + 从仓库中获取：在仓库根路径下执行 `mvn clean package` 得到完整的 docker 文件夹
 
 2. 启动Docker
-    1. 复制 `docker` 目录到 Linux 服务器然后 `cd` 进去。
-    2. 执行 `chmod 777 ./bin/wait` 赋予 `wait 二进制文件` 执行权限。
-    3. 执行 `docker-compose up`
-    4. 稍等几分钟后，尽情享受吧！
