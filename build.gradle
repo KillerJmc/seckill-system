@@ -1,0 +1,43 @@
+plugins {
+    id "org.springframework.boot" version "3.0.0" apply false
+}
+
+group "com.lingyuango.seckill"
+version "2.1.0"
+
+subprojects {
+    repositories {
+        mavenCentral()
+        maven { url "https://killerjmc.github.io/jmc-utils/repo/maven" }
+    }
+
+    ext {
+        springBootVersion = "2.7.6"
+        springCloudVersion = "2021.0.5"
+        alibabaCloudVersion = "2021.1"
+        mybatisPlusVersion = "3.5.2"
+        jmcUtilsVersion = "2.6.0"
+
+        jarOutputPath = "../docker/services"
+    }
+
+    apply plugin: "java"
+    apply plugin: "org.springframework.boot"
+
+    dependencies {
+        implementation platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
+        annotationProcessor platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
+        implementation platform("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+        implementation platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:$alibabaCloudVersion")
+        implementation platform("com.baomidou:mybatis-plus-boot-starter:$mybatisPlusVersion")
+        implementation platform("com.jmc:jmc-utils:$jmcUtilsVersion")
+
+        implementation "com.jmc:jmc-utils"
+        compileOnly "org.projectlombok:lombok"
+        annotationProcessor "org.projectlombok:lombok"
+    }
+
+    bootJar {
+        destinationDirectory.set(file("$jarOutputPath"))
+    }
+}

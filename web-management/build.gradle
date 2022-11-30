@@ -1,0 +1,10 @@
+ext {
+    eruptVersion = "1.10.15"
+}
+
+dependencies {
+    implementation "xyz.erupt:erupt-web:$eruptVersion"
+    implementation "xyz.erupt:erupt-security:$eruptVersion"
+    implementation "xyz.erupt:erupt-upms:$eruptVersion"
+    implementation "mysql:mysql-connector-java"
+}
