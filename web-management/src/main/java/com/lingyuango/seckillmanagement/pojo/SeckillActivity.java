@@ -1,30 +1,20 @@
 package com.lingyuango.seckillmanagement.pojo;
 
-import com.lingyuango.seckillmanagement.handler.DataSourceBasedSqlChoiceFetchHandler;
-import com.lingyuango.seckillmanagement.model.BaseGmtModel;
-import com.lingyuango.seckillmanagement.proxy.BaseGmtModelProxy;
-import com.lingyuango.seckillmanagement.proxy.SeckillIdFillerProxy;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.PreDataProxy;
-import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
-import xyz.erupt.annotation.sub_field.sub_edit.NumberType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.annotation.EruptDataSource;
-import xyz.erupt.upms.handler.SqlChoiceFetchHandler;
+import xyz.erupt.toolkit.handler.SqlChoiceFetchHandler;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
-import java.util.Random;
 
 @Getter
 @Setter
@@ -32,8 +22,11 @@ import java.util.Random;
 @EruptDataSource("mysql_seckill_service_db")
 @Table(name = "sk_seckill_activity")
 @Erupt(name = "活动管理")
-@PreDataProxy(SeckillIdFillerProxy.class)
-public class SeckillActivity extends BaseGmtModel {
+public class SeckillActivity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EruptField
+    private Integer id;
 
     /**
      * 秒杀活动id
@@ -53,12 +46,8 @@ public class SeckillActivity extends BaseGmtModel {
                     title = "产品id",
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
-                            fetchHandler = DataSourceBasedSqlChoiceFetchHandler.class,
-                            fetchHandlerParams = {
-                                    "mysql_seckill_service_db",
-                                    "select product_id from seckill_service_db.sk_product",
-                                    "5000"
-                            }
+                            fetchHandler = SqlChoiceFetchHandler.class,
+                            fetchHandlerParams = "select product_id from seckill_service.sk_product"
                     )
             )
     )
@@ -70,7 +59,7 @@ public class SeckillActivity extends BaseGmtModel {
     @Column(name = "amount")
     @EruptField(
             views = @View(title = "库存数量", sortable = true),
-            edit = @Edit(title = "库存数量", notNull = true, search = @Search)
+            edit = @Edit(title = "库存数量", notNull = true)
     )
     private Integer amount;
 
@@ -106,12 +95,8 @@ public class SeckillActivity extends BaseGmtModel {
                     title = "规则id",
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
-                            fetchHandler = DataSourceBasedSqlChoiceFetchHandler.class,
-                            fetchHandlerParams = {
-                                    "mysql_seckill_service_db",
-                                    "select rule_id from seckill_service_db.sk_seckill_activity_rule",
-                                    "5000"
-                            }
+                            fetchHandler = SqlChoiceFetchHandler.class,
+                            fetchHandlerParams = "select rule_id from seckill_service.sk_seckill_activity_rule"
                     )
             )
     )

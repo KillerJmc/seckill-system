@@ -18,7 +18,7 @@ erupt:
       -
         datasource:
           name: mysql_seckill_service_db
-          url: jdbc:mysql:///seckill_service_db?serverTimezone=Asia/Shanghai
+          url: jdbc:mysql:///seckill_service?serverTimezone=Asia/Shanghai
           username: root
           password: root
 
@@ -33,7 +33,7 @@ erupt:
       -
         datasource:
           name: mysql_seckill_payment_db
-          url: jdbc:mysql:///seckill_payment_db?serverTimezone=Asia/Shanghai
+          url: jdbc:mysql:///seckill_payment?serverTimezone=Asia/Shanghai
           username: root
           password: root
 

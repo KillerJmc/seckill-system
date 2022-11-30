@@ -10,27 +10,52 @@ A simple seckill system.
 + **Database**: MySQL, Redis
 + **Server**: Tomcat, Nginx, Nacos
 + **Message Queue**: RabbitMQ
-+ **Build**: Docker Compose
++ **Run**: Docker Compose
 
-## App
-1. [Seckill Web System](https://github.com/KillerJmc/seckill-system-web) on port `80`.
-2. Seckill Web Management on port `81`.
+## Services
++ Account Service
+
+  Manage the function of customer login and register.
+
+
++ Seckill Service
+
+  1. Manage seckill activity information.
+  2. Manage the function of customer applies for seckill activity and customer seckill.
+  3. Provide the function of customer obtains and pays for the order of seckill activity.
+  
+
++ Payment Service
+
+  Provide the interfaces of ordering and paying for the order.
+
+
++ Mock Service
+
+  1. Simulate the customer pre-screening information.
+  2. Simulate the customer's third-party account balance information.
+  3. Simulate the customer's third-party account to pay for the order.
+
+
++ Gateway Service
+
+  Provide a unique gateway exposure port for microservices.
+
+
+
+## Page
+1. [Seckill Web Page](https://github.com/KillerJmc/seckill-system-web) on port `80`.
+2. [Seckill Web Management](https://github.com/KillerJmc/seckill-system/tree/master/web-management) on port `81`.
+
+## Api
+[ApiFox Doc](https://seckill-system.apifox.cn/)
 
 ## Usage
 1. Get Docker directory
-    + From release
-        1. Download `docker.zip` from release.
-        2. Unzip it to get `docker` directory.
-    + From repository
-        1. Clone repository.
-        2. In repository root path, execute `mvn clean package` to generate jar files in `docker` directory.
-        3. `docker` directory is in the repository root path.
-
+    + From release: Download `docker.zip` from release and unzip.
+    + From repository: Under repository root, execute `mvn clean package` to get complete docker directory.
 
 2. Start with Docker
-   1. Copy `docker` directory to Linux server and `cd` into it.
-   2. Execute `chmod 777 ./bin/wait` to give `wait bin` execute permission.
-   3. Execute `docker-compose up`
-   4. Wait for a few minutes then enjoy it!
+   + Execute `docker-compose up` under docker directory.
 
 
