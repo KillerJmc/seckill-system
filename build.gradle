@@ -8,7 +8,7 @@ version "2.1.0"
 subprojects {
     repositories {
         mavenCentral()
-        maven { url "https://killerjmc.github.io/jmc-utils/repo/maven" }
+        maven { url "https://killerjmc.github.io/jmc-utils/repo" }
     }
 
     ext {
