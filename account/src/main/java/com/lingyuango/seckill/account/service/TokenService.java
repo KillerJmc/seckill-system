@@ -1,5 +1,6 @@
 package com.lingyuango.seckill.account.service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -9,10 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 public interface TokenService {
     /**
      * 创建token并设置2个cookie：token和account
+     *
      * @param account 账号id
-     * @param resp 响应体对象
+     * @param req     请求体对象
+     * @param resp    响应体对象
      */
-    void createAndSetCookies(Integer account, HttpServletResponse resp);
+    void createAndSetCookies(Integer account, HttpServletRequest req, HttpServletResponse resp);
 
     /**
      * 将token -> 账户id存入redis

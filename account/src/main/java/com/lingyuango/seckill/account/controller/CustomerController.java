@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
@@ -56,6 +57,7 @@ public class CustomerController {
     @PostMapping("/login")
     public R<Void> login(@CookieValue(value = "token", required = false) String repeatedToken,
                                 @RequestBody Customer customer,
+                                HttpServletRequest req,
                                 HttpServletResponse resp) {
         // 账号密码是否格式错误
         var formatError = Objs.nullOrEmpty(customer.getAccount(), customer.getPassword()) &&
@@ -69,7 +71,7 @@ public class CustomerController {
                 // 检查账号密码正确
                 .check(!customerService.contains(customer), MsgMapping.ACCOUNT_OR_PWD_ERROR)
                 // 创建token并设置cookie
-                .exec(() -> tokenService.createAndSetCookies(customer.getAccount(), resp))
+                .exec(() -> tokenService.createAndSetCookies(customer.getAccount(), req, resp))
                 .exec(() -> log.info("客户登录：{}", customer))
                 .build();
     }

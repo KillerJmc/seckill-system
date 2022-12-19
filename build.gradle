@@ -23,6 +23,7 @@ subprojects {
 
     apply plugin: "java"
     apply plugin: "org.springframework.boot"
+    sourceCompatibility = 17
 
     dependencies {
         implementation platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
