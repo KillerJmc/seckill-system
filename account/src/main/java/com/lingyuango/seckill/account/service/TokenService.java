@@ -9,13 +9,12 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface TokenService {
     /**
-     * 创建token并设置2个cookie：token和account
-     *
+     * 添加登录的cookie
      * @param account 账号id
      * @param req     请求体对象
      * @param resp    响应体对象
      */
-    void createAndSetCookies(Integer account, HttpServletRequest req, HttpServletResponse resp);
+    void addLoginCookies(Integer account, HttpServletRequest req, HttpServletResponse resp);
 
     /**
      * 将token -> 账户id存入redis
@@ -29,9 +28,10 @@ public interface TokenService {
     Integer getAccount(String token);
 
     /**
-     * 删除token
-     *
+     * 删除登录的cookie
      * @param token 登录凭证
+     * @param req 请求体对象
+     * @param resp 响应体对象
      */
-    void delete(String token) throws Exception;
+    void deleteLoginCookies(String token, HttpServletRequest req, HttpServletResponse resp) throws Exception;
 }

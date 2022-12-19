@@ -41,9 +41,25 @@ public class TokenFilter implements GlobalFilter {
     private boolean isExcludeURI(ServerWebExchange exchange) {
         // 请求的uri
         var uri = exchange.getRequest().getURI().getPath();
+        log.info("获取到客户端ip：{}", getClientIp(exchange).orElse(null));
         log.info("获取到uri：{}", uri);
 
         return EXCLUDE_URI.contains(uri);
+    }
+
+    /**
+     * 获取客户端ip
+     * @param exchange 服务网络交换器
+     * @return 客户端ip
+     */
+    private Optional<String> getClientIp(ServerWebExchange exchange) {
+        // 获取到的格式：client1,proxy1,proxy2
+        var ips = exchange.getRequest().getHeaders().getFirst("X-FORWARDED-FOR");
+
+        // 获取到client1，即客户端的原始ip
+        return Optional.ofNullable(ips)
+                .map(s -> s.split(","))
+                .map(ipList -> ipList[0]);
     }
 
     @Override

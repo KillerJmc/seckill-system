@@ -5,7 +5,6 @@ import com.jmc.net.R;
 import com.lingyuango.seckill.account.client.SeckillApplicationFormClient;
 import com.lingyuango.seckill.account.common.MsgMapping;
 import com.lingyuango.seckill.account.pojo.Customer;
-import com.lingyuango.seckill.account.pojo.PreScreening;
 import com.lingyuango.seckill.account.service.CustomerService;
 import com.lingyuango.seckill.account.service.PreScreeningService;
 import com.lingyuango.seckill.account.service.TokenService;
@@ -50,15 +49,13 @@ public class CustomerController {
     }
 
     /**
-     * 登录（提供账号/身份证号和密码） <br>
-     * 并根据初筛结果插入到{@link PreScreening}（如果已经有了就不再插入） <br>
-     * 返回token给客户端（token用{token:uuid} -> {account}存进redis）
+     * 登录（提供账号/身份证号和密码）
      */
     @PostMapping("/login")
     public R<Void> login(@CookieValue(value = "token", required = false) String repeatedToken,
-                                @RequestBody Customer customer,
-                                HttpServletRequest req,
-                                HttpServletResponse resp) {
+                        @RequestBody Customer customer,
+                        HttpServletRequest req,
+                        HttpServletResponse resp) {
         // 账号密码是否格式错误
         var formatError = Objs.nullOrEmpty(customer.getAccount(), customer.getPassword()) &&
                 Objs.nullOrEmpty(customer.getIdNumber(), customer.getPassword());
@@ -71,19 +68,32 @@ public class CustomerController {
                 // 检查账号密码正确
                 .check(!customerService.contains(customer), MsgMapping.ACCOUNT_OR_PWD_ERROR)
                 // 创建token并设置cookie
-                .exec(() -> tokenService.createAndSetCookies(customer.getAccount(), req, resp))
+                .exec(() -> tokenService.addLoginCookies(customer.getAccount(), req, resp))
                 .exec(() -> log.info("客户登录：{}", customer))
                 .build();
     }
 
+    /**
+     * 退出登录
+     * @param token 登录凭证
+     * @param req 请求体对象
+     * @param resp 响应体对象
+     */
     @PostMapping("/logout")
-    public R<Void> logout(@CookieValue(value = "token", required = false) String token) {
+    public R<Void> logout(@CookieValue(value = "token", required = false) String token,
+                          HttpServletRequest req,
+                          HttpServletResponse resp) {
         return R.stream()
                 // 删除token
-                .exec(() -> tokenService.delete(token))
+                .exec(() -> tokenService.deleteLoginCookies(token, req, resp))
                 .build();
     }
 
+    /**
+     * 获取客户账户信息
+     * @param account 客户账号
+     * @return 具体信息
+     */
     @GetMapping("/getInfo")
     public R<Map<String, Object>> getInfo(@CookieValue("account") Integer account) {
         var customer = customerService.getByAccount(account);
