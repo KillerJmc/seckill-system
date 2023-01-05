@@ -1,8 +1,14 @@
 ext {
-    eruptVersion = "1.10.15"
+    eruptVersion = "1.11.1"
+    springBootVersion = "2.7.5"
 }
 
 dependencies {
+    tasks.processAot.onlyIf { false }
+    implementation platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion", {
+        force = true
+    })
+
     implementation "xyz.erupt:erupt-web:$eruptVersion"
     implementation "xyz.erupt:erupt-security:$eruptVersion"
     implementation "xyz.erupt:erupt-upms:$eruptVersion"

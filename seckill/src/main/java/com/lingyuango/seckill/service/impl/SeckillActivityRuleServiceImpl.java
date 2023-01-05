@@ -16,7 +16,7 @@ public class SeckillActivityRuleServiceImpl implements SeckillActivityRuleServic
     private final SeckillActivityRuleDao seckillActivityRuleDao;
 
     @Override
-    public SeckillActivityRule getById(Integer id) {
-        return seckillActivityRuleDao.selectById(id);
+    public SeckillActivityRule getById(Long id) {
+        return seckillActivityRuleDao.findById(id).orElseThrow();
     }
 }

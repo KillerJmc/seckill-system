@@ -1,14 +1,14 @@
 package com.lingyuango.seckill.mock.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lingyuango.seckill.mock.pojo.SecretKey;
-import org.apache.ibatis.annotations.Mapper;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author ChaconneLuo
  */
 
-@Mapper
-public interface SecretKeyDao extends BaseMapper<SecretKey> {
-
+@Repository
+public interface SecretKeyDao extends JpaRepository<SecretKey, Long> {
+    SecretKey getOneByAppIdIs(String appId);
 }

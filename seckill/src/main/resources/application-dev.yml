@@ -8,3 +8,5 @@ spring:
     url: jdbc:mysql:///seckill_service
     username: root
     password: root
+  jpa:
+    show-sql: true

@@ -1,10 +1,10 @@
 package com.lingyuango.seckill.mock.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,12 +13,13 @@ import java.time.LocalDateTime;
  * @author ChaconneLuo
  */
 @Data
-@TableName("account")
+@Entity(name = "account")
 @JsonIgnoreProperties({"id","gmtCreate","gmtModified"})
 public class MockAccount {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String idNumber;
 
@@ -26,10 +27,8 @@ public class MockAccount {
 
     private Integer accountId;
 
-    @TableField(select = false)
     private LocalDateTime gmtCreate;
 
-    @TableField(select = false)
     private LocalDateTime gmtModified;
 
 }

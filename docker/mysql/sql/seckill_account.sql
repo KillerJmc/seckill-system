@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.16, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: seckill_account
+-- Host: localhost    Database: seckill_account
 -- ------------------------------------------------------
 -- Server version	8.0.16
 
@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `sk_customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `sk_customer` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `account` int(11) NOT NULL COMMENT '账号，等于自然主键 + 10000',
   `id_number` char(18) NOT NULL COMMENT '身份证号',
   `name` varchar(20) NOT NULL COMMENT '客户姓名',
@@ -33,7 +33,7 @@ CREATE TABLE `sk_customer` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `customer_account_id_uindex` (`account`),
   UNIQUE KEY `customer_id_number_uindex` (`id_number`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='客户';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='客户';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -54,7 +54,7 @@ DROP TABLE IF EXISTS `sk_customer_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `sk_customer_info` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `account` int(11) NOT NULL COMMENT '账号',
   `work_status` tinyint(1) NOT NULL COMMENT '是否有工作',
   `in_credit_blacklist` tinyint(1) NOT NULL COMMENT '是否被列入失信人名单',
@@ -65,7 +65,7 @@ CREATE TABLE `sk_customer_info` (
   `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `customer_info_id_number_uindex` (`account`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='客户信息';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='客户信息';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -86,7 +86,7 @@ DROP TABLE IF EXISTS `sk_pre_screening`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `sk_pre_screening` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `seckill_id` int(11) DEFAULT NULL COMMENT '秒杀活动id',
   `account` int(11) NOT NULL COMMENT '账号',
   `name` varchar(20) NOT NULL COMMENT '客户姓名',
@@ -115,4 +115,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-23  2:44:11
+-- Dump completed on 2023-01-03  0:39:51

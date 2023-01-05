@@ -1,18 +1,18 @@
 package com.lingyuango.seckill.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lingyuango.seckill.pojo.SeckillActivity;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author Jmc
  */
-@Mapper
-public interface SeckillActivityDao extends BaseMapper<SeckillActivity> {
-    @Select("select product_id, amount, start_time, activity_info, activity_rule_id from sk_seckill_activity where id = (select max(id) from sk_seckill_activity)")
+@Repository
+public interface SeckillActivityDao extends JpaRepository<SeckillActivity, Long> {
+    @Query(nativeQuery = true, value = "select * from sk_seckill_activity where id = (select max(id) from sk_seckill_activity)")
     SeckillActivity getLatest();
 
-    @Select("select seckill_id from sk_seckill_activity where id = (select max(id) from sk_seckill_activity)")
+    @Query(nativeQuery = true, value = "select seckill_id from sk_seckill_activity where id = (select max(id) from sk_seckill_activity)")
     Integer getLatestSeckillId();
 }

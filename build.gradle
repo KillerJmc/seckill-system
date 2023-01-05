@@ -1,41 +1,41 @@
 plugins {
     id "org.springframework.boot" version "3.0.0" apply false
+    id "org.graalvm.buildtools.native" version "0.9.19" apply false
 }
 
 group "com.lingyuango.seckill"
 version "3.0.0"
 
 subprojects {
-    repositories {
-        mavenCentral()
-        maven { url "https://killerjmc.github.io/jmc-utils/repo" }
-    }
+    apply plugin: "java"
+    apply plugin: "org.springframework.boot"
+    apply plugin: "org.graalvm.buildtools.native"
+
+    sourceCompatibility = 17
 
     ext {
-        springBootVersion = "2.7.6"
-        springCloudVersion = "2021.0.5"
-        alibabaCloudVersion = "2021.1"
-        mybatisPlusVersion = "3.5.2"
-        jmcUtilsVersion = "2.6.0"
+        springBootVersion = "3.0.0"
+        springCloudVersion = "2022.0.0"
+        alibabaCloudVersion = "2022.0.0.0-RC1"
+        jmcUtilsVersion = "2.7.0"
 
         jarOutputPath = "../docker/services"
     }
 
-    apply plugin: "java"
-    apply plugin: "org.springframework.boot"
-    sourceCompatibility = 17
+    repositories {
+        mavenCentral()
+        maven { url "https://killerjmc.github.io/jmc-utils/repo" }
+    }
 
     dependencies {
         implementation platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
         annotationProcessor platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
         implementation platform("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
         implementation platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:$alibabaCloudVersion")
-        implementation platform("com.baomidou:mybatis-plus-boot-starter:$mybatisPlusVersion")
-        implementation platform("com.jmc:jmc-utils:$jmcUtilsVersion")
 
-        implementation "com.jmc:jmc-utils"
         compileOnly "org.projectlombok:lombok"
         annotationProcessor "org.projectlombok:lombok"
+        implementation "com.jmc:jmc-utils:$jmcUtilsVersion"
     }
 
     bootJar {

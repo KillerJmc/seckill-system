@@ -1,13 +1,15 @@
 package com.lingyuango.seckill.payment.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.jmc.net.R;
 import com.lingyuango.seckill.payment.client.CustomerClient;
 import com.lingyuango.seckill.payment.client.PayClient;
 import com.lingyuango.seckill.payment.common.Const;
 import com.lingyuango.seckill.payment.common.MsgMapping;
 import com.lingyuango.seckill.payment.dao.OrderDao;
-import com.lingyuango.seckill.payment.pojo.*;
+import com.lingyuango.seckill.payment.pojo.MockAccount;
+import com.lingyuango.seckill.payment.pojo.MockOrder;
+import com.lingyuango.seckill.payment.pojo.MockPayInfo;
+import com.lingyuango.seckill.payment.pojo.PaymentStatus;
 import com.lingyuango.seckill.payment.service.OrderService;
 import com.lingyuango.seckill.payment.service.PayService;
 import com.lingyuango.seckill.payment.service.RedisService;
@@ -38,41 +40,35 @@ public class PayServiceImpl implements PayService {
     @Override
     @Transactional
     public synchronized R<PaymentStatus> pay(String orderId) throws IOException {
-        var order = orderDao.selectOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderId, orderId));
+        var order = orderDao.getOneByOrderId(orderId);
         var customer = customerClient.getByAccount(order.getAccountId()).getData();
         var product = redisService.getActivityProduct(order.getSeckillId());
 
         var date = LocalDateTime.now();
-        var checkAccount = new MockAccount() {{
-            setName(customer.getName());
-            setIdNumber(customer.getIdNumber());
-        }};
+        var checkAccount = new MockAccount();
+        checkAccount.setName(customer.getName());
+        checkAccount.setIdNumber(customer.getIdNumber());
         var checkSignature = Security.getSignature(Const.Appid, Const.secKey, date, checkAccount);
         var checkResponse = payClient.checkInformation(Const.Appid, date, checkSignature, checkAccount);
 
         Boolean isSuccess = Security.VerifyMapMessage(checkResponse, Boolean.class);
         if (Boolean.TRUE.equals(isSuccess)) {
-            var payInfo = new MockPayInfo() {{
-                setMoney(product.getPrice());
-                setIdNumber(customer.getIdNumber());
-                setName(customer.getName());
-            }};
+            var payInfo = new MockPayInfo();
+            payInfo.setMoney(product.getPrice());
+            payInfo.setIdNumber(customer.getIdNumber());
+            payInfo.setName(customer.getName());
             var signature = Security.getSignature(Const.Appid, Const.secKey, date, payInfo);
             var response = payClient.pay(Const.Appid, date, signature, payInfo);
             var payOrder = Security.VerifyMapMessage(response, MockOrder.class);
             if (payOrder != null) {
                 if (payOrder.getPaySuccess()) {
-                    var flag = orderService.update(orderId);
-                    var storageFlag = storageService.decrease(order.getSeckillId());
-                    if (flag && storageFlag) {
-                        return R.ok(new PaymentStatus() {{
-                            setAccountId(customer.getAccount());
-                            setOrderId(orderId);
-                            setPaymentSuccess(true);
-                        }});
-                    } else {
-                        return R.error(MsgMapping.UNKNOWN_ERROR);
-                    }
+                    orderService.update(orderId);
+                    storageService.decrease(order.getSeckillId());
+                    return R.ok(new PaymentStatus() {{
+                        setAccountId(customer.getAccount());
+                        setOrderId(orderId);
+                        setPaymentSuccess(true);
+                    }});
                 } else {
                     return R.error(MsgMapping.INSUFFICIENT_BALANCE);
                 }

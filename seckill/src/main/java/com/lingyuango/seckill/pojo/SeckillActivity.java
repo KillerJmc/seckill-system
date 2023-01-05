@@ -1,10 +1,7 @@
 package com.lingyuango.seckill.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -14,11 +11,12 @@ import java.time.LocalDateTime;
  * @author Jmc
  */
 @Data
-@TableName("sk_seckill_activity")
+@Entity(name = "sk_seckill_activity")
 public class SeckillActivity {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     /**
      * 秒杀活动id
@@ -29,12 +27,6 @@ public class SeckillActivity {
      * 商品id
      */
     private Integer productId;
-
-    /**
-     * 秒杀活动商品（手动注入）
-     */
-    @TableField(select = false)
-    private Product product;
 
     /**
      * 活动中商品总量
@@ -55,17 +47,23 @@ public class SeckillActivity {
     /**
      * 秒杀活动规则id
      */
-    private Integer activityRuleId;
+    private Long activityRuleId;
+
+    @Transient
+    private LocalDateTime gmtCreate;
+
+    @Transient
+    private LocalDateTime gmtModified;
+
+    /**
+     * 秒杀活动商品（手动注入）
+     */
+    @Transient
+    private Product product;
 
     /**
      * 秒杀活动规则（手动注入）
      */
-    @TableField(select = false)
+    @Transient
     private SeckillActivityRule rule;
-
-    @TableField(select = false)
-    private LocalDateTime gmtCreate;
-
-    @TableField(select = false)
-    private LocalDateTime gmtModified;
 }

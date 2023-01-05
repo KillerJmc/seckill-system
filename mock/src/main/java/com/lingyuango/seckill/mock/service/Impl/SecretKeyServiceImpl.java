@@ -1,8 +1,6 @@
 package com.lingyuango.seckill.mock.service.Impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lingyuango.seckill.mock.dao.SecretKeyDao;
-import com.lingyuango.seckill.mock.pojo.SecretKey;
 import com.lingyuango.seckill.mock.service.SecretKeyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,11 +16,10 @@ public class SecretKeyServiceImpl implements SecretKeyService {
 
     @Override
     public String getSecretKey(String appId) {
-        var secretKey = secretKeyDao.selectOne(Wrappers.<SecretKey>lambdaQuery().eq(SecretKey::getAppId, appId));
+        var secretKey = secretKeyDao.getOneByAppIdIs(appId);
         if (secretKey != null) {
             return secretKey.getSecretKey();
         } else {
-
             return null;
         }
     }

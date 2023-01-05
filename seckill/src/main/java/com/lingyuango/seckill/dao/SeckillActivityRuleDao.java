@@ -1,13 +1,13 @@
 package com.lingyuango.seckill.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lingyuango.seckill.pojo.SeckillActivityRule;
-import org.apache.ibatis.annotations.Mapper;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author Jmc
  */
-@Mapper
-public interface SeckillActivityRuleDao extends BaseMapper<SeckillActivityRule> {
+@Repository
+public interface SeckillActivityRuleDao extends JpaRepository<SeckillActivityRule, Long> {
 
 }

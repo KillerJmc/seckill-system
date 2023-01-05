@@ -11,13 +11,13 @@ import com.lingyuango.seckill.mock.service.PayService;
 import com.lingyuango.seckill.mock.service.SecretKeyService;
 import com.lingyuango.seckill.mock.utils.CheckDateStamp;
 import com.lingyuango.seckill.mock.utils.Security;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.Map;
 

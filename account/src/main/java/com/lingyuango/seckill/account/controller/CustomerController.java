@@ -8,12 +8,12 @@ import com.lingyuango.seckill.account.pojo.Customer;
 import com.lingyuango.seckill.account.service.CustomerService;
 import com.lingyuango.seckill.account.service.PreScreeningService;
 import com.lingyuango.seckill.account.service.TokenService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**

@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.16, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: seckill_mock
+-- Host: localhost    Database: seckill_mock
 -- ------------------------------------------------------
 -- Server version	8.0.16
 
@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `account` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_number` varchar(18) NOT NULL,
   `name` varchar(255) NOT NULL,
   `account_id` int(11) NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (2,'123456200108097890','江明畅',10000,'2022-03-09 21:22:34','2022-03-09 21:22:34');
+INSERT INTO `account` VALUES (1,'123456200108097890','江明畅',10000,'2022-03-09 21:22:34','2022-03-09 21:22:34');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -53,7 +53,7 @@ DROP TABLE IF EXISTS `money`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `money` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `account_id` int(11) NOT NULL,
   `money` int(11) NOT NULL,
   `gmt_create` datetime NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE `money` (
 
 LOCK TABLES `money` WRITE;
 /*!40000 ALTER TABLE `money` DISABLE KEYS */;
-INSERT INTO `money` VALUES (2,10000,200000,'2022-03-09 21:22:34','2022-11-23 02:39:24');
+INSERT INTO `money` VALUES (1,10000,200000,'2022-03-09 21:22:34','2022-11-23 02:39:24');
 /*!40000 ALTER TABLE `money` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -80,7 +80,7 @@ DROP TABLE IF EXISTS `order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `order` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
   `account_id` int(11) NOT NULL,
   `money` int(11) NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE `order` (
   `gmt_modified` datetime NOT NULL,
   `pay_success` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -108,7 +108,7 @@ DROP TABLE IF EXISTS `secret_key`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `secret_key` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `app_id` varchar(255) NOT NULL,
   `secret_key` varchar(255) NOT NULL,
   `gmt_create` datetime NOT NULL,
@@ -138,4 +138,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-23  2:45:27
+-- Dump completed on 2023-01-03  0:39:52

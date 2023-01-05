@@ -1,9 +1,6 @@
 package com.lingyuango.seckill.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,11 +10,12 @@ import java.time.LocalDateTime;
  * @author Jmc
  */
 @Data
-@TableName("sk_seckill_activity_rule")
+@Entity(name = "sk_seckill_activity_rule")
 public class SeckillActivityRule {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     /**
      * 规则id
@@ -64,9 +62,9 @@ public class SeckillActivityRule {
      */
     private Double maxOverdueMoney;
 
-    @TableField(select = false)
+    @Transient
     private LocalDateTime gmtCreate;
 
-    @TableField(select = false)
+    @Transient
     private LocalDateTime gmtModified;
 }

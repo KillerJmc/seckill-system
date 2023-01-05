@@ -1,9 +1,6 @@
 package com.lingyuango.seckill.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.jmc.lang.Tries;
 import com.lingyuango.seckill.client.CustomerClient;
-import com.lingyuango.seckill.common.MsgMapping;
 import com.lingyuango.seckill.dao.SeckillApplicationFormDao;
 import com.lingyuango.seckill.pojo.SeckillApplicationForm;
 import com.lingyuango.seckill.service.SeckillActivityService;
@@ -24,25 +21,20 @@ public class SeckillApplicationFormServiceImpl implements SeckillApplicationForm
 
     @Override
     public boolean contains(int account) {
-        return seckillApplicationFormDao.selectOne(
-                Wrappers.<SeckillApplicationForm>lambdaQuery()
-                        .eq(SeckillApplicationForm::getAccountId, account)
-        ) != null;
+        return seckillApplicationFormDao.getOneByAccountId(account) != null;
     }
 
     @Override
-    public boolean insert(int account) throws Exception {
-        var canApply = Tries.tryReturnsT(customerClient.canApply(account)::getData);
+    public boolean insert(int account) {
+        var canApply = customerClient.canApply(account).getData();
 
         if (canApply) {
             var seckillId = seckillActivityService.getLatestSeckillId();
-            var seckillApplicationForm = new SeckillApplicationForm() {{
-                setSeckillId(seckillId);
-                setAccountId(account);
-            }};
-            if (seckillApplicationFormDao.insert(seckillApplicationForm) != 1) {
-                throw new Exception(MsgMapping.APPLY_FAILED);
-            }
+            var seckillApplicationForm = new SeckillApplicationForm();
+            seckillApplicationForm.setSeckillId(seckillId);
+            seckillApplicationForm.setAccountId(account);
+
+            seckillApplicationFormDao.save(seckillApplicationForm);
         }
 
         return canApply;

@@ -1,6 +1,5 @@
 package com.lingyuango.seckill.account.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lingyuango.seckill.account.client.MockCreditClient;
 import com.lingyuango.seckill.account.dao.CustomerInfoDao;
 import com.lingyuango.seckill.account.pojo.Customer;
@@ -21,10 +20,7 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
 
     @Override
     public CustomerInfo getByAccount(Integer account) {
-        return customerInfoDao.selectOne(
-                Wrappers.<CustomerInfo>lambdaQuery()
-                        .eq(CustomerInfo::getAccount, account)
-        );
+        return customerInfoDao.getOneByAccount(account);
     }
 
     @Override
@@ -32,13 +28,14 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
         // 获取模拟客户信息
         var mockCreditInfo = mockCreditClient.getCreditInfo().getData();
 
-        customerInfoDao.insert(new CustomerInfo() {{
-            setAccount(customer.getAccount());
-            setWorkStatus(mockCreditInfo.getWorkStatus());
-            setInCreditBlacklist(mockCreditInfo.getInCreditBlacklist());
-            setOverdueTimes(mockCreditInfo.getOverdueTimes());
-            setOverdueMoney(mockCreditInfo.getOverdueMoney());
-            setOverdueDays(mockCreditInfo.getOverdueDays());
-        }});
+        var customerInfo = new CustomerInfo();
+        customerInfo.setAccount(customer.getAccount());
+        customerInfo.setWorkStatus(mockCreditInfo.getWorkStatus());
+        customerInfo.setInCreditBlacklist(mockCreditInfo.getInCreditBlacklist());
+        customerInfo.setOverdueTimes(mockCreditInfo.getOverdueTimes());
+        customerInfo.setOverdueMoney(mockCreditInfo.getOverdueMoney());
+        customerInfo.setOverdueDays(mockCreditInfo.getOverdueDays());
+
+        customerInfoDao.save(customerInfo);
     }
 }

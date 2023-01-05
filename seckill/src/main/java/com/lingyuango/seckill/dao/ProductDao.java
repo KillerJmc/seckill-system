@@ -1,13 +1,13 @@
 package com.lingyuango.seckill.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lingyuango.seckill.pojo.Product;
-import org.apache.ibatis.annotations.Mapper;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author Jmc
  */
-@Mapper
-public interface ProductDao extends BaseMapper<Product> {
-
+@Repository
+public interface ProductDao extends JpaRepository<Product, Long> {
+    Product getOneByProductId(Integer productId);
 }

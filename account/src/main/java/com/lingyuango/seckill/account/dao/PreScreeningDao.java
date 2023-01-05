@@ -1,13 +1,13 @@
 package com.lingyuango.seckill.account.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lingyuango.seckill.account.pojo.PreScreening;
-import org.apache.ibatis.annotations.Mapper;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author Jmc
  */
-@Mapper
-public interface PreScreeningDao extends BaseMapper<PreScreening> {
+@Repository
+public interface PreScreeningDao extends JpaRepository<PreScreening, Long> {
 
 }

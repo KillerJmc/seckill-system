@@ -1,8 +1,5 @@
 package com.lingyuango.seckill.payment.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -14,8 +11,7 @@ import java.time.LocalDateTime;
 @Data
 public class Customer {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      * 账号，等于自然主键 + 10000
@@ -37,9 +33,7 @@ public class Customer {
      */
     private String password;
 
-    @TableField(select = false)
     private LocalDateTime gmtCreate;
 
-    @TableField(select = false)
     private LocalDateTime gmtModified;
 }

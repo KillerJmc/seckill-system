@@ -1,15 +1,13 @@
 package com.lingyuango.seckill.account.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lingyuango.seckill.account.pojo.CustomerInfo;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author Jmc
  */
-@Mapper
-public interface CustomerInfoDao extends BaseMapper<CustomerInfo> {
-    @Select("select max(id) from sk_customer_info")
-    Integer getMaxId();
+@Repository
+public interface CustomerInfoDao extends JpaRepository<CustomerInfo, Long> {
+    CustomerInfo getOneByAccount(Integer account);
 }

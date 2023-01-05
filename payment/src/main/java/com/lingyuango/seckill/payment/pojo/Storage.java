@@ -1,19 +1,24 @@
 package com.lingyuango.seckill.payment.pojo;
 
-import java.time.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
-import com.baomidou.mybatisplus.annotation.*;
+
+import java.time.LocalDateTime;
 
 /**
  * 库存
  * @author Lingyuango
  */
 @Data
-@TableName("sk_storage")
+@Entity(name = "sk_storage")
 public class Storage {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     /**
      * 秒杀活动id

@@ -1,7 +1,6 @@
 package com.lingyuango.seckillmanagement.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -12,17 +11,16 @@ import xyz.erupt.core.annotation.EruptDataSource;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Data
 @Entity
-@EruptDataSource("mysql_seckill_service_db")
 @Table(name = "sk_seckill_activity_rule")
 @Erupt(name = "规则管理")
+@EruptDataSource("mysql_seckill_service_db")
 public class ActivityRule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EruptField
-    private Integer id;
+    private Long id;
 
     /**
      * 规则id

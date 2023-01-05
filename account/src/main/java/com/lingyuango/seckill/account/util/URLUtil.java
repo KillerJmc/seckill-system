@@ -13,6 +13,11 @@ public class URLUtil {
      * @return 二级域名
      */
     public static String getSecondDomain(String serverName) {
+        // 如果不存在"."，说明是本地部署，直接返回localhost
+        if (!serverName.contains(".")) {
+            return "localhost";
+        }
+
         // 域名列表
         var domains = new Stack<String>();
 

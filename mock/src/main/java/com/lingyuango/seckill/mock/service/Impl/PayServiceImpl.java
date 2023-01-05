@@ -1,12 +1,10 @@
 package com.lingyuango.seckill.mock.service.Impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lingyuango.seckill.mock.common.Const;
 import com.lingyuango.seckill.mock.dao.MoneyDao;
 import com.lingyuango.seckill.mock.dao.OrderDao;
 import com.lingyuango.seckill.mock.pojo.MockOrder;
 import com.lingyuango.seckill.mock.pojo.MockPayInfo;
-import com.lingyuango.seckill.mock.pojo.Money;
 import com.lingyuango.seckill.mock.service.PayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,17 +26,16 @@ public class PayServiceImpl implements PayService {
         boolean paySuccess;
         var payMoney = pay.getMoney();
         var accountId = moneyDao.getAccountId(pay);
-        var money = moneyDao.selectOne(Wrappers.<Money>lambdaQuery().eq(Money::getAccountId, accountId)).getMoney();
+        var money = moneyDao.getOneByAccountIdIs(accountId).getMoney();
         var date = LocalDateTime.now();
 
         if (money < payMoney) {
             paySuccess = false;
         } else {
-            moneyDao.update(new Money() {{
-                setAccountId(accountId);
-                setGmtModified(LocalDateTime.now());
-                setMoney(money - payMoney);
-            }}, Wrappers.<Money>update().eq("account_id", accountId));
+            var moneyObj = moneyDao.getOneByAccountIdIs(accountId);
+            moneyObj.setGmtModified(date);
+            moneyObj.setMoney(money - payMoney);
+            moneyDao.save(moneyObj);
             paySuccess = true;
         }
 
@@ -47,15 +44,14 @@ public class PayServiceImpl implements PayService {
             maxId = -1;
         }
         var id = maxId;
-        var order = new MockOrder() {{
-            setAccountId(accountId);
-            setMoney(-payMoney);
-            setPaySuccess(paySuccess);
-            setOrderId(id + Const.ORDER_ID_OFFSET + 1);
-            setGmtCreate(date);
-            setGmtModified(date);
-        }};
-        orderDao.insert(order);
+        var order = new MockOrder();
+        order.setAccountId(accountId);
+        order.setMoney(-payMoney);
+        order.setPaySuccess(paySuccess);
+        order.setOrderId(id + Const.ORDER_ID_OFFSET + 1);
+        order.setGmtCreate(date);
+        order.setGmtModified(date);
+        orderDao.save(order);
         return order;
     }
 }
