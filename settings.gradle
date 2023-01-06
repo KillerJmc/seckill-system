@@ -1,0 +1,8 @@
+rootProject.name = "seckill-system"
+
+include "gateway"
+include "account"
+include "payment"
+include "seckill"
+include "mock"
+include "web-management"

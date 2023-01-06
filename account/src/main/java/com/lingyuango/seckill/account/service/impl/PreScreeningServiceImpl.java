@@ -28,14 +28,13 @@ public class PreScreeningServiceImpl implements PreScreeningService {
 
         int seckillId = seckillActivityClient.getSeckillId().getData();
 
-        var preliminaryScreening = new PreScreening() {{
-            setSeckillId(seckillId);
-            setAccount(customerId);
-            setName(customer.getName());
-            setPass(canApply);
-        }};
+        var preScreen = new PreScreening();
+        preScreen.setSeckillId(seckillId);
+        preScreen.setAccount(customerId);
+        preScreen.setName(customer.getName());
+        preScreen.setPass(canApply);
 
-        log.info("初筛信息：{}", preliminaryScreening);
-        preScreeningDao.insert(preliminaryScreening);
+        log.info("初筛信息：{}", preScreen);
+        preScreeningDao.save(preScreen);
     }
 }

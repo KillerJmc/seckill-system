@@ -1,9 +1,9 @@
 package com.lingyuango.seckill.payment.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,11 +13,12 @@ import java.time.LocalDateTime;
  * @author Lingyuango
  */
 @Data
-@TableName("sk_seckill_success")
+@Entity(name = "sk_seckill_success")
 public class Order {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     /**
      * 秒杀活动id
@@ -38,6 +39,5 @@ public class Order {
 
     private LocalDateTime gmtCreate;
 
-    @TableField(select = false)
     private LocalDateTime gmtModified;
 }

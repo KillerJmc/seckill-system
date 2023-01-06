@@ -5,14 +5,14 @@ import com.jmc.lang.Strs;
 import com.lingyuango.seckill.account.common.Const;
 import com.lingyuango.seckill.account.common.MsgMapping;
 import com.lingyuango.seckill.account.service.TokenService;
+import com.lingyuango.seckill.account.util.Cookies;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Service
@@ -21,30 +21,17 @@ public class TokenServiceImpl implements TokenService {
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    public void createAndSetCookies(Integer account, HttpServletResponse resp) {
+    public void addLoginCookies(Integer account, HttpServletRequest req, HttpServletResponse resp) {
         // 定义token
         var token = UUID.randomUUID().toString();
 
         // 存入redis
         putAccount(token, account);
 
-        // token的cookie
-        var tokenCookie = ResponseCookie
-                .from(Const.COOKIE_TOKEN_NAME, token)
-                .sameSite("Lax")
-                .path("/")
-                .build();
-
-        // 账号的cookie
-        var accountCookie = ResponseCookie
-                .from(Const.COOKIE_ACCOUNT_NAME, account.toString())
-                .sameSite("Lax")
-                .path("/")
-                .build();
-
-        // 添加cookie
-        resp.addHeader(HttpHeaders.SET_COOKIE, tokenCookie.toString());
-        resp.addHeader(HttpHeaders.SET_COOKIE, accountCookie.toString());
+        // 添加token和账户的cookie
+        Cookies.bind(req, resp)
+                .add(Const.COOKIE_TOKEN_NAME, token)
+                .add(Const.COOKIE_ACCOUNT_NAME, account.toString());
     }
 
     @Override
@@ -63,9 +50,15 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public void delete(String token) throws Exception {
+    public void deleteLoginCookies(String token, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        // 从redis移除token
         if (Boolean.FALSE.equals(redisTemplate.delete(Const.REDIS_TOKEN_GROUP + token))) {
             throw new Exception(MsgMapping.INVALID_TOKEN);
         }
+
+        // 移除cookie
+        Cookies.bind(req, resp)
+                .delete(Const.COOKIE_TOKEN_NAME)
+                .delete(Const.COOKIE_ACCOUNT_NAME);
     }
 }

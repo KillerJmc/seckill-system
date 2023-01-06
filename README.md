@@ -53,7 +53,7 @@ A simple seckill system.
 ## Usage
 1. Get Docker directory
     + From release: Download `docker.zip` from release and unzip.
-    + From repository: Under repository root, execute `mvn clean package` to get complete docker directory.
+    + From repository: Under repository root, execute `gradle bootJar` to get complete docker directory.
 
 2. Start with Docker
    + Execute `docker-compose up` under docker directory.

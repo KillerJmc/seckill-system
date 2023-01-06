@@ -1,6 +1,5 @@
 package com.lingyuango.seckill.account.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lingyuango.seckill.account.client.SeckillActivityClient;
 import com.lingyuango.seckill.account.common.Const;
 import com.lingyuango.seckill.account.common.MsgMapping;
@@ -13,6 +12,7 @@ import com.lingyuango.seckill.account.util.Verify;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,43 +28,38 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void insert(Customer customer) throws Exception {
-        var queryCustomer = customerDao.selectCount(
-                Wrappers.<Customer>lambdaQuery()
-                        .eq(Customer::getIdNumber, customer.getIdNumber())
-        );
-
-        if (queryCustomer == 1) {
+        // 身份证不能重复
+        if (customerDao.existsByIdNumber(customer.getIdNumber())) {
             throw new Exception(MsgMapping.ID_NUM_REPEATED);
         }
 
+        // 获取当前最大id
         var maxId = customerDao.getMaxId();
-        if (maxId == null) {
-            maxId = 0;
-        }
+        maxId = maxId == null ? 0 : maxId;
 
+        // 设置新用户id
         customer.setAccount(Const.ACCOUNT_ID_OFFSET + maxId + 1);
 
-        customerDao.insert(customer);
+        customerDao.save(customer);
         customerInfoService.insert(customer);
         log.info("客户注册：{}", customer);
     }
 
     @Override
     public boolean contains(Customer customer) {
-        var queryCustomer = customerDao.selectOne(Wrappers.query(customer));
-
-        if (queryCustomer != null) {
-            // 回填信息
-            customer.setAccount(queryCustomer.getAccount());
-            customer.setName(queryCustomer.getName());
-        }
-
-        return queryCustomer != null;
+        return customerDao.findOne(Example.of(customer))
+                .map(queryCustomer -> {
+                    // 回填信息
+                    customer.setAccount(queryCustomer.getAccount());
+                    customer.setName(queryCustomer.getName());
+                    return queryCustomer;
+                })
+                .isPresent();
     }
 
     @Override
     public Customer getByAccount(Integer account) {
-        return customerDao.selectOne(Wrappers.<Customer>lambdaQuery().eq(Customer::getAccount, account));
+        return customerDao.getOneByAccount(account);
     }
 
     @Override

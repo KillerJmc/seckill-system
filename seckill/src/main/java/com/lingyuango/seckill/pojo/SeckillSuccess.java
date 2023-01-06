@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  */
 @Data
 public class SeckillSuccess {
-    private Integer id;
+    private Long id;
 
     /**
      * 秒杀活动id

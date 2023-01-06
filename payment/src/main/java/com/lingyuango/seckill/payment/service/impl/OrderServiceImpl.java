@@ -1,6 +1,5 @@
 package com.lingyuango.seckill.payment.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lingyuango.seckill.payment.common.Const;
 import com.lingyuango.seckill.payment.dao.OrderDao;
 import com.lingyuango.seckill.payment.pojo.BasicOrder;
@@ -29,33 +28,28 @@ public class OrderServiceImpl implements OrderService {
         var accountId = basicOrder.getAccountId();
         var date = LocalDateTime.now();
         var orderId = OrderUtil.getOrderId();
-        var seckillOrder = new Order() {{
-            setSeckillId(seckillId);
-            setAccountId(accountId);
-            setGmtModified(date);
-            setGmtCreate(date);
-            setOrderId(orderId);
-            setPaid(false);
-        }};
-        orderDao.insert(seckillOrder);
+        var seckillOrder = new Order();
+        seckillOrder.setSeckillId(seckillId);
+        seckillOrder.setAccountId(accountId);
+        seckillOrder.setGmtModified(date);
+        seckillOrder.setGmtCreate(date);
+        seckillOrder.setOrderId(orderId);
+        seckillOrder.setPaid(false);
+        orderDao.save(seckillOrder);
         return seckillOrder;
     }
 
     public boolean OrderOverTimeCheck(String orderId) {
-        var order = orderDao.selectOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderId, orderId));
+        var order = orderDao.getOneByOrderId(orderId);
         return CheckDateStamp.CheckOverTime(order.getGmtCreate(), Const.ORDER_OVERTIME_MILLIONS);
     }
 
     @Override
     @Transactional
-    public synchronized Boolean update(String orderId) {
-        var order = orderDao.selectOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderId, orderId));
+    public synchronized void update(String orderId) {
+        var order = orderDao.getOneByOrderId(orderId);
         order.setPaid(true);
-        return orderDao.update(order, Wrappers.<Order>lambdaUpdate().eq(Order::getOrderId, orderId)) != 0;
+        orderDao.save(order);
     }
 
-    public Integer getAccountIdFromOrder(String orderId) {
-        var order = orderDao.selectOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderId, orderId));
-        return order != null ? order.getAccountId() : null;
-    }
 }

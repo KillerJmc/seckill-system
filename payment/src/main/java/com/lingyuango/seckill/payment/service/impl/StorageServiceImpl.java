@@ -1,10 +1,7 @@
 package com.lingyuango.seckill.payment.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.jmc.net.R;
-import com.lingyuango.seckill.payment.pojo.Storage;
-import com.lingyuango.seckill.payment.service.StorageService;
 import com.lingyuango.seckill.payment.dao.StorageDao;
+import com.lingyuango.seckill.payment.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,17 +13,10 @@ import org.springframework.stereotype.Service;
 public class StorageServiceImpl implements StorageService {
     private final StorageDao storageDao;
 
-    public Storage getStorage(Integer seckillId) {
-        return storageDao.selectOne(
-                Wrappers.<Storage>lambdaQuery()
-                        .eq(Storage::getSeckillId, seckillId)
-        );
-    }
-
     @Override
-    public synchronized Boolean decrease(Integer seckillId) {
-        var storage = storageDao.selectOne(Wrappers.<Storage>lambdaQuery().eq(Storage::getSeckillId, seckillId));
+    public synchronized void decrease(Integer seckillId) {
+        var storage = storageDao.getOneBySeckillId(seckillId);
         storage.setAmount(storage.getAmount() - 1);
-        return storageDao.updateById(storage) != 0;
+        storageDao.save(storage);
     }
 }

@@ -1,17 +1,17 @@
 package com.lingyuango.seckill.mock.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lingyuango.seckill.mock.pojo.MockAccount;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-@Mapper
-public interface AccountDao extends BaseMapper<MockAccount> {
+@Repository
+public interface AccountDao extends JpaRepository<MockAccount, Long> {
 
-    @Select("select account_id from account where id_number = #{idNumber} and name = #{name}")
+    @Query(nativeQuery = true, value = "select account_id from account where id_number = ?#{#inf.idNumber} and name = ?#{#inf.name}")
     Integer getAccountId(MockAccount inf);
 
-    @Select("select max(id) from account")
+    @Query(nativeQuery = true, value = "select max(id) from account")
     Integer getMaxId();
 
 }

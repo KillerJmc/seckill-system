@@ -1,16 +1,16 @@
 package com.lingyuango.seckill.mock.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lingyuango.seckill.mock.pojo.MockOrder;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author ChaconneLuo
  */
 
-@Mapper
-public interface OrderDao extends BaseMapper<MockOrder> {
-    @Select("select max(id) from `order`")
+@Repository
+public interface OrderDao extends JpaRepository<MockOrder, Long> {
+    @Query(nativeQuery = true, value = "select max(id) from `order`")
     Integer getMaxId();
 }

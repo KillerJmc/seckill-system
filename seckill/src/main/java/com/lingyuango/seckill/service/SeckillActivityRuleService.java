@@ -6,5 +6,5 @@ import com.lingyuango.seckill.pojo.SeckillActivityRule;
  * @author Jmc
  */
 public interface SeckillActivityRuleService {
-    SeckillActivityRule getById(Integer id);
+    SeckillActivityRule getById(Long id);
 }

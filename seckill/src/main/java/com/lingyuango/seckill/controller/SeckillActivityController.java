@@ -10,11 +10,10 @@ import com.lingyuango.seckill.pojo.SeckillActivity;
 import com.lingyuango.seckill.service.PaymentService;
 import com.lingyuango.seckill.service.SeckillActivityService;
 import com.lingyuango.seckill.service.SeckillApplicationFormService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.PostConstruct;
 
 /**
  * @author Jmc

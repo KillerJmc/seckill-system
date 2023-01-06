@@ -27,9 +27,13 @@ spring:
           uri: lb://account-service
           predicates:
             - Path=/customer/**
+          filters:
+            - PreserveHostHeader
 
         # 秒杀服务
         - id: seckill-service
           uri: lb://seckill-service
           predicates:
             - Path=/seckillActivity/**
+          filters:
+            - PreserveHostHeader

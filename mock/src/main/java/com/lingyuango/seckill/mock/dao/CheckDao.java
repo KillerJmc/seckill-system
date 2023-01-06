@@ -1,14 +1,14 @@
 package com.lingyuango.seckill.mock.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lingyuango.seckill.mock.pojo.MockAccount;
-import org.apache.ibatis.annotations.Mapper;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author ChaconneLuo
  */
 
-@Mapper
-public interface CheckDao extends BaseMapper<MockAccount> {
-
+@Repository
+public interface CheckDao extends JpaRepository<MockAccount, Long> {
+    Long countByIdNumber(String idNumber);
 }

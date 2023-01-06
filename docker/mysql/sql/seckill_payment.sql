@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.16, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: seckill_payment
+-- Host: localhost    Database: seckill_payment
 -- ------------------------------------------------------
 -- Server version	8.0.16
 
@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `sk_seckill_success`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `sk_seckill_success` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `seckill_id` int(11) NOT NULL COMMENT '秒杀活动id',
   `account_id` int(11) NOT NULL COMMENT '客户id',
   `order_id` varchar(100) NOT NULL COMMENT '订单id',
@@ -51,7 +51,7 @@ DROP TABLE IF EXISTS `sk_storage`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `sk_storage` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `seckill_id` int(11) NOT NULL COMMENT '秒杀活动id',
   `amount` int(11) NOT NULL COMMENT '库存数量',
   `gmt_create` datetime NOT NULL,
@@ -80,4 +80,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-23  2:46:16
+-- Dump completed on 2023-01-03  0:39:51

@@ -1,9 +1,6 @@
 package com.lingyuango.seckill.account.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,11 +10,12 @@ import java.time.LocalDateTime;
  * @author Jmc
  */
 @Data
-@TableName("sk_pre_screening")
+@Entity(name = "sk_pre_screening")
 public class PreScreening {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     /**
      * 秒杀活动id
@@ -39,9 +37,9 @@ public class PreScreening {
      */
     private Boolean pass;
 
-    @TableField(select = false)
+    @Transient
     private LocalDateTime gmtCreate;
 
-    @TableField(select = false)
+    @Transient
     private LocalDateTime gmtModified;
 }

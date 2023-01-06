@@ -1,13 +1,13 @@
 package com.lingyuango.seckill.payment.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lingyuango.seckill.payment.pojo.Order;
-import org.apache.ibatis.annotations.Mapper;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author Lingyuango
  */
-@Mapper
-public interface OrderDao extends BaseMapper<Order> {
-
+@Repository
+public interface OrderDao extends JpaRepository<Order, Long> {
+    Order getOneByOrderId(String orderId);
 }

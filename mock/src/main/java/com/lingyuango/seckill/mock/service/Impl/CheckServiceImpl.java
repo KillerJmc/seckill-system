@@ -1,6 +1,5 @@
 package com.lingyuango.seckill.mock.service.Impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lingyuango.seckill.mock.common.Const;
 import com.lingyuango.seckill.mock.dao.AccountDao;
 import com.lingyuango.seckill.mock.dao.CheckDao;
@@ -10,6 +9,7 @@ import com.lingyuango.seckill.mock.pojo.Money;
 import com.lingyuango.seckill.mock.service.CheckService;
 import com.lingyuango.seckill.mock.utils.RandomGeneratorTool;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,9 +28,7 @@ public class CheckServiceImpl implements CheckService {
 
     @Override
     public boolean checkAccount(MockAccount inf) {
-
-        var count = checkDao.selectCount(Wrappers.<MockAccount>lambdaQuery()
-                .eq(MockAccount::getIdNumber, inf.getIdNumber()));
+        var count = checkDao.countByIdNumber(inf.getIdNumber());
         if (count != 0L) {
             return true;
         } else {
@@ -46,24 +44,23 @@ public class CheckServiceImpl implements CheckService {
                 maxId = -1;
             }
             var id = maxId;
-            var account = new MockAccount() {{
-                setIdNumber(inf.getIdNumber());
-                setName(inf.getName());
-                setAccountId(id + Const.ACCOUNT_ID_OFFSET + 1);
-            }};
+            var account = new MockAccount();
+            account.setIdNumber(inf.getIdNumber());
+            account.setName(inf.getName());
+            account.setAccountId(id + Const.ACCOUNT_ID_OFFSET + 1);
             account.setGmtCreate(date);
             account.setGmtModified(date);
-            accountDao.insert(account);
+            accountDao.save(account);
 
-            var count = checkDao.selectCount(Wrappers.lambdaQuery(inf));
+            var count = checkDao.count(Example.of(inf));
             if (count == 1L) {
 
-                moneyDao.insert(new Money() {{
-                    setAccountId(accountDao.getAccountId(inf));
-                    setMoney(RandomGeneratorTool.getRandomMoney());
-                    setGmtCreate(date);
-                    setGmtModified(date);
-                }});
+                var money = new Money();
+                money.setAccountId(accountDao.getAccountId(inf));
+                money.setMoney(RandomGeneratorTool.getRandomMoney());
+                money.setGmtCreate(date);
+                money.setGmtModified(date);
+                moneyDao.save(money);
 
             } else {
                 return false;

@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.16, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: seckill_service
+-- Host: localhost    Database: seckill_service
 -- ------------------------------------------------------
 -- Server version	8.0.16
 
@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `sk_product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `sk_product` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL COMMENT '商品id',
   `name` varchar(50) NOT NULL COMMENT '商品名称',
   `price` double NOT NULL COMMENT '商品价格',
@@ -54,13 +54,13 @@ DROP TABLE IF EXISTS `sk_seckill_activity`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `sk_seckill_activity` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `seckill_id` int(11) NOT NULL COMMENT '秒杀活动id',
   `product_id` int(11) NOT NULL COMMENT '商品id',
   `amount` int(11) NOT NULL COMMENT '活动中商品总量',
   `start_time` datetime NOT NULL COMMENT '秒杀活动开始时间',
   `activity_info` varchar(300) NOT NULL COMMENT '秒杀活动信息',
-  `activity_rule_id` int(11) NOT NULL COMMENT '秒杀规则id',
+  `activity_rule_id` bigint(20) NOT NULL COMMENT '秒杀规则id',
   `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -86,7 +86,7 @@ DROP TABLE IF EXISTS `sk_seckill_activity_rule`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `sk_seckill_activity_rule` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `rule_id` int(11) NOT NULL COMMENT '规则id',
   `rule_name` varchar(20) NOT NULL COMMENT '规则名称',
   `work_status` tinyint(1) NOT NULL COMMENT '工作状态（在岗或失业）',
@@ -120,7 +120,7 @@ DROP TABLE IF EXISTS `sk_seckill_application_form`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `sk_seckill_application_form` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `seckill_id` int(11) NOT NULL COMMENT '秒杀活动id',
   `account_id` int(11) NOT NULL COMMENT '客户id',
   `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
@@ -148,4 +148,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-23  2:46:47
+-- Dump completed on 2023-01-03  0:39:52

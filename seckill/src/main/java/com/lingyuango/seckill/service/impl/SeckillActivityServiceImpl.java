@@ -46,13 +46,19 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
             return null;
         }
 
+        // 安全性忽略
+        res.setId(null);
+        res.setSeckillId(null);
+
         var activityRule = seckillActivityRuleService.getById(res.getActivityRuleId());
+        // 安全性忽略
         activityRule.setId(null);
         activityRule.setRuleId(null);
         res.setActivityRuleId(null);
         res.setRule(activityRule);
 
         var product = productService.getByProductId(res.getProductId());
+        // 安全性忽略
         product.setId(null);
         product.setProductId(null);
         res.setProductId(null);
@@ -200,7 +206,7 @@ public class SeckillActivityServiceImpl implements SeckillActivityService {
             throw new Exception(MsgMapping.PRODUCT_SOLD_OUT);
         }
 
-        // 把秒杀成功用户放进redis (seckillSuccess:account -> 1)
+        // 把秒杀成功用户放进redis (seckillSuccess:account -> "")
         redisTemplate.opsForValue()
                 .set(Const.REDIS_SECKILL_SUCCESS_GROUP + account, "");
     }

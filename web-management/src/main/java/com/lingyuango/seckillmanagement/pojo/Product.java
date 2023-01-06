@@ -1,8 +1,7 @@
 package com.lingyuango.seckillmanagement.pojo;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -13,17 +12,16 @@ import xyz.erupt.core.annotation.EruptDataSource;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Data
 @Entity
-@EruptDataSource("mysql_seckill_service_db")
 @Table(name = "sk_product")
 @Erupt(name = "产品管理")
+@EruptDataSource("mysql_seckill_service_db")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EruptField
-    private Integer id;
+    private Long id;
 
     /**
      * 商品id
@@ -38,7 +36,6 @@ public class Product {
     /**
      * 商品名称
      */
-    @Column(name = "name")
     @EruptField(
             views = @View(title = "商品名", sortable = true),
             edit = @Edit(title = "商品名", notNull = true, search = @Search)
@@ -48,7 +45,6 @@ public class Product {
     /**
      * 商品价格
      */
-    @Column(name = "price")
     @EruptField(
             views = @View(title = "商品价格", sortable = true),
             edit = @Edit(title = "商品价格", notNull = true)
@@ -58,7 +54,6 @@ public class Product {
     /**
      * 商品介绍
      */
-    @Column(name = "info", length = 100)
     @EruptField(
             views = @View(title = "商品信息"),
             edit = @Edit(title = "商品信息", type = EditType.TEXTAREA, notNull = true)
