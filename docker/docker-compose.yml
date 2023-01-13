@@ -1,8 +1,8 @@
 version: "3"
 
 # Author: zwz15008, Jmc
-# Need at least 4G memory
-# Version: 2.0
+# Need at least 2G memory
+# Version: 4.0
 services:
   web:
     image: nginx:1.20.2
