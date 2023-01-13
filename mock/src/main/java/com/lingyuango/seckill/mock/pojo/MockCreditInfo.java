@@ -1,8 +1,10 @@
 package com.lingyuango.seckill.mock.pojo;
 
+import com.lingyuango.seckill.mock.config.TypedReflective;
 import lombok.Data;
 
 @Data
+@TypedReflective
 public class MockCreditInfo {
     /**
      * 工作状态

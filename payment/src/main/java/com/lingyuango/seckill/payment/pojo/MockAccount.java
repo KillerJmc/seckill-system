@@ -1,5 +1,6 @@
 package com.lingyuango.seckill.payment.pojo;
 
+import com.lingyuango.seckill.payment.config.TypedReflective;
 import lombok.Data;
 
 /**
@@ -7,6 +8,7 @@ import lombok.Data;
  * @author ChaconneLuo
  */
 @Data
+@TypedReflective
 public class MockAccount {
 
     private String idNumber;

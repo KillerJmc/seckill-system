@@ -1,0 +1,22 @@
+# Use for gateway and payment module
+# gateway: "org.springframework.cloud:spring-cloud-starter-gateway"
+# payment: "org.springframework.cloud:spring-cloud-starter-stream-rabbit"
+
+# Netty common aot info
+# From: https://stackoverflow.com/questions/75013326/graalvm-native-image-image-build-error-report-error-encountered-while-parsing
+--initialize-at-run-time=io.netty.channel.epoll \
+--initialize-at-run-time=io.netty.channel.unix \
+--initialize-at-run-time=io.netty.handler.ssl.BouncyCastleAlpnSslUtils \
+
+# Netty Extra aot info (Get through personal experiments)
+--initialize-at-run-time=io.netty.handler.codec.http2 \
+
+# Slf4j common aot info
+# From: https://blog.csdn.net/liuhagen/article/details/115535721
+--initialize-at-build-time=org.slf4j.LoggerFactory \
+--initialize-at-build-time=org.slf4j.MDC \
+--initialize-at-build-time=ch.qos.logback.classic.Level \
+--initialize-at-build-time=ch.qos.logback.classic.Logger \
+--initialize-at-build-time=ch.qos.logback.core.CoreConstants \
+--initialize-at-build-time=ch.qos.logback.core.status \
+--initialize-at-build-time=ch.qos.logback.core.util \

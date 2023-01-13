@@ -1,5 +1,6 @@
 package com.lingyuango.seckill.payment.pojo;
 
+import com.lingyuango.seckill.payment.config.TypedReflective;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.io.Serializable;
  * @author ChaconneLuo
  */
 @Data
+@TypedReflective
 public class BasicOrder implements Serializable {
     private Integer seckillId;
     private Integer accountId;

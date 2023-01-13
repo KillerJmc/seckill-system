@@ -9,9 +9,6 @@ spring:
       host: redis
       port: 6379
   cloud:
-    nacos:
-      server-addr: nacos:8848
-
     gateway:
       # 启动gateway
       discovery:
@@ -31,7 +28,7 @@ spring:
       routes:
         # 账号服务
         - id: account-service
-          uri: lb://account-service
+          uri: http://account-service:9010
           predicates:
             - Path=/customer/**
           filters:
@@ -39,7 +36,7 @@ spring:
 
         # 秒杀服务
         - id: seckill-service
-          uri: lb://seckill-service
+          uri: http://seckill-service:9030
           predicates:
             - Path=/seckillActivity/**
           filters:

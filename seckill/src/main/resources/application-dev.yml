@@ -10,3 +10,12 @@ spring:
     password: root
   jpa:
     show-sql: true
+  cloud:
+    openfeign:
+      client:
+        config:
+          account-service:
+            url: http://localhost:9010
+          payment-service:
+            url: http://localhost:9020
+

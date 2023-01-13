@@ -5,7 +5,12 @@ import com.lingyuango.seckill.account.pojo.SeckillActivityRule;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(value = "seckill-service", path = "/expose/seckillActivity", contextId = "seckillActivityClient")
+@FeignClient(
+        name = "seckill-service",
+        url = "${spring.cloud.openfeign.client.config.seckill-service.url}",
+        path = "/expose/seckillActivity",
+        contextId = "seckillActivityClient"
+)
 public interface SeckillActivityClient {
     /**
      * 获取当前秒杀规则

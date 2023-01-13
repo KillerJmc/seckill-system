@@ -1,10 +1,10 @@
 plugins {
-    id "org.springframework.boot" version "3.0.0" apply false
+    id "org.springframework.boot" version "3.0.1" apply false
     id "org.graalvm.buildtools.native" version "0.9.19" apply false
 }
 
 group "com.lingyuango.seckill"
-version "3.0.0"
+version "4.0.0"
 
 subprojects {
     apply plugin: "java"
@@ -14,9 +14,8 @@ subprojects {
     sourceCompatibility = 17
 
     ext {
-        springBootVersion = "3.0.0"
+        springBootVersion = "3.0.1"
         springCloudVersion = "2022.0.0"
-        alibabaCloudVersion = "2022.0.0.0-RC1"
         jmcUtilsVersion = "2.7.0"
 
         jarOutputPath = "../docker/services"
@@ -31,7 +30,6 @@ subprojects {
         implementation platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
         annotationProcessor platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
         implementation platform("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
-        implementation platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:$alibabaCloudVersion")
 
         compileOnly "org.projectlombok:lombok"
         annotationProcessor "org.projectlombok:lombok"

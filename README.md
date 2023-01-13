@@ -5,12 +5,20 @@
 ## Description
 A simple seckill system.
 
+
+
 ## Technology Stack
 + **Background Services**: Spring Cloud
+
 + **Database**: MySQL, Redis
+
 + **Server**: Tomcat, Nginx, Nacos
+
 + **Message Queue**: RabbitMQ
+
 + **Run**: Docker Compose
+
+  
 
 ## Services
 + Account Service
@@ -24,7 +32,6 @@ A simple seckill system.
   2. Manage the function of customer applies for seckill activity and customer seckill.
   3. Provide the function of customer obtains and pays for the order of seckill activity.
   
-
 + Payment Service
 
   Provide the interfaces of ordering and paying for the order.
@@ -47,15 +54,19 @@ A simple seckill system.
 1. [Seckill Web Page](https://github.com/KillerJmc/seckill-system-web) on port `80`.
 2. [Seckill Web Management](https://github.com/KillerJmc/seckill-system/tree/master/web-management) on port `81`.
 
+
+
 ## Api
 [ApiFox Doc](https://seckill-system.apifox.cn/)
 
+
+
 ## Usage
-1. Get Docker directory
-    + From release: Download `docker.zip` from release and unzip.
-    + From repository: Under repository root, execute `gradle bootJar` to get complete docker directory.
-
-2. Start with Docker
-   + Execute `docker-compose up` under docker directory.
-
+1. Get Docker
+   
+   Download `docker.zip` from **Release** and unzip.
+   
+2. Start
+   
+   Execute `docker-compose up` under docker directory.
 

@@ -14,6 +14,15 @@ spring:
     redis:
       database: 1
   cloud:
+    openfeign:
+      client:
+        config:
+          account-service:
+            url: http://localhost:9010
+          seckill-service:
+            url: http://localhost:9030
+          mock-service:
+            url: http://localhost:9040
     stream:
       bindings:
         placeOrder-out-0:

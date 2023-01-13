@@ -1,0 +1,3 @@
+[
+  ["org.hibernate.query.sql.spi.NativeQueryImplementor", "org.hibernate.query.spi.DomainQueryExecutionContext", "org.hibernate.query.internal.ResultSetMappingResolutionContext", "org.hibernate.query.spi.QueryImplementor", "org.hibernate.query.SelectionQuery", "org.hibernate.query.CommonQueryContract"]
+]

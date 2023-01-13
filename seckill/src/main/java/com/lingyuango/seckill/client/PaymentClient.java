@@ -8,7 +8,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "payment-service", path = "/payment", contextId = "paymentClient")
+@FeignClient(
+        name = "payment-service",
+        url = "${spring.cloud.openfeign.client.config.payment-service.url}",
+        path = "/payment",
+        contextId = "paymentClient"
+)
 public interface PaymentClient {
     /**
      * 下订单

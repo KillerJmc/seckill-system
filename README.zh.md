@@ -65,11 +65,11 @@
 
 ## 用法
 
-1. 获取Docker文件夹
-    + 从发行版中获取：从发行版中下载 `docker.zip` 并解压。
-    + 从仓库中获取：在仓库根路径下执行 `gradle bootJar` 得到完整的 docker 文件夹。
-
-2. 启动Docker
-    + 在 docker 文件夹中执行 `docker-compose up`。
-
+1. 获取Docker
+    
+    从**发行版**中下载 `docker.zip` 并解压。
+    
+2. 启动
+    
+    在 docker 文件夹中执行 `docker-compose up`。
 

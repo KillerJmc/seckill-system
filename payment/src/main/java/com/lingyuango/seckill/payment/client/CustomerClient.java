@@ -6,7 +6,12 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "account-service", path = "/expose/customer", contextId = "customerClient")
+@FeignClient(
+        name = "account-service",
+        url = "${spring.cloud.openfeign.client.config.account-service.url}",
+        path = "/expose/customer",
+        contextId = "customerClient"
+)
 public interface CustomerClient {
     @GetMapping("/getByAccount")
     R<Customer> getByAccount(@RequestParam("account") Integer account);

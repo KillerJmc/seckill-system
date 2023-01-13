@@ -3,5 +3,5 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-redis"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "mysql:mysql-connector-java"
-    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
+    implementation "commons-codec:commons-codec"
 }

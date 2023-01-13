@@ -10,3 +10,12 @@ spring:
     password: root
   jpa:
     show-sql: true
+  cloud:
+    openfeign:
+      client:
+        config:
+          seckill-service:
+            url: http://localhost:9030
+          mock-service:
+            url: http://localhost:9040
+
