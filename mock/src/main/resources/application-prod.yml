@@ -8,6 +8,3 @@ spring:
     url: jdbc:mysql://mysql:3306/seckill_mock
     username: root
     password: root
-  cloud:
-    nacos:
-      server-addr: nacos:8848

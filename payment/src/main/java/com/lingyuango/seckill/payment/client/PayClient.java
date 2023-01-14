@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.time.LocalDateTime;
 
-@FeignClient(value = "mock-service", contextId = "payClient")
+@FeignClient(
+        name = "mock-service",
+        url = "${spring.cloud.openfeign.client.config.mock-service.url}",
+        contextId = "payClient"
+)
 public interface PayClient {
 
     @PostMapping("/pay")

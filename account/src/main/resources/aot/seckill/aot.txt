@@ -1,0 +1,16 @@
+Solve Problem: JFR not found
+Caused by: SeckillActivityController.initRedis() with @PostConstruct annotation inits redis module
+           while generating aot info.
+
+Works for generating aot info:
+    1. Disable @PostConstruct method in SeckillActivityController.java before running script (GenerateAot.cmd).
+    2. Run the script, and after pressing ctrl + c (generating aot info finished), enable @PostConstruct method again.
+    3. At last, the script will generate target jar.
+
+Solve Problem: Proxy classes need to be defined at image build time by specifying the list of interfaces that they implement.
+Caused by: SeckillActivityServiceImpl.initRedis()
+Solution From: https://github.com/oracle/graal/issues/1028
+
+After generated aot info:
+    1. Copy dynamic-proxies.json to resources/META-INF/native-image.
+    2. Add argument "-H:DynamicProxyConfigurationFiles="META-INF/native-image/dynamic-proxies.json"" to native-image command.

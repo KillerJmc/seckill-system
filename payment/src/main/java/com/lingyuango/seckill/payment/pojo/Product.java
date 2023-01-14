@@ -1,5 +1,6 @@
 package com.lingyuango.seckill.payment.pojo;
 
+import com.lingyuango.seckill.payment.config.TypedReflective;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
  * @author Jmc
  */
 @Data
+@TypedReflective
 public class Product {
 
     private Long id;

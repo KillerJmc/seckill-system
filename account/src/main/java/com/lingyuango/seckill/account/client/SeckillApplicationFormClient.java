@@ -5,7 +5,12 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "seckill-service", path = "/expose/seckillApplicationForm", contextId = "seckillApplicationFormClient")
+@FeignClient(
+        name = "seckill-service",
+        url = "${spring.cloud.openfeign.client.config.seckill-service.url}",
+        path = "/expose/seckillApplicationForm",
+        contextId = "seckillApplicationFormClient"
+)
 public interface SeckillApplicationFormClient {
     /**
      * 判断某客户是否在申请表中

@@ -1,0 +1,12 @@
+Solve Problem: Runtime reflection is not supported by ProducerProperties.xxx
+Caused by: "org.springframework.cloud:spring-cloud-starter-stream-rabbit"
+
+After generated aot info, in reflect-config.json:
+    1. Remove a class named "org.springframework.integration.config.ConverterRegistrar$IntegrationConverterRegistration"
+    2. Replace a class named "org.springframework.cloud.stream.binder.ProducerProperties" config to:
+        {
+          "name":"org.springframework.cloud.stream.binder.ProducerProperties",
+          "allDeclaredFields":true,
+          "allDeclaredMethods":true,
+          "allDeclaredConstructors":true
+        }

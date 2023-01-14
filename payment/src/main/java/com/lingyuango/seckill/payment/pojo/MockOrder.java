@@ -1,5 +1,6 @@
 package com.lingyuango.seckill.payment.pojo;
 
+import com.lingyuango.seckill.payment.config.TypedReflective;
 import lombok.Data;
 import lombok.ToString;
 
@@ -10,6 +11,7 @@ import lombok.ToString;
  */
 @Data
 @ToString
+@TypedReflective
 public class MockOrder {
 
     private Integer orderId;

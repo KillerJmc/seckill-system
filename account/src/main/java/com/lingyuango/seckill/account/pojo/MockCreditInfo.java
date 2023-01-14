@@ -1,5 +1,6 @@
 package com.lingyuango.seckill.account.pojo;
 
+import com.lingyuango.seckill.account.config.TypedReflective;
 import lombok.Data;
 
 /**
@@ -7,6 +8,7 @@ import lombok.Data;
  * @author Jmc
  */
 @Data
+@TypedReflective
 public class MockCreditInfo {
     /**
      * 工作状态

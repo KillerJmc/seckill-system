@@ -24,7 +24,7 @@ spring:
       routes:
         # 账号服务
         - id: account-service
-          uri: lb://account-service
+          uri: http://localhost:9010
           predicates:
             - Path=/customer/**
           filters:
@@ -32,7 +32,7 @@ spring:
 
         # 秒杀服务
         - id: seckill-service
-          uri: lb://seckill-service
+          uri: http://localhost:9030
           predicates:
             - Path=/seckillActivity/**
           filters:

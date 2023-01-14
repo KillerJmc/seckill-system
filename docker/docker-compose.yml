@@ -1,8 +1,8 @@
 version: "3"
 
 # Author: zwz15008, Jmc
-# Need at least 4G memory
-# Version: 2.0
+# Need at least 2G memory
+# Version: 4.0
 services:
   web:
     image: nginx:1.20.2
@@ -31,19 +31,9 @@ services:
     entrypoint:
       - /bin/sh
       - -c
-      - /wait && java -jar /app.jar --spring.profiles.active=prod
+      - /wait && java -jar /app.jar
 
   # --------------------------------------------------------------- #
-
-  nacos:
-    image: nacos/nacos-server:v2.0.4
-    restart: always
-    environment:
-      MODE: standalone
-      JVM_XMS: 128M
-      JVM_XMX: 128M
-    ports:
-      - "8848:8848"
 
   mysql:
     image: mysql:8.0.28
@@ -76,100 +66,100 @@ services:
   # --------------------------------------------------------------- #
 
   gateway:
-    image: openjdk:17
+    image: alpine:3.17.1
     restart: always
     ports:
       - "9000"
     volumes:
       - ./bin/wait:/wait
-      - ./services/gateway.jar:/app.jar
+      - ./services/gateway:/app
     environment:
       TZ: Asia/Shanghai
-      WAIT_HOSTS: nacos:8848, redis:6379
+      WAIT_HOSTS: redis:6379
       WAIT_TIMEOUT: 600
       WAIT_SLEEP_INTERVAL: 10
     entrypoint:
       - /bin/sh
       - -c
-      - /wait && java -jar /app.jar --spring.profiles.active=prod
+      - /wait && /app
 
   # --------------------------------------------------------------- #
 
   account-service:
-    image: openjdk:17
+    image: alpine:3.17.1
     restart: always
     ports:
       - "9010"
     volumes:
       - ./bin/wait:/wait
-      - ./services/account.jar:/app.jar
+      - ./services/account:/app
     environment:
       TZ: Asia/Shanghai
-      WAIT_HOSTS: nacos:8848, mysql:3306, redis:6379
+      WAIT_HOSTS: mysql:3306, redis:6379
       WAIT_TIMEOUT: 600
       WAIT_SLEEP_INTERVAL: 10
     entrypoint:
       - /bin/sh
       - -c
-      - /wait && java -jar /app.jar --spring.profiles.active=prod
+      - /wait && /app
 
   # --------------------------------------------------------------- #
 
   payment-service:
-    image: openjdk:17
+    image: alpine:3.17.1
     restart: always
     ports:
       - "9020"
     volumes:
       - ./bin/wait:/wait
-      - ./services/payment.jar:/app.jar
+      - ./services/payment:/app
     environment:
       TZ: Asia/Shanghai
-      WAIT_HOSTS: nacos:8848, mysql:3306, redis:6379, rabbitmq:5672
+      WAIT_HOSTS: mysql:3306, redis:6379, rabbitmq:5672
       WAIT_TIMEOUT: 600
       WAIT_SLEEP_INTERVAL: 10
     entrypoint:
       - /bin/sh
       - -c
-      - /wait && java -jar /app.jar --spring.profiles.active=prod
+      - /wait && /app
 
   # --------------------------------------------------------------- #
 
   seckill-service:
-    image: openjdk:17
+    image: alpine:3.17.1
     restart: always
     ports:
       - "9030"
     volumes:
       - ./bin/wait:/wait
-      - ./services/seckill.jar:/app.jar
+      - ./services/seckill:/app
     environment:
       TZ: Asia/Shanghai
-      WAIT_HOSTS: nacos:8848, mysql:3306, redis:6379
+      WAIT_HOSTS: mysql:3306, redis:6379
       WAIT_TIMEOUT: 600
       WAIT_SLEEP_INTERVAL: 10
     entrypoint:
       - /bin/sh
       - -c
-      - /wait && java -jar /app.jar --spring.profiles.active=prod
+      - /wait && /app
 
   # --------------------------------------------------------------- #
 
   mock-service:
-    image: openjdk:17
+    image: alpine:3.17.1
     restart: always
     ports:
       - "9040"
     volumes:
       - ./bin/wait:/wait
-      - ./services/mock.jar:/app.jar
+      - ./services/mock:/app
     environment:
       TZ: Asia/Shanghai
-      WAIT_HOSTS: nacos:8848, mysql:3306
+      WAIT_HOSTS: mysql:3306
       WAIT_TIMEOUT: 600
       WAIT_SLEEP_INTERVAL: 10
     entrypoint:
       - /bin/sh
       - -c
-      - /wait && java -jar /app.jar --spring.profiles.active=prod
+      - /wait && /app
 

@@ -9,8 +9,13 @@ spring:
     username: root
     password: root
   cloud:
-    nacos:
-      server-addr: nacos:8848
+    openfeign:
+      client:
+        config:
+          seckill-service:
+            url: http://seckill-service:9030
+          mock-service:
+            url: http://mock-service:9040
   data:
     redis:
       host: redis

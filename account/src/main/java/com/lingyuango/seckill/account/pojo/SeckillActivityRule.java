@@ -1,5 +1,6 @@
 package com.lingyuango.seckill.account.pojo;
 
+import com.lingyuango.seckill.account.config.TypedReflective;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
  * @author Jmc
  */
 @Data
+@TypedReflective
 public class SeckillActivityRule {
     private Long id;
 

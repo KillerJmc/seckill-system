@@ -1,5 +1,6 @@
 package com.lingyuango.seckill.pojo;
 
+import com.lingyuango.seckill.config.TypedReflective;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.io.Serializable;
  * @author Jmc
  */
 @Data
+@TypedReflective
 public class BasicOrder implements Serializable {
     /**
      * 秒杀id

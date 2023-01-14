@@ -43,7 +43,7 @@ public class Cookies {
 
         var cookie = ResponseCookie
                 .from(name, value)
-                .sameSite("Lax")
+                .sameSite("Strict")
                 .domain(secondDomain)
                 .path("/")
                 .build();
@@ -62,7 +62,7 @@ public class Cookies {
 
         var cookie = ResponseCookie
                 .from(name, "")
-                .sameSite("Lax")
+                .sameSite("Strict")
                 .domain(secondDomain)
                 .path("/")
                 .maxAge(0)

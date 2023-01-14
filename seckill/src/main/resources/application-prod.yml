@@ -9,8 +9,13 @@ spring:
     username: root
     password: root
   cloud:
-    nacos:
-      server-addr: nacos:8848
+    openfeign:
+      client:
+        config:
+          account-service:
+            url: http://account-service:9010
+          payment-service:
+            url: http://payment-service:9020
   data:
     redis:
       host: redis
