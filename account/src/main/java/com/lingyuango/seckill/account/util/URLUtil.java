@@ -1,5 +1,7 @@
 package com.lingyuango.seckill.account.util;
 
+import com.jmc.lang.Strs;
+
 import java.util.Stack;
 
 /**
@@ -13,9 +15,14 @@ public class URLUtil {
      * @return 二级域名
      */
     public static String getSecondDomain(String serverName) {
-        // 如果不存在"."，说明是本地部署，直接返回localhost
+        // 如果不存在"."，说明是本地部署，没有二级域名
         if (!serverName.contains(".")) {
-            return "localhost";
+            return null;
+        }
+
+        // 如果是ip，说明没有域名
+        if (Strs.isNum(serverName.replace(".", ""))) {
+            return null;
         }
 
         // 域名列表
